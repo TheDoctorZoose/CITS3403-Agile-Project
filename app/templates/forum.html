@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Board Game Entry Analysis Tool</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f5f5f5;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      max-width: 800px;
+      margin: 40px auto;
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    h1, h2 {
+      text-align: center;
+    }
+    input, select, textarea, button {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+    button {
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #45a049;
+    }
+    .file-upload {
+      margin-top: 20px;
+      border: 2px dashed #ccc;
+      padding: 20px;
+      text-align: center;
+      color: #888;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Board Game Entry Analysis Tool</h1>
+    <h2>Manual Data Entry</h2>
+    <form id="entryForm">
+      <label>Game Title:</label>
+      <input type="text" name="gameTitle" required />
+
+      <label>Number of Players:</label>
+      <input type="number" name="playerCount" required />
+
+      <label>Scores:</label>
+      <input type="text" name="scores" placeholder="e.g., 30, 45, 20" required />
+
+      <label>Win/Loss:</label>
+      <select name="result">
+        <option value="win">Win</option>
+        <option value="loss">Loss</option>
+      </select>
+
+      <label>Duration (minutes):</label>
+      <input type="number" name="duration" />
+
+      <label>Role:</label>
+      <input type="text" name="role" />
+
+      <button type="submit">Submit Entry</button>
+    </form>
+
+    <h2>Batch File Upload</h2>
+    <div class="file-upload">
+      <input type="file" id="fileInput" accept=".csv, .json" />
+      <p>Upload your CSV or JSON file</p>
+    </div>
+
+    <h2>External Data Integration</h2>
+    <input type="url" placeholder="Enter external API URL" />
+    <button>Fetch External Data</button>
+  </div>
+</body>
+</html>
