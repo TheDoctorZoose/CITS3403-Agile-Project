@@ -3,53 +3,65 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Board Game Entry and Analysis Tool for tracking game stats and performance." />
   <title>Board Game Entry Analysis Tool</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
-  <div class="container">
+  <main class="container">
     <h1>Board Game Entry Analysis Tool</h1>
-    <h2>Manual Data Entry</h2>
-    <form id="entryForm">
-      <label>Game Title:</label>
-      <input type="text" name="gameTitle" required />
+    <p>Please fill in the form below to record your board game session.</p>
 
-      <label>Number of Players:</label>
-      <input type="number" name="playerCount" required />
+    <!-- Manual Data Entry Section -->
+    <section aria-label="Manual Data Entry">
+      <h2>Manual Data Entry</h2>
+      <form id="entryForm" action="#" method="POST">
+        <label for="gameTitle">Game Title:</label>
+        <input type="text" id="gameTitle" name="gameTitle" required placeholder="e.g., Go" />
 
-      <label>Scores:</label>
-      <input type="text" name="scores" placeholder="e.g., 30, 45, 20" required />
+        <label for="playerCount">Number of Players:</label>
+        <input type="number" id="playerCount" name="playerCount" required placeholder="e.g., 4" />
 
-      <label>Win/Loss:</label>
-      <select name="result">
-        <option value="win">Win</option>
-        <option value="loss">Loss</option>
-      </select>
+        <label for="scores">Scores:</label>
+        <input type="text" id="scores" name="scores" placeholder="e.g., 30, 45, 20" required />
 
-      <label>Duration (minutes):</label>
-      <input type="number" name="duration" />
+        <label for="result">Win/Loss:</label>
+        <select id="result" name="result">
+          <option value="win">Win</option>
+          <option value="loss">Loss</option>
+        </select>
 
-      <label>Role:</label>
-      <input type="text" name="role" />
+        <label for="duration">Duration (minutes):</label>
+        <input type="number" id="duration" name="duration" placeholder="e.g., 60" />
 
-      <button type="submit">Submit Entry</button>
-    </form>
+        <label for="role">Role:</label>
+        <input type="text" id="role" name="role" placeholder="e.g., Knight, Farmer" />
 
-    <h2>Batch File Upload</h2>
-    <div class="file-upload">
+        <button type="submit">Submit Entry</button>
+      </form>
+    </section>
+
+    <!-- File Upload Section -->
+    <section class="file-upload" aria-label="Batch File Upload">
+      <h2>Batch File Upload</h2>
       <input type="file" id="fileInput" accept=".csv, .json" />
       <p>Upload your CSV or JSON file</p>
-    </div>
+    </section>
 
-    <h2>External Data Integration</h2>
-    <input type="url" placeholder="Enter external API URL" />
-    <button>Fetch External Data</button>
+    <!-- External API Section -->
+    <section aria-label="External Data Integration">
+      <h2>External Data Integration</h2>
+      <input type="url" id="externalUrl" placeholder="Enter external API URL" />
+      <button type="button">Fetch External Data</button>
+    </section>
 
-    <h2>Submitted Entries</h2>
-    <ul id="entryList"></ul>
-  </div>
+    <!-- Entry Display Section -->
+    <section id="entryDisplay" aria-label="Submitted Entries" style="margin-top: 40px;">
+      <h2>Submitted Entries</h2>
+      <ul id="entryList"></ul>
+    </section>
+  </main>
 
   <script src="{{ url_for('static', filename='js/script.js') }}"></script>
 </body>
 </html>
-
