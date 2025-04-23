@@ -1,0 +1,50 @@
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body.intropage {
+    background-color: rgb(235, 235, 235);
+}
+
+body.formpage {
+    background-color: rgb(222, 179, 166);       /* in case browser doesn't support gradients */
+    background-image: linear-gradient(90deg, rgb(222, 179, 166), rgb(209, 209, 128));       /* gradient background */
+}
+
+.centre {
+    background: rgb(236, 233, 233);
+    border: 10px rgb(133, 133, 133);
+    border-radius: 30px;
+    box-shadow: 0px 0px 15px rgb(68, 68, 68);
+    padding: 10px 70px 35px 70px;
+    text-align: center;
+    
+    /* Centre Positioning */
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.input-field {
+    text-align: left;
+    margin-bottom: 12px;
+}
+
+.input-field input {
+    width: 96.49%;
+}
+
+.submit-btn {
+    margin-bottom: 15px;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.rounded-btn {
+    background-color: brown;
+    color: white;                 /* text colour */
+    padding: 10px 10px;
+    border-radius: 20px;            /* rounding corners */
+    text-decoration: none;          /* removes the hyperlink underline */
+}
