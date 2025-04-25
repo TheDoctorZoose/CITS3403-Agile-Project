@@ -1,27 +1,31 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        <title>
-            Log In | &lt;Insert App Name Here&gt;
-        </title>
-        <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
-    </head>
-    <body class="formpage">
-        <div class="centre">
-            <h2>Log In</h2>
-            <form>
-                <div class="input-field">
-                    <label for="username">Username:</label><br>
-                    <input type="text" id="username" placeholder="Enter username" name="username">
-                </div>
-                <div class="input-field">
-                    <label for="password">Password:</label><br>
-                    <input type="password" id="password" placeholder="Enter password" name="password">
-                </div>
-                <span class="submit-btn"><input type="submit" value="Submit"></span>
-            </form>
-            <a href="{{ url_for('forgot_password') }}">Forgot password?</a><br>
-            <a href="{{ url_for('register') }}">Sign up</a>!
+{% extends "base.html" %}
+
+{% block title %}Log In | Board Game Central{% endblock %}
+
+{% block extra_styles %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
+{% endblock %}
+
+{% block body_class %}formpage{% endblock %}
+
+{% block content %}
+<div class="centre">
+    <h2>Log In</h2>
+    <form>
+        <div class="input-field">
+            <label for="username">Username:</label><br>
+            <input type="text" id="username" placeholder="Enter username" name="username">
         </div>
-    </body>
-</html>
+        <div class="input-field">
+            <label for="password">Password:</label><br>
+            <input type="password" id="password" placeholder="Enter password" name="password">
+        </div>
+        <span class="submit-btn"><input type="submit" value="Submit"></span>
+    </form>
+    <p>
+        <a href="{{ url_for('forgot_password') }}">Forgot password?</a><br>
+        Don't have an account? <a href="{{ url_for('register') }}">Sign up</a>!
+    </p>
+</div>
+{% endblock %}
+

@@ -1,31 +1,33 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        <title>
-            Welcome | &lt;Insert App Name Here&gt;
-        </title>
-        <link rel="stylesheet" href="{{ url_for('static', filename='css/intro.css') }}">
-    </head>
-    
-    <body class="intropage">
-        <p>Welcome!</p>
-        <p>
-            Ever wonder who's actually the best board game player among your friends or family?<br>
-            Want to see which board games you play the most, or the ones you win the most at?
-        </p>
-        <h2>About</h2>
-        <p>This app allows for tracking, analysis and sharing of your board game data!</p>
-        <p>
-            Every time you have a board game session, simply search for the name of the board game and enter the details of your last games through our interface,
-            or instead batch import a CSV or JSON file containing your previous board gaming history.
-        </p>
-        <p>
-            Your play data is automatically analysed and summaries and charts are displayed so you can see insights on your play history!<br>
-            These analyses can be shared with other users on the platform so you can compare your play statistics with others you know!
-        </p>
-        <p>To get started, log in or sign up below!</p>
-        <a class="rounded-btn" href="{{ url_for('login') }}">Log In</a>
-        <a class="rounded-btn" href="{{ url_for('register') }}">Sign Up</a>
+{% extends "base.html" %}
 
-    </body>
-</html>
+{% block title %}Welcome | Board Game Central{% endblock %}
+
+{% block extra_styles %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/intro.css') }}">
+{% endblock %}
+
+{% block body_class %}intropage{% endblock %}
+
+{% block content %}
+<p>Welcome!</p>
+<p>
+    Ever wonder who's actually the best board game player among your friends or family?<br>
+    Want to see which board games you play the most, or the ones you win the most at?
+</p>
+<h2>About</h2>
+<p>This app allows for tracking, analysis and sharing of your board game data!</p>
+<p>
+    Every time you have a board game session, simply search for the name of the board game and enter the details of your last games through our interface,
+    or instead batch import a CSV or JSON file containing your previous board gaming history.
+</p>
+<p>
+    Your play data is automatically analysed and summaries and charts are displayed so you can see insights on your play history!<br>
+    These analyses can be shared with other users on the platform so you can compare your play statistics with others you know!
+</p>
+<p>To get started, log in or sign up below!</p>
+
+<div style="text-align: center;">
+    <a class="rounded-btn" href="{{ url_for('login') }}">Log In</a>
+    <a class="rounded-btn" href="{{ url_for('register') }}">Sign Up</a>
+</div>
+{% endblock %}

@@ -1,43 +1,30 @@
-<!-- app/templates/index.html -->
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8" />
-    <title>Board Game Central | Home</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
-</head>
-<body>
-    <header>
-        <h1>🎲 Board Game Central 🎲</h1>
-        <nav>
-            <a href="{{ url_for('login') }}">Login</a>
-            <a href="{{ url_for('register') }}">Sign Up</a>
-            <a href="{{ url_for('forgot_password') }}">Forgot Password</a>
-            <a href="{{ url_for('intro') }}">Intro</a>
-        </nav>
-        <button id="themeToggle">Toggle Theme</button>
-    </header>
+{% extends "base.html" %}
 
-    <main>
-        <section class="intro">
-            <h2>Welcome to Board Game Central</h2>
-            <p>Track your board game plays, analyze your win stats, and compete with friends!</p>
-            <ul>
-                <li>Log game sessions</li>
-                <li>Import past game data</li>
-                <li>Visualize your win/loss record</li>
-                <li>Share and compare with others</li>
-            </ul>
+{% block title %}Board Game Central | Home{% endblock %}
 
-            <div style="text-align: center; margin-top: 30px;">
-                <a href="{{ url_for('forum') }}" class="rounded-btn">Go to Forum</a>
-        </section>
-    </main>
+{% block extra_styles %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
+{% endblock %}
 
-    <footer>
-        &copy; 2025 Board Game Central
-    </footer>
+{% block content %}
+<section class="intro">
+  <h2>Welcome to Board Game Central</h2>
+  <p>Track your board game plays, analyze your win stats, and compete with friends!</p>
+  <ul>
+    <li>Log game sessions</li>
+    <li>Import past game data</li>
+    <li>Visualize your win/loss record</li>
+    <li>Share and compare with others</li>
+  </ul>
 
-    <script src="{{ url_for('static', filename='js/index.js') }}"></script>
-</body>
-</html>
+  <div style="text-align: center; margin-top: 30px;">
+    <a href="{{ url_for('forum') }}" class="rounded-btn">Go to Forum</a>
+    <a href="{{ url_for('share_data_view') }}" class="rounded-btn">View Shared Data</a>
+    
+  </div>
+</section>
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="{{ url_for('static', filename='js/index.js') }}"></script>
+{% endblock %}

@@ -29,5 +29,17 @@ def create_app():
     @app.route('/forum')
     def forum():
         return render_template("forum.html")
+    
+    @app.route("/share")
+    def share_data_view():
+        return render_template("share-data-view.html")
+
+    @app.route("/entry")
+    def entry():
+        return render_template("entry.html")  # 或者你文件名是什么就写什么
+
+    @app.route("/profile")
+    def profile():  
+        return render_template("profile.html")
 
     return app
