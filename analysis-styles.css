@@ -1,0 +1,69 @@
+#summary{
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    max-width: 100%;
+}
+#summary:last-child {
+    flex-direction: column-reverse;
+}
+
+@media (min-width: 350px) {
+    #summary {
+        flex-direction: row;
+        gap: 2rem;
+    }
+
+    .summary-column {
+        flex: 1;
+    }
+}
+
+.summary-column p:not(.h-index-note ) {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.summary-column p:not(.h-index-note) span {
+    margin-left: auto;
+    text-align: right;
+    min-width: 3ch;
+    font-variant-numeric: tabular-nums;
+}
+
+#percent-of-own-games-played {
+    text-align: center;
+    margin: 1em 2em 1em 2em;
+}
+
+main > div {
+    border: 1px dashed black;
+}
+
+table {
+    width: 100%;
+    text-align: right;
+    margin-bottom: 2em;
+    border-collapse: collapse;
+}
+
+table, th, td {
+    padding-right: 1em
+}
+th {
+    background-color: lightgray;
+    border-bottom: 1px solid black;
+}
+
+table td:nth-child(2),
+table th:nth-child(2) {
+    text-align: left;
+}
+
+footer {
+    background: #000;
+    color: #fff;
+    text-align: center;
+    padding: 0.5em;
+}
