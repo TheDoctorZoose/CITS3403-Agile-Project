@@ -1,0 +1,43 @@
+<!-- app/templates/index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Board Game Central | Home</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
+</head>
+<body>
+    <header>
+        <h1>🎲 Board Game Central 🎲</h1>
+        <nav>
+            <a href="{{ url_for('login') }}">Login</a>
+            <a href="{{ url_for('register') }}">Sign Up</a>
+            <a href="{{ url_for('forgot_password') }}">Forgot Password</a>
+            <a href="{{ url_for('intro') }}">Intro</a>
+        </nav>
+        <button id="themeToggle">Toggle Theme</button>
+    </header>
+
+    <main>
+        <section class="intro">
+            <h2>Welcome to Board Game Central</h2>
+            <p>Track your board game plays, analyze your win stats, and compete with friends!</p>
+            <ul>
+                <li>Log game sessions</li>
+                <li>Import past game data</li>
+                <li>Visualize your win/loss record</li>
+                <li>Share and compare with others</li>
+            </ul>
+
+            <div style="text-align: center; margin-top: 30px;">
+                <a href="{{ url_for('forum') }}" class="rounded-btn">Go to Forum</a>
+        </section>
+    </main>
+
+    <footer>
+        &copy; 2025 Board Game Central
+    </footer>
+
+    <script src="{{ url_for('static', filename='js/index.js') }}"></script>
+</body>
+</html>
