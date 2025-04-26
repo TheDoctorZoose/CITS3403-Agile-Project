@@ -1,0 +1,125 @@
+{% extends "base.html" %}
+
+{% block title %}Analysis View{% endblock %}
+
+{% block extra_styles %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/analysis-styles.css') }}">
+{% endblock %}
+
+{% block body_class %}{% endblock %}
+
+{% block content %}
+<header>
+  <h1>Analysis View</h1>
+  <nav>
+    <!-- Future navigation links here -->
+  </nav>
+</header>
+
+<main>
+  <h2>All time</h2>
+  <div id="summary">
+    <div class="summary-column">
+      <p id="plays">Plays: <span>326</span></p>
+      <p id="locations">Locations: <span>16</span></p>
+      <p id="players">Players: <span>107</span></p>
+      <p id="named-players">- named: <span>56</span></p>
+      <p id="h-index">H-index: <span>9</span></p>
+      <p class="h-index-note"><span>9</span> games were played at least <span>9</span> times</p>
+    </div>
+    <div class="summary-column">
+      <p id="games">Games: <span>59</span></p>
+      <p id="my-copy">- my copy: <span>36</span></p>
+      <p id="new-to-me">- new to me: <span>43</span></p>
+      <p id="time">Time: <span>≈401h</span></p>
+      <p id="days">Days: <span>188</span></p>
+    </div>
+  </div>
+
+  <div class="summary-column" id="percent-of-own-games-played">
+    <b>78%</b> of Own Base Games Played
+  </div>
+
+  <div id="player-count-charts">
+    <div id="players-chart">
+      <canvas id="player-counts-bar" width="200" height="200"></canvas>
+    </div>
+    <div id="player-counts">
+      <canvas id="player-counts-chart-pie" width="400" height="200"></canvas>
+    </div>
+  </div>
+
+  <div id="game-table">
+    <h3>Games</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Nr</th>
+          <th>Game</th>
+          <th><i data-lucide="clock"></i></th>
+          <th><i data-lucide="play"></i></th>
+          <th><i data-lucide="target"></i></th>
+          <th><i data-lucide="users"></i></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>1</td><td>Gloomhaven</td><td>≈63h</td><td>42</td><td>1</td><td>5</td></tr>
+        <tr><td>2</td><td>Sequence</td><td>≈9h</td><td>40</td><td>2</td><td>8</td></tr>
+        <tr><td>3</td><td>Scythe</td><td>≈51h</td><td>36</td><td>6</td><td>22</td></tr>
+        <tr><td>4</td><td>Codenames</td><td>≈9h</td><td>33</td><td>3</td><td>38</td></tr>
+        <tr><td>5</td><td>Everdell</td><td>≈24h</td><td>12</td><td>3</td><td>10</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div id="players-table">
+    <h3>Players</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Nr</th>
+          <th>Player</th>
+          <th><i data-lucide="play"></i></th>
+          <th><i data-lucide="dices"></i></th>
+          <th><i data-lucide="trophy"></i></th>
+          <th><i data-lucide="percent"></i></th>
+          <th><i data-lucide="gauge"></i></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>1</td><td>You</td><td>326</td><td>59</td><td>133</td><td>42%</td><td>41%</td></tr>
+        <tr><td>2</td><td>Diarmuid</td><td>172</td><td>30</td><td>80</td><td>47%</td><td>42%</td></tr>
+        <tr><td>3</td><td>Pengyu</td><td>76</td><td>22</td><td>38</td><td>50%</td><td>38%</td></tr>
+        <tr><td>4</td><td>Zayn</td><td>43</td><td>19</td><td>24</td><td>57%</td><td>40%</td></tr>
+        <tr><td>5</td><td>Matt</td><td>46</td><td>17</td><td>22</td><td>53%</td><td>37%</td></tr>
+      </tbody>
+    </table>
+  </div>
+</main>
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://unpkg.com/lucide@latest"></script>
+
+<script>
+  new Chart(document.getElementById('player-counts-bar'), {
+    type: 'bar',
+    options: { indexAxis: 'y' },
+    data: {
+      labels: ["Peter", "Diarmuid", "Pengyu", "Matt", "Zayn"],
+      datasets: [{ data: [326, 172, 76, 46, 43] }]
+    }
+  });
+
+  new Chart(document.getElementById('player-counts-chart-pie'), {
+    type: 'pie',
+    data: {
+      labels: ['2', '3', '4', '6', '5', '10', '8', '7', '9', '1'],
+      datasets: [{ data: [35, 25, 24, 7, 5, 2, 2, 2, 1, 1] }]
+    }
+  });
+
+  lucide.createIcons();
+</script>
+{% endblock %}

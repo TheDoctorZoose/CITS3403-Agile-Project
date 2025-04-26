@@ -36,10 +36,15 @@ def create_app():
 
     @app.route("/entry")
     def entry():
-        return render_template("entry.html")  # 或者你文件名是什么就写什么
+        return render_template("entry.html")
 
     @app.route("/profile")
     def profile():  
         return render_template("profile.html")
+    
+    @app.route("/analysis")
+    def analysis():
+        return render_template("analysis.html")
+
 
     return app

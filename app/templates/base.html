@@ -1,33 +1,40 @@
-<!-- app/templates/base.html -->
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>{% block title %}Board Game Central{% endblock %}</title>
+
   <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
   {% block extra_styles %}{% endblock %}
 </head>
 
-<body>
+<body class="{% block body_class %}{% endblock %}">
   <header class="main-header">
-    <h1>🎲 Board Game Central</h1>
-    <nav>
-      <a href="{{ url_for('index') }}">Home</a>
-      <a href="{{ url_for('login') }}">Login</a>
-      <a href="{{ url_for('register') }}">Sign Up</a>
-      <a href="{{ url_for('forgot_password') }}">Forgot Password</a>
-      <a href="{{ url_for('intro') }}">Intro</a>
-      <a href="{{ url_for('forum') }}">Forum</a>
-      <a href="{{ url_for('share_data_view') }}">Share</a>
-      
+    <h1 class="main-title">🎲 Board Game Central 🎲</h1>
+
+    <nav class="main-nav">
+      <ul>
+        <li><a href="{{ url_for('index') }}">Home</a></li>
+        <li><a href="{{ url_for('login') }}">Login</a></li>
+        <li><a href="{{ url_for('register') }}">Sign Up</a></li>
+        <li><a href="{{ url_for('forgot_password') }}">Forgot Password</a></li>
+        <li><a href="{{ url_for('intro') }}">Intro</a></li>
+        <li><a href="{{ url_for('forum') }}">Forum</a></li>
+        <li><a href="{{ url_for('share_data_view') }}">Share</a></li>
+        <li><a href="{{ url_for('analysis') }}">Analysis</a></li>
+      </ul>
     </nav>
+
+    <button id="themeToggle" class="theme-toggle">Toggle Theme</button>
   </header>
 
   <main class="container">
     {% block content %}{% endblock %}
   </main>
 
-  <footer>
+  <footer class="main-footer">
     &copy; 2025 Board Game Central. All rights reserved.
   </footer>
 
