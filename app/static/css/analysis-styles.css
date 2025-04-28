@@ -1,69 +1,372 @@
-#summary{
+.container {
+    display: flex;
+    gap: 2rem;
+    padding: 1rem;
+}
+
+.left-column {
+    flex: 3;
+    /*max-width: 600px*/
+}
+
+
+#summary {
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: #fafafa;
+    box-shadow: 2px 2px 6px rgba(0,0,0,0.1);
+    padding: 2rem;
+    max-width: 800px;
+    margin: 2rem auto;
+}
+
+/* Heading */
+#summary-header {
+    text-align: left;
+    font-size: 1.6rem;
+    margin-top: 0;
+    margin-bottom: 1.5rem;
+    color: #333;
+}
+
+/* Only the columns flex */
+#summary-columns {
     display: flex;
     flex-direction: column;
     gap: 2rem;
-    max-width: 100%;
 }
-#summary:last-child {
-    flex-direction: column-reverse;
-}
-
 @media (min-width: 350px) {
-    #summary {
+    #summary-columns {
         flex-direction: row;
         gap: 2rem;
     }
-
     .summary-column {
         flex: 1;
     }
 }
 
-.summary-column p:not(.h-index-note ) {
+/* Summary items */
+.summary-column p:not(.h-index-note) {
     display: flex;
     justify-content: space-between;
+    align-items: center;
     gap: 1rem;
+    margin: 0.5rem 0;
+    font-size: 1rem;
 }
 
+/* Numbers styling */
 .summary-column p:not(.h-index-note) span {
     margin-left: auto;
     text-align: right;
     min-width: 3ch;
     font-variant-numeric: tabular-nums;
+    font-weight: bold;
+    color: #1976d2;
 }
 
+/* H-index note styling */
+.h-index-note {
+    font-style: italic;
+    font-size: 0.9rem;
+    color: #666;
+    margin-top: 1rem;
+}
+
+.section-divider {
+    border: none;
+    border-top: 1px solid #ccc;
+    margin: 2rem auto;
+    width: 80%;
+}
+
+/* Centered "Percent of Own Games Played" (if present) */
 #percent-of-own-games-played {
     text-align: center;
-    margin: 1em 2em 1em 2em;
+    margin: 1em 2em;
 }
 
+/* Main table styles */
 main > div {
-    border: 1px dashed black;
+    /* Previously dashed black border; now optional */
+    /* border: 1px dashed black; */
 }
 
+/* Table styling */
 table {
     width: 100%;
-    text-align: right;
     margin-bottom: 2em;
     border-collapse: collapse;
+    background-color: #fafafa;
+    box-shadow: 2px 2px 6px rgba(0,0,0,0.1);
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    overflow: hidden;
 }
 
+/* Table cell spacing */
 table, th, td {
-    padding-right: 1em
+    padding: 0.75em;
 }
+
+/* Header cells */
 th {
     background-color: lightgray;
     border-bottom: 1px solid black;
+    text-align: right;
 }
 
+/* Make 2nd column left-aligned */
 table td:nth-child(2),
 table th:nth-child(2) {
     text-align: left;
 }
 
-footer {
-    background: #000;
-    color: #fff;
-    text-align: center;
-    padding: 0.5em;
+body {
+    margin: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f0f2f5;
+    color: #333;
 }
+
+/* Header */
+.main-header {
+    background-color: #34495e;
+    color: white;
+    padding: 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.notifications {
+    position: relative;
+    font-size: 1.5rem;
+}
+
+.notif-count {
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    background: #e74c3c;
+    color: white;
+    padding: 2px 6px;
+    font-size: 0.8rem;
+    border-radius: 50%;
+}
+
+ .card {
+     border: 1px solid #ccc;
+     border-radius: 8px;
+     padding: 1rem;
+     margin: 1rem 0;
+     box-shadow: 2px 2px 6px rgba(0,0,0,0.1);
+     background-color: #fafafa;
+ }
+
+.card h3 {
+    margin-top: 0;
+}
+
+ .card-actions {
+     margin-top: 1rem;
+     display: flex;
+     justify-content: flex-end;
+     gap: 0.5rem;
+ }
+
+.card-actions button {
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 4px;
+    background-color: #1976d2;
+    color: white;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: background-color 0.2s;
+}
+
+.card-actions button:hover {
+    background-color: #125ca1;
+}
+
+.placeholder-graph {
+    margin-top: 1rem;
+    height: 200px;
+    background-color: #eee;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #777;
+    font-size: 1rem;
+    border-radius: 4px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+}
+
+th, td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: center;
+}
+
+th {
+    background-color: #f4f4f4;
+}
+
+.share-analysis-button {
+    margin-top: 1em;
+    float: right;
+}
+
+.create-analysis-toolbar {
+    width: 300px;
+    z-index: 1000;
+}
+
+.create-analysis-toolbar .create-card {
+    margin-top: 2rem;
+    box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+/* Style the Create Card a little differently */
+.create-card {
+    background-color: #e3f2fd; /* soft light blue */
+    border: 1px solid #90caf9; /* light blue border */
+    border-radius: 8px;
+    padding: 2rem;
+    max-width: 700px;
+    margin: auto;
+    box-shadow: 2px 2px 6px rgba(0,0,0,0.1);
+}
+
+/* Form inside the Create Card */
+.create-card form {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-top: 1rem;
+}
+
+.create-card h1 {
+    text-align: center;
+    margin-bottom: 1.5rem;
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: bold;
+}
+
+select, input[type="date"], input[type="text"], input[type="number"] {
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1rem;
+}
+
+.create-card .checkbox-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+}
+
+.checkbox-group input {
+    margin-right: 0.5rem;
+}
+
+.form-actions {
+    text-align: center;
+    margin-top: 2rem;
+}
+
+.form-actions button {
+    padding: 0.75rem 2rem;
+    font-size: 1rem;
+    border: none;
+    border-radius: 4px;
+    background-color: #1976d2;
+    color: white;
+    cursor: pointer;
+}
+
+.form-actions button:hover {
+    background-color: #125ca1;
+}
+
+/*.create-card select,*/
+/*.create-card button {*/
+/*    padding: 0.5rem;*/
+/*    font-size: 1rem;*/
+/*    border-radius: 4px;*/
+/*    border: 1px solid #ccc;*/
+/*}*/
+
+/*.create-card button {*/
+/*    background-color: #1976d2;*/
+/*    color: white;*/
+/*    border: none;*/
+/*    cursor: pointer;*/
+/*}*/
+
+/*.create-card button:hover {*/
+/*    background-color: #125ca1;*/
+/*}*/
+
+.filters {
+    margin: 1rem 0;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.filters select {
+    padding: 0.5rem;
+    font-size: 1rem;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+}
+
+.main-header {
+    display: flex;
+    justify-content: flex-end; 
+    align-items: center;
+    padding: 20px;
+    background-color: brown;
+    color: white;
+  }
+  
+  .site-title {
+    margin-right: auto; 
+    font-size: 1.8rem;
+  }
+  
+  .notifications {
+    display: flex;
+    align-items: center;
+    position: relative;
+  }
+  
+  .notif-count {
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    background: red;
+    color: white;
+    border-radius: 50%;
+    padding: 2px 6px;
+    font-size: 0.7rem;
+  }
+  
