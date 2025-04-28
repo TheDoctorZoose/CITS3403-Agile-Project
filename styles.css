@@ -282,3 +282,64 @@ footer {
   margin-top: 0.5rem;
   color: #777;
 }
+
+
+.data-preview {
+  font-size: 0.9rem;
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  padding: 1rem;
+  margin-bottom: 2rem;
+}
+
+.data-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: bold;
+  font-size: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  cursor: pointer;
+  color: #888;
+  transition: color 0.3s ease;
+}
+
+.close-btn:hover {
+  color: #e74c3c;
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 0.5rem 0;
+  font-size: 0.85rem;
+}
+
+.data-table th, .data-table td {
+  border: 1px solid #ddd;
+  padding: 0.5rem 0.8rem;
+  text-align: center;
+}
+
+.data-table th {
+  background-color: #f9f9f9;
+  font-weight: bold;
+}
+
+.data-table td {
+  background-color: #fff;
+}
+.data-note {
+  font-size: 0.9rem;
+  color: #666;
+  margin-top: 0.5rem;
+  font-style: italic;
+  text-align: left;
+}
