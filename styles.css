@@ -62,6 +62,55 @@ body {
   margin-bottom: 2rem;
 }
 
+/* Incoming and Accepted Share Cards */
+.incoming-share, .accepted-share {
+  background: #fef2d7;
+  border-left: 5px solid #f39c12;
+  font-size: 0.9rem; 
+  padding: 1rem;
+}
+
+.shared-data {
+  background: #fafafa;
+  padding: 0.5rem;
+  border-radius: 4px;
+  margin: 0.5rem 0;
+  font-size: 0.55rem;
+}
+
+.share-actions {
+  display: flex;
+  gap: 1rem;
+}
+
+.accept-btn, .decline-btn {
+  flex: 0.5;
+  padding: 0.5rem;
+  font-size: 0.5rem;
+  border: none;
+  border-radius: 2px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.accept-btn {
+  background: #2ecc71;
+  color: white;
+}
+
+.accept-btn:hover {
+  background: #27ae60;
+}
+
+.decline-btn {
+  background: #e74c3c;
+  color: white;
+}
+
+.decline-btn:hover {
+  background: #c0392b;
+}
+
 /* Share Form */
 .share-form {
   display: flex;
@@ -204,4 +253,32 @@ footer {
   color: #777;
   background: #ecf0f1;
   font-size: 0.9rem;
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.data-table th, .data-table td {
+  border: 1px solid #ccc;
+  padding: 0.4rem 0.6rem;
+  text-align: center;
+}
+
+.data-table th {
+  background-color: #f9f9f9;
+  font-weight: bold;
+}
+
+.data-table td {
+  background-color: #ffffff;
+}
+
+.data-table small {
+  display: block;
+  margin-top: 0.5rem;
+  color: #777;
 }
