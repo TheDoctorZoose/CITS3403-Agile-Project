@@ -7,91 +7,177 @@
 {% endblock %}
 
 {% block content %}
-<!-- Left Column: Share Form + Feed -->
-<div class="left-column">
-  <!-- Share Form Section -->
-  <section class="share-box card">
-    <h2>📤 Share Something</h2>
-    <form class="share-form">
-      <input type="text" placeholder="Title of your post..." class="input-title" />
-      <select>
-        <option>🕹️ Game Score</option>
-        <option>💬 Thought</option>
-        <option>🗃️ Attachment</option>
-      </select>
-      <textarea placeholder="Write your game experience, review, or thoughts..."></textarea>
-      <input type="file" />
-      <div class="permission-select">
-        <label class="permission public">
-          <input type="radio" name="permission" checked />
-          🌐 Public
-        </label>
-        <label class="permission friends">
-          <input type="radio" name="permission" />
-          👥 Friends Only
-        </label>
-        <label class="permission private">
-          <input type="radio" name="permission" />
-          🔒 Private
-        </label>
+<main class="container">
+
+  <!-- 左边区域 -->
+  <div class="left-column">
+    
+    <!-- 收到的分享请求 -->
+    <section class="incoming-share card">
+      <h2>📨 Alex shared a game data with you</h2>
+      <div class="timestamp">1 hour ago</div>
+      <p>Do you want to accept?</p>
+      <div class="shared-data">
+        <strong>Game:</strong> Catan<br><br>
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Player</th>
+              <th>Score</th>
+              <th>Result</th>
+              <th>First Time Played</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Alex</td><td>10</td><td>Win</td><td>Yes</td></tr>
+            <tr><td>Sam</td><td>7</td><td>Lose</td><td>No</td></tr>
+            <tr><td>Jamie</td><td>8</td><td>Lose</td><td>No</td></tr>
+            <tr><td>Chris</td><td>6</td><td>Lose</td><td>No</td></tr>
+          </tbody>
+        </table>
       </div>
-      <button type="submit">Post</button>
-    </form>
-  </section>
+      <div class="share-actions">
+        <button class="accept-btn">✅ Accept</button>
+        <button class="decline-btn">❌ Decline</button>
+      </div>
+    </section>
 
-  <!-- Feed Section -->
-  <section class="feed card">
-    <h2>📰 Latest Shares</h2>
+    <!-- 分享内容 -->
+    <section class="share-box card">
+      <h2>📤 Share Something</h2>
+      <form class="share-form">
+        <input type="text" placeholder="Title of your post..." class="input-title" />
 
-    <!-- Post Card -->
-    <article class="share-card">
-      <div class="user-info">
-        <img src="https://via.placeholder.com/60" class="avatar" alt="User Avatar" />
-        <div>
-          <strong>GameMaster123</strong>
-          <div class="timestamp">3 hours ago</div>
+        <select>
+          <option>🕹️ Game Score</option>
+          <option>💬 Thought</option>
+          <option>🗃️ Attachment</option>
+        </select>
+
+        <input type="text" placeholder="Gameplay Data: Victory Points - 10 (imported from analysis)" class="input-gameplay" />
+
+        <!-- 游戏数据预览 -->
+        <section class="data-preview card">
+          <div class="data-header">
+            <span>Gameplay Data</span>
+            <button class="close-btn">✖️</button>
+          </div>
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Player</th>
+                <th>Score</th>
+                <th>Result</th>
+                <th>First Time Played</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>Jack</td><td>12</td><td>Win</td><td>No</td></tr>
+              <tr><td>Lance</td><td>9</td><td>Lose</td><td>Yes</td></tr>
+              <tr><td>Andrew</td><td>8</td><td>Lose</td><td>No</td></tr>
+              <tr><td>Mike</td><td>6</td><td>Lose</td><td>Yes</td></tr>
+            </tbody>
+          </table>
+          <div class="data-note">(Data imported from Analysis View)</div>
+        </section>
+
+        <textarea placeholder="Write your game experience, review, or thoughts..."></textarea>
+        <input type="file" />
+
+        <div class="permission-select">
+          <label class="permission public">
+            <input type="radio" name="permission" checked />
+            🌐 Public
+          </label>
+          <label class="permission private">
+            <input type="radio" name="permission" />
+            🔒 Private
+          </label>
         </div>
-        <div class="privacy public">🌐 Public</div>
-      </div>
-      <h3 class="post-title">Catan Strategy Guide</h3>
-      <p>Just developed a new wheat-focused strategy that won me 3 consecutive games!</p>
-      <div class="attachment">📎 Attached: strategy.pdf</div>
-      <div class="interactions">
-        <button>👍 12</button>
-        <button>💬 5 Comments</button>
-      </div>
-      <div class="comments">
-        <div class="comment"><strong>Alice:</strong> Great insights!</div>
-        <div class="comment"><strong>Bob:</strong> Need to try this!</div>
-      </div>
-    </article>
-  </section>
-</div>
 
-<!-- Right Column: Users + History -->
-<div class="right-column">
-  <!-- Active Users -->
-  <section class="user-list card">
-    <h3>Active Players</h3>
-    <div class="user-grid">
-      <a href="{{ url_for('profile') }}?user=alice" class="user-card">
-        <img src="https://via.placeholder.com/60" alt="avatar" />
-        <div>Alice</div>
-      </a>
-      <a href="{{ url_for('profile') }}?user=bob" class="user-card">
-        <img src="https://via.placeholder.com/60" alt="avatar" />
-        <div>Bob</div>
-      </a>
-    </div>
-  </section>
+        <button type="submit">Post</button>
+      </form>
+    </section>
 
-  <!-- Share History -->
-  <section class="history card">
-    <h3>Sharing History</h3>
-    <ul class="history-list">
-      <li>You shared data with Alice on 2025-04-20</li>
-      <li>Bob shared data with You on 2025-04-18</li>
-    </ul>
-  </section>
-</div>
+    <!-- 接受分享的确认记录 -->
+    <section class="accepted-share card">
+      <h2>✅ You accepted James's game data</h2>
+      <div class="timestamp">2 hours ago</div>
+      <div class="shared-data">
+        <strong>Game:</strong> Catan<br><br>
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Player</th>
+              <th>Score</th>
+              <th>Result</th>
+              <th>First Time Played</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Alex</td><td>10</td><td>Win</td><td>Yes</td></tr>
+            <tr><td>Sam</td><td>7</td><td>Lose</td><td>No</td></tr>
+            <tr><td>Jamie</td><td>8</td><td>Lose</td><td>No</td></tr>
+            <tr><td>Chris</td><td>6</td><td>Lose</td><td>No</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- 最新分享动态 -->
+    <section class="feed card">
+      <h2>📰 Latest Shares</h2>
+      <article class="share-card">
+        <div class="user-info">
+          <img src="https://www.w3schools.com/html/pic_trulli.jpg" class="avatar" alt="User Avatar" />
+          <div>
+            <strong>GameMaster123</strong>
+            <div class="timestamp">3 hours ago</div>
+          </div>
+          <div class="privacy public">🌐 Public</div>
+        </div>
+        <h3 class="post-title">Catan Strategy Guide</h3>
+        <p>Just developed a new wheat-focused strategy that won me 3 consecutive games!</p>
+        <div class="attachment">📎 Attached: strategy.pdf</div>
+        <div class="interactions">
+          <button>👍 12</button>
+          <button>💬 5 Comments</button>
+        </div>
+        <div class="comments">
+          <div class="comment"><strong>Alice:</strong> Great insights!</div>
+          <div class="comment"><strong>Bob:</strong> Need to try this!</div>
+        </div>
+      </article>
+    </section>
+
+  </div>
+
+  <!-- 右边区域 -->
+  <div class="right-column">
+    <!-- 活跃玩家 -->
+    <section class="user-list card">
+      <h3>Active Players</h3>
+      <div class="user-grid">
+        <a href="{{ url_for('profile') }}?user=alice" class="user-card">
+          <img src="https://www.w3schools.com/html/img_chania.jpg" alt="avatar" />
+          <div>Alice</div>
+        </a>
+        <a href="{{ url_for('profile') }}?user=bob" class="user-card">
+          <img src="https://www.w3schools.com/html/pic_trulli.jpg" alt="avatar" />
+          <div>Bob</div>
+        </a>
+      </div>
+    </section>
+
+    <!-- 分享历史 -->
+    <section class="history card">
+      <h3>Sharing History</h3>
+      <ul class="history-list">
+        <li>You shared data with Alice on 2025-04-20</li>
+        <li>Bob shared data with You on 2025-04-18</li>
+      </ul>
+    </section>
+  </div>
+
+</main>
 {% endblock %}
