@@ -1,12 +1,12 @@
-{% extends "base.html" %}
-
-{% block title %}Board Game Entry Analysis Tool{% endblock %}
-
-{% block extra_styles %}
-<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-{% endblock %}
-
-{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Board Game Entry Analysis Tool</title>
+  <link rel="stylesheet" href="upload-data.css">
+</head>
+<body>
 <main class="container">
   <h1>Board Game Entry Analysis Tool</h1>
   <p>Please fill in the form below to record your board game session.</p>
@@ -53,7 +53,6 @@
     </form>
   </section>
 
-  <!-- 下面的上传区、外部API区不变 -->
   <section class="file-upload" aria-label="Batch File Upload">
     <h2>Batch File Upload</h2>
     <input type="file" id="fileInput" accept=".csv, .json" />
@@ -71,8 +70,6 @@
     <ul id="entryList"></ul>
   </section>
 </main>
-{% endblock %}
-
-{% block extra_scripts %}
-<script src="{{ url_for('static', filename='js/forum.js') }}"></script>
-{% endblock %}
+<script src="forum.js"></script>
+</body>
+</html>
