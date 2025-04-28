@@ -36,12 +36,12 @@ def create_app():
 
     @app.route("/entry")
     def entry():
-        return render_template("entry.html")
+        return render_template("entry.html") 
 
     @app.route("/profile")
     def profile():  
         return render_template("profile.html")
-    
+
     @app.route("/analysis")
     def analysis():
         return render_template("analysis.html")

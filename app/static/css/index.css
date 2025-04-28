@@ -24,18 +24,33 @@ body {
     font-size: 2.5rem;
 }
 
-/* 导航栏nav美化 */
-.main-nav ul {
-    list-style: none;
+.main-nav {
     display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 20px;
-    padding: 0;
-    margin: 20px 0 10px;
+    justify-content: center; /* 先整体居中 */
+    align-items: center;
+    width: 100%;
+    margin-top: 10px;
+    padding: 0 20px;
+    box-sizing: border-box;
+    position: relative; /* 为了右上角定位 */
 }
 
-.main-nav a {
+/* 中间的链接组 */
+.nav-center {
+    flex-grow: 1;
+    display: flex;
+    justify-content: center; /* 中间水平居中 */
+}
+
+.nav-list {
+    list-style: none;
+    display: flex;
+    gap: 20px;
+    padding: 0;
+    margin: 0;
+}
+
+.nav-list a {
     color: white;
     font-weight: bold;
     text-decoration: none;
@@ -43,15 +58,42 @@ body {
     transition: background-color 0.3s ease;
 }
 
-.main-nav a:hover {
+.nav-list a:hover {
     background-color: #8b0000;
     border-radius: 10px;
 }
 
+/* 右边的登录注册按钮 */
+.nav-right {
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.auth-button {
+    background-color: #27ae60;
+    color: white;
+    text-align: center;
+    padding: 8px 16px;
+    border-radius: 20px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
+
+.auth-button:hover {
+    background-color: #1e8449;
+}
+
+
 /* Toggle按钮样式 */
 #themeToggle {
-    margin-top: 10px;
-    background-color: #27ae60;
+    margin-top: 15px;
+    background-color: #3498db;
     color: white;
     border: none;
     padding: 10px 20px;
@@ -61,7 +103,7 @@ body {
 }
 
 #themeToggle:hover {
-    background-color: #1e8449;
+    background-color: #2980b9;
 }
 
 /* Main主内容区 */

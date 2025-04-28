@@ -1,0 +1,188 @@
+/* Basic page setup */
+body {
+    margin: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f0f2f5;
+    color: #333;
+  }
+  
+  /* Header */
+  .main-header {
+    background-color: #34495e;
+    color: white;
+    padding: 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  .notifications {
+    position: relative;
+    font-size: 1.5rem;
+  }
+  
+  .notif-count {
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    background: #e74c3c;
+    color: white;
+    padding: 2px 6px;
+    font-size: 0.8rem;
+    border-radius: 50%;
+  }
+  
+  /* Layout */
+  .container {
+    display: flex;
+    flex-wrap: wrap;
+    max-width: 1200px;
+    margin: auto;
+    padding: 2rem 1rem;
+    gap: 2rem;
+  }
+  
+  .left-column {
+    flex: 3;
+    min-width: 300px;
+  }
+  
+  .right-column {
+    flex: 1;
+    min-width: 250px;
+  }
+  
+  /* Card Style */
+  .card {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    margin-bottom: 2rem;
+  }
+  
+  /* Share Form */
+  .share-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .share-form input,
+  .share-form select,
+  .share-form textarea,
+  .share-form button {
+    padding: 0.75rem;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+  }
+  
+  .share-form button {
+    background-color: #27ae60;
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: background 0.3s ease;
+  }
+  
+  .share-form button:hover {
+    background-color: #219150;
+  }
+  
+  .permission-select {
+    display: flex;
+    gap: 1rem;
+    font-size: 0.95rem;
+  }
+  
+  .permission input {
+    margin-right: 0.3rem;
+  }
+  
+  /* Feed */
+  .share-card {
+    padding: 1rem 0;
+    border-top: 1px solid #e0e0e0;
+  }
+  
+  .user-info {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+  }
+  
+  .avatar {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+  
+  .timestamp {
+    color: #888;
+    font-size: 0.9rem;
+  }
+  
+  .privacy {
+    margin-left: auto;
+    padding: 0.3rem 0.6rem;
+    font-size: 0.9rem;
+    border-radius: 8px;
+    color: white;
+  }
+  
+  .public { background: #2ecc71; }
+  .friends { background: #3498db; }
+  .private { background: #e74c3c; }
+  
+  .interactions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1rem;
+  }
+  
+  .interactions button {
+    background: none;
+    border: none;
+    font-size: 1rem;
+    cursor: pointer;
+    color: #34495e;
+  }
+  
+  .interactions button:hover {
+    text-decoration: underline;
+  }
+  
+  .comments {
+    margin-top: 1rem;
+    background: #f9f9f9;
+    padding: 0.75rem;
+    border-radius: 8px;
+  }
+  
+  .comment {
+    margin-bottom: 0.5rem;
+    font-size: 0.95rem;
+  }
+  
+  .attachment {
+    background: #ecf0f1;
+    padding: 0.5rem;
+    margin-top: 0.5rem;
+    border-radius: 6px;
+    font-size: 0.95rem;
+    color: #2c3e50;
+  }
+  
+  /* Footer */
+  footer {
+    text-align: center;
+    padding: 1rem;
+    color: #777;
+    background: #ecf0f1;
+    font-size: 0.9rem;
+  }
+  
