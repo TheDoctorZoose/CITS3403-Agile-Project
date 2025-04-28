@@ -63,25 +63,49 @@
           </select>
            <input type="text" placeholder="Gameplay Data: Victory Points - 10 (obtained from analysis data)" class="input-gameplay" />
         
-        <div class="shared-data">
-          <table class="data-table">
-            <thead>
-              <tr>
-                <th>Player</th>
-                <th>Score</th>
-                <th>Result</th>
-                <th>First Time Played</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr><td>Jack</td><td>12</td><td>Win</td><td>No</td></tr>
-              <tr><td>Lance</td><td>9</td><td>Lose</td><td>Yes</td></tr>
-              <tr><td>Andrew</td><td>8</td><td>Lose</td><td>No</td></tr>
-              <tr><td>Mike</td><td>6</td><td>Lose</td><td>Yes</td></tr>
-            </tbody>
-          </table>
-          <small>(obtained from analysis data)</small>
-        </div>
+        <section class="data-preview card">
+            <div class="data-header">
+              <span>Gameplay Data</span>
+              <button class="close-btn">✖️</button>
+            </div>
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Player</th>
+                  <th>Score</th>
+                  <th>Result</th>
+                  <th>First Time Played</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Jack</td>
+                  <td>12</td>
+                  <td>Win</td>
+                  <td>No</td>
+                </tr>
+                <tr>
+                  <td>Lance</td>
+                  <td>9</td>
+                  <td>Lose</td>
+                  <td>Yes</td>
+                </tr>
+                <tr>
+                  <td>Andrew</td>
+                  <td>8</td>
+                  <td>Lose</td>
+                  <td>No</td>
+                </tr>
+                <tr>
+                  <td>Mike</td>
+                  <td>6</td>
+                  <td>Lose</td>
+                  <td>Yes</td>
+                </tr>
+              </tbody>
+            </table>
+            <div class="data-note">(Data imported from Analysis Data View)</div>
+          </section>
           
           <textarea placeholder="Write your game experience, review, or thoughts..."></textarea>
           <input type="file" />
