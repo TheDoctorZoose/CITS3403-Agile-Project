@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{% block title %}Board Game Central{% endblock %}</title>
+
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
+  {% block extra_styles %}{% endblock %}
+</head>
+
+<body class="{% block body_class %}{% endblock %}">
+  <header class="main-header">
+    <h1 class="main-title">🎲 Board Game Central 🎲</h1>
+  
+    <nav class="main-nav">
+      <div class="nav-center">
+        <ul class="nav-list">
+          <li><a href="{{ url_for('main.index') }}">Home</a></li>
+          <li><a href="{{ url_for('main.intro') }}">Intro</a></li>
+          <li><a href="{{ url_for('main.forum') }}">Forum</a></li>
+          <li><a href="{{ url_for('main.analysis') }}">Analysis</a></li>
+          <li><a href="{{ url_for('main.profile') }}">Profile</a></li>
+        </ul>
+      </div>
+  
+      <div class="nav-right">
+        <a href="{{ url_for('main.login') }}" class="auth-button">Login</a>
+        <a href="{{ url_for('main.register') }}" class="auth-button">Sign Up</a>
+      </div>
+    </nav>
+  
+    <button id="themeToggle" class="theme-toggle">Toggle Theme</button>
+  </header>
+  
+
+  <main class="container">
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer class="main-footer">
+    &copy; 2025 Board Game Central. All rights reserved.
+  </footer>
+
+  {% block extra_scripts %}{% endblock %}
+</body>
+</html>
