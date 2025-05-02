@@ -17,3 +17,25 @@ class User(UserMixin, db.Model):
 
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
+
+
+class GameEntry(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    game_title = db.Column(db.String(100))
+    date_played = db.Column(db.Date)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    timestamp = db.Column(db.DateTime, default=datetime.utcnow)
+
+    user = db.relationship('User', backref='entries')
+
+
+class Comment(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    content = db.Column(db.Text, nullable=False)
+    timestamp = db.Column(db.DateTime, default=datetime.utcnow)
+
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    entry_id = db.Column(db.Integer, db.ForeignKey('game_entry.id'), nullable=False)
+
+    user = db.relationship('User', backref='comments')
+    entry = db.relationship('GameEntry', backref='comments')

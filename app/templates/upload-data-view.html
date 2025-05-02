@@ -14,7 +14,7 @@
 
 <section aria-label="Manual Data Entry">
   <h2>Manual Data Entry</h2>
-  <form id="entryForm" action="#" method="POST">
+  <form id="entryForm" action="{{ url_for('main.forum') }}" method="POST">
 
     <label for="gameTitle">Game Title:</label>
     <input type="text" id="gameTitle" name="gameTitle" required placeholder="e.g., Go" />
@@ -68,7 +68,16 @@
 
 <section id="entryDisplay" aria-label="Submitted Entries" style="margin-top: 40px;">
   <h2>Submitted Entries</h2>
-  <ul id="entryList"></ul>
+  <ul>
+    {% for entry in entries %}
+      <li>
+        <strong>{{ entry.game_title }}</strong> — played on {{ entry.date_played }} <br>
+        Submitted by <em>{{ entry.user.username }}</em> at {{ entry.timestamp.strftime('%Y-%m-%d %H:%M') }}<br>
+        <a href="{{ url_for('main.view_entry', entry_id=entry.id) }}">💬 View & Comment</a>
+      </li>
+    {% endfor %}
+  </ul>
+  
 </section>
 {% endblock %}
 

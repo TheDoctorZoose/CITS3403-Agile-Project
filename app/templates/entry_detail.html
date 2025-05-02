@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h2>{{ entry.game_title }} ({{ entry.date_played }})</h2>
+  <p>Uploaded by {{ entry.user.username }} at {{ entry.timestamp }}</p>
+
+  <h3>Comments:</h3>
+  <ul>
+    {% for comment in entry.comments %}
+      <li><strong>{{ comment.user.username }}</strong>: {{ comment.content }} ({{ comment.timestamp.strftime('%Y-%m-%d %H:%M') }})</li>
+    {% else %}
+      <li>No comments yet.</li>
+    {% endfor %}
+  </ul>
+
+  <form method="POST">
+    <textarea name="comment" placeholder="Add a comment..." required></textarea><br>
+    <button type="submit">Post Comment</button>
+  </form>
+
+  <a href="{{ url_for('main.forum') }}">← Back to forum</a>
+{% endblock %}

@@ -2,9 +2,12 @@ from flask import Blueprint, render_template, redirect, url_for, flash, request
 from flask_login import login_user, logout_user, current_user, login_required
 from werkzeug.security import generate_password_hash, check_password_hash
 
-from app.models import User
+from app.models import User, GameEntry, Comment
+
 from app.forms import RegistrationForm, LoginForm
 from app import db 
+
+from datetime import datetime
 
 main = Blueprint('main', __name__)
 
@@ -67,9 +70,9 @@ def forgot_password():
 def intro():
     return render_template("intropage.html")
 
-@main.route('/forum')
-def forum():
-    return render_template("upload-data-view.html")
+# @main.route('/forum')
+# def forum():
+#     return render_template("upload-data-view.html")
 
 @main.route('/share')
 def share_data_view():
@@ -91,3 +94,52 @@ def analysis():
 @main.route('/visualisation')
 def visualisation():
     return render_template("visualisation-options.html")
+
+@main.route('/forum', methods=['GET', 'POST'])
+@login_required
+def forum():
+    if request.method == 'POST':
+        game_title = request.form.get('gameTitle')
+        date_str = request.form.get('datePlayed')
+
+        try:
+            date_played = datetime.strptime(date_str, "%Y-%m-%d").date()
+        except ValueError:
+            flash("Invalid date format.", "error")
+            return redirect(url_for('main.forum'))
+
+        new_entry = GameEntry(
+            game_title=game_title,
+            date_played=date_played,  
+            user_id=current_user.id
+        )
+        db.session.add(new_entry)
+        db.session.commit()
+        flash('Entry submitted!')
+
+        return redirect(url_for('main.forum'))
+
+    entries = GameEntry.query.order_by(GameEntry.timestamp.desc()).all()
+    return render_template('upload-data-view.html', entries=entries)
+
+
+@main.route('/forum/<int:entry_id>', methods=['GET', 'POST'])
+@login_required
+def view_entry(entry_id):
+    entry = GameEntry.query.get_or_404(entry_id)
+
+    if request.method == 'POST':
+        comment_text = request.form.get('comment')
+        if comment_text:
+            comment = Comment(
+                content=comment_text,
+                user_id=current_user.id,
+                entry_id=entry.id
+            )
+            db.session.add(comment)
+            db.session.commit()
+            flash('Comment posted!')
+
+        return redirect(url_for('main.view_entry', entry_id=entry.id))
+
+    return render_template('entry_detail.html', entry=entry)
