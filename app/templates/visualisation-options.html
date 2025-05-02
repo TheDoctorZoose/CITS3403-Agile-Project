@@ -1,235 +1,181 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Analysis Views Showcase</title>
-  <style>
-      body {
-          font-family: Arial, sans-serif;
-          background-color: #f9f9f9;
-          padding: 2rem;
-          line-height: 1.6;
-          color: #333;
-      }
+{% extends "base.html" %}
 
-      h1, h2 {
-          text-align: center;
-          color: #222;
-      }
+{% block title %}Analysis Views Showcase{% endblock %}
 
-      .category-grid {
-          display: grid;
-          grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-          gap: 1rem;
-          margin-top: 2rem;
-      }
-      .view-card {
-          border: 1px solid #ccc;
-          border-radius: 8px;
-          background-color: #fff;
-          padding: 1.5rem;
-          margin: 1rem 0;
-          box-shadow: 2px 2px 6px rgba(0,0,0,0.1);
-          display: flex;
-          flex-direction: column;
-          justify-content: space-between;
-      }
+{% block extra_styles %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/visualisation-options.css') }}">
+{% endblock %}
 
-      .view-card h3 {
-          margin-top: 0;
-          margin-bottom: 0.5rem;
-      }
+{% block body_class %}visualisation-page{% endblock %}
 
-      .placeholder {
-          margin-top: 1rem;
-          height: 120px;
-          background-color: #eee;
-          color: #777;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          font-size: 0.9rem;
-          border-radius: 4px;
-      }
-
-      hr {
-          margin: 3rem 0;
-          border: none;
-          border-top: 2px solid #ddd;
-      }
-  </style>
-</head>
-<body>
-
+{% block content %}
 <h1>Brainstormed Analysis Views</h1>
 <p style="text-align: center;">A showcase of potential ideas for visualising board game play data.</p>
-
 <hr>
 
-  <div class="category-grid">
-    <div class="view-card">
-      <h3>Plays Over Time</h3>
-      <p>Number of plays per month/year.</p>
-      <div class="placeholder">[Line/Bar Chart Placeholder]</div>
-    </div>
+<div class="category-grid">
 
-    <div class="view-card">
-      <h3>Play Streaks</h3>
-      <p>Consecutive days/weeks/months with plays.</p>
-      <div class="placeholder">[Streak Chart Placeholder]</div>
-    </div>
+  <div class="view-card">
+    <h3>Plays Over Time</h3>
+    <p>Number of plays per month/year.</p>
+    <div class="placeholder">[Line/Bar Chart Placeholder]</div>
+  </div>
 
-    <div class="view-card">
-      <h3>Average Play Duration Over Time</h3>
-      <p>Session length trends over time.</p>
-      <div class="placeholder">[Duration Graph Placeholder]</div>
-    </div>
+  <div class="view-card">
+    <h3>Play Streaks</h3>
+    <p>Consecutive days/weeks/months with plays.</p>
+    <div class="placeholder">[Streak Chart Placeholder]</div>
+  </div>
 
-    <div class="view-card">
-      <h3>First Plays Timeline</h3>
-      <p>Timeline showing when new games were first played.</p>
-      <div class="placeholder">[Timeline Placeholder]</div>
-    </div>
+  <div class="view-card">
+    <h3>Average Play Duration Over Time</h3>
+    <p>Session length trends over time.</p>
+    <div class="placeholder">[Duration Graph Placeholder]</div>
+  </div>
 
-    <div class="view-card">
-      <h3>Day of Week Play Frequency</h3>
-      <p>Distribution of plays across days of the week.</p>
-      <div class="placeholder">[Pie Chart Placeholder]</div>
-    </div>
+  <div class="view-card">
+    <h3>First Plays Timeline</h3>
+    <p>Timeline showing when new games were first played.</p>
+    <div class="placeholder">[Timeline Placeholder]</div>
+  </div>
 
+  <div class="view-card">
+    <h3>Day of Week Play Frequency</h3>
+    <p>Distribution of plays across days of the week.</p>
+    <div class="placeholder">[Pie Chart Placeholder]</div>
+  </div>
 
-    <div class="view-card">
-      <h3>Most Played Games</h3>
-      <p>Games sorted by number of plays.</p>
-      <div class="placeholder">[Bar Chart Placeholder]</div>
-    </div>
+  <div class="view-card">
+    <h3>Most Played Games</h3>
+    <p>Games sorted by number of plays.</p>
+    <div class="placeholder">[Bar Chart Placeholder]</div>
+  </div>
 
-    <div class="view-card">
-      <h3>Longest Played Games</h3>
-      <p>Games with most total playtime.</p>
-      <div class="placeholder">[Bar Chart Placeholder]</div>
-    </div>
+  <div class="view-card">
+    <h3>Longest Played Games</h3>
+    <p>Games with most total playtime.</p>
+    <div class="placeholder">[Bar Chart Placeholder]</div>
+  </div>
 
-    <div class="view-card">
-      <h3>Win Rates by Game</h3>
-      <p>Win percentages across different games.</p>
-      <div class="placeholder">[Table Placeholder]</div>
-    </div>
+  <div class="view-card">
+    <h3>Win Rates by Game</h3>
+    <p>Win percentages across different games.</p>
+    <div class="placeholder">[Table Placeholder]</div>
+  </div>
 
-    <div class="view-card">
-      <h3>First Play Success Rate</h3>
-      <p>How often players win their first game.</p>
-      <div class="placeholder">[Pie Chart Placeholder]</div>
-    </div>
+  <div class="view-card">
+    <h3>First Play Success Rate</h3>
+    <p>How often players win their first game.</p>
+    <div class="placeholder">[Pie Chart Placeholder]</div>
+  </div>
 
-    <div class="view-card">
-      <h3>Average Score by Game</h3>
-      <p>Typical score ranges by game.</p>
-      <div class="placeholder">[Bar Chart Placeholder]</div>
-    </div>
+  <div class="view-card">
+    <h3>Average Score by Game</h3>
+    <p>Typical score ranges by game.</p>
+    <div class="placeholder">[Bar Chart Placeholder]</div>
+  </div>
 
-    <div class="view-card">
-      <h3>Total Plays per Player</h3>
-      <p>How many plays each player has participated in.</p>
-      <div class="placeholder">[Bar Chart Placeholder]</div>
-    </div>
+  <div class="view-card">
+    <h3>Total Plays per Player</h3>
+    <p>How many plays each player has participated in.</p>
+    <div class="placeholder">[Bar Chart Placeholder]</div>
+  </div>
 
-    <div class="view-card">
-      <h3>Win Rates per Player</h3>
-      <p>Wins relative to games played.</p>
-      <div class="placeholder">[Bar Chart Placeholder]</div>
-    </div>
+  <div class="view-card">
+    <h3>Win Rates per Player</h3>
+    <p>Wins relative to games played.</p>
+    <div class="placeholder">[Bar Chart Placeholder]</div>
+  </div>
 
-    <div class="view-card">
-      <h3>First Player Advantage Analysis</h3>
-      <p>First player win advantage.</p>
-      <div class="placeholder">[Bar Graph Placeholder]</div>
-    </div>
+  <div class="view-card">
+    <h3>First Player Advantage Analysis</h3>
+    <p>First player win advantage.</p>
+    <div class="placeholder">[Bar Graph Placeholder]</div>
+  </div>
 
-    <div class="view-card">
-      <h3>Roles/Factions Played</h3>
-      <p>Most played roles and win rates.</p>
-      <div class="placeholder">[Stacked Bar Chart Placeholder]</div>
-    </div>
+  <div class="view-card">
+    <h3>Roles/Factions Played</h3>
+    <p>Most played roles and win rates.</p>
+    <div class="placeholder">[Stacked Bar Chart Placeholder]</div>
+  </div>
 
-    <div class="view-card">
-      <h3>Player Rivalries</h3>
-      <p>Win rates against specific opponents.</p>
-      <div class="placeholder">[Heatmap Placeholder]</div>
-    </div>
+  <div class="view-card">
+    <h3>Player Rivalries</h3>
+    <p>Win rates against specific opponents.</p>
+    <div class="placeholder">[Heatmap Placeholder]</div>
+  </div>
 
-    <div class="view-card">
-      <h3>Highest Scores Ever</h3>
-      <p>Top 10 scores across all games.</p>
-      <div class="placeholder">[Leaderboard Placeholder]</div>
-    </div>
+  <div class="view-card">
+    <h3>Highest Scores Ever</h3>
+    <p>Top 10 scores across all games.</p>
+    <div class="placeholder">[Leaderboard Placeholder]</div>
+  </div>
 
-    <div class="view-card">
-      <h3>Fastest Wins</h3>
-      <p>Shortest duration victories.</p>
-      <div class="placeholder">[Table Placeholder]</div>
-    </div>
+  <div class="view-card">
+    <h3>Fastest Wins</h3>
+    <p>Shortest duration victories.</p>
+    <div class="placeholder">[Table Placeholder]</div>
+  </div>
 
-    <div class="view-card">
-      <h3>Most Unique Games Played</h3>
-      <p>Number of different games per player.</p>
-      <div class="placeholder">[Bar Chart Placeholder]</div>
-    </div>
+  <div class="view-card">
+    <h3>Most Unique Games Played</h3>
+    <p>Number of different games per player.</p>
+    <div class="placeholder">[Bar Chart Placeholder]</div>
+  </div>
 
-    <div class="view-card">
-      <h3>Player H-Index</h3>
-      <p>Versatility based on games played multiple times.</p>
-      <div class="placeholder">[Chart Placeholder]</div>
-    </div>
+  <div class="view-card">
+    <h3>Player H-Index</h3>
+    <p>Versatility based on games played multiple times.</p>
+    <div class="placeholder">[Chart Placeholder]</div>
+  </div>
 
-    <div class="view-card">
-      <h3>Personal Bests</h3>
-      <p>Best score, longest streaks, most plays.</p>
-      <div class="placeholder">[Achievement Cards Placeholder]</div>
-    </div>
+  <div class="view-card">
+    <h3>Personal Bests</h3>
+    <p>Best score, longest streaks, most plays.</p>
+    <div class="placeholder">[Achievement Cards Placeholder]</div>
+  </div>
 
-    <div class="view-card">
-      <h3>Win Rate by Role</h3>
-      <p>Win rates broken down by faction/role.</p>
-      <div class="placeholder">[Stacked Bar Chart Placeholder]</div>
-    </div>
+  <div class="view-card">
+    <h3>Win Rate by Role</h3>
+    <p>Win rates broken down by faction/role.</p>
+    <div class="placeholder">[Stacked Bar Chart Placeholder]</div>
+  </div>
 
-    <div class="view-card">
-      <h3>Role Popularity</h3>
-      <p>Most picked roles across games.</p>
-      <div class="placeholder">[Pie/Bar Chart Placeholder]</div>
-    </div>
+  <div class="view-card">
+    <h3>Role Popularity</h3>
+    <p>Most picked roles across games.</p>
+    <div class="placeholder">[Pie/Bar Chart Placeholder]</div>
+  </div>
 
-    <div class="view-card">
-      <h3>Role First Play Success</h3>
-      <p>First-play win rates per faction.</p>
-      <div class="placeholder">[Pie Chart Placeholder]</div>
-    </div>
+  <div class="view-card">
+    <h3>Role First Play Success</h3>
+    <p>First-play win rates per faction.</p>
+    <div class="placeholder">[Pie Chart Placeholder]</div>
+  </div>
 
-    <div class="view-card">
-      <h3>Score Distributions</h3>
-      <p>Histogram of score frequencies.</p>
-      <div class="placeholder">[Histogram Placeholder]</div>
-    </div>
+  <div class="view-card">
+    <h3>Score Distributions</h3>
+    <p>Histogram of score frequencies.</p>
+    <div class="placeholder">[Histogram Placeholder]</div>
+  </div>
 
-    <div class="view-card">
-      <h3>Cluster Analysis</h3>
-      <p>Player types based on stats.</p>
-      <div class="placeholder">[Cluster Graph Placeholder]</div>
-    </div>
+  <div class="view-card">
+    <h3>Cluster Analysis</h3>
+    <p>Player types based on stats.</p>
+    <div class="placeholder">[Cluster Graph Placeholder]</div>
+  </div>
 
-    <div class="view-card">
-      <h3>Session Heatmaps</h3>
-      <p>Calendar heatmap of session activity.</p>
-      <div class="placeholder">[Calendar Heatmap Placeholder]</div>
-    </div>
+  <div class="view-card">
+    <h3>Session Heatmaps</h3>
+    <p>Calendar heatmap of session activity.</p>
+    <div class="placeholder">[Calendar Heatmap Placeholder]</div>
+  </div>
 
-    <div class="view-card">
-      <h3>Game Age Analysis</h3>
-      <p>Game age at first play.</p>
-      <div class="placeholder">[Bar/Line Chart Placeholder]</div>
-    </div>
+  <div class="view-card">
+    <h3>Game Age Analysis</h3>
+    <p>Game age at first play.</p>
+    <div class="placeholder">[Bar/Line Chart Placeholder]</div>
+  </div>
+
 </div>
-
-</body>
-</html>
+{% endblock %}

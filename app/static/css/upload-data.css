@@ -5,6 +5,7 @@ body {
     padding: 0;
 }
 
+/* Main container */
 .container {
     max-width: 800px;
     margin: 40px auto;
@@ -18,29 +19,100 @@ h1, h2 {
     text-align: center;
 }
 
-input, select, textarea, button {
+/* Inputs and form elements */
+input, select, textarea {
     width: 100%;
     padding: 10px;
     margin: 10px 0;
     border: 1px solid #ccc;
     border-radius: 5px;
+    box-sizing: border-box;
 }
 
+/* Button defaults (self-sized, not full width) */
 button {
+    padding: 10px 20px;
+    margin: 10px 5px 10px 0;
     background-color: #4CAF50;
     color: white;
     border: none;
+    border-radius: 5px;
     cursor: pointer;
+    width: auto;
+    display: inline-block;
 }
 
 button:hover {
     background-color: #45a049;
 }
 
+/* Upload Section */
 .file-upload {
     margin-top: 20px;
     border: 2px dashed #ccc;
     padding: 20px;
     text-align: center;
     color: #888;
+    background-color: #fafafa;
+    border-radius: 8px;
+}
+
+/* Theme Toggle (top-right or header button) */
+.theme-toggle {
+    font-size: 0.95rem;
+    padding: 8px 16px;
+    border-radius: 6px;
+    background-color: #333;
+    color: white;
+    border: none;
+    cursor: pointer;
+    width: auto;
+    white-space: nowrap;
+    display: inline-block;
+
+    display: block;
+    margin: 20px auto;
+}
+
+/* For dynamic player input fieldsets */
+.player-info {
+    border: 1px solid #aaa;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 20px;
+    background-color: #fefefe;
+}
+
+/* Buttons section */
+.submit-buttons {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+}
+
+/* Entry display list */
+#entryList {
+    list-style: none;
+    padding: 0;
+}
+
+#entryList li {
+    background: #f1f1f1;
+    margin-bottom: 10px;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+/* Responsive tweak */
+@media (max-width: 600px) {
+    .container {
+        margin: 20px;
+        padding: 15px;
+    }
+
+    .submit-buttons {
+        flex-direction: column;
+        align-items: stretch;
+    }
 }

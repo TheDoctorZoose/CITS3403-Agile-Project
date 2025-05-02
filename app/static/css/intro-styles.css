@@ -1,46 +1,59 @@
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 0;
 }
 
 /* Intro Page */
 body.intropage {
     background-color: rgb(222, 179, 166);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
 }
 
-.flex-container {
-    /* Flex Container */
+main.container {
+    flex: 1;
     display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
     align-items: center;
+}
 
-    /* Centre Positioning */
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+/* Updated to avoid footer overlap */
+.flex-container {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    max-width: 1000px;
+    margin: 60px auto;
+    padding: 20px;
+    gap: 40px;
 }
 
 .left-flex-item {
     flex: 1;
-    width: 400px;
+    min-width: 300px;
+    max-width: 500px;
     text-align: left;
     background-color: rgb(235, 235, 235);
     border: 4px solid black;
     border-radius: 20px;
     box-shadow: 0px 0px 5px rgb(68, 68, 68);
     padding: 40px;
-    margin-right: 20px;
 }
 
 .right-flex-item {
     flex: 1;
-    width: 400px;
+    min-width: 300px;
+    max-width: 500px;
     text-align: center;
     background-color: rgb(235, 235, 235);
     border: 4px solid black;
     border-radius: 20px;
     box-shadow: 0px 0px 15px rgb(68, 68, 68);
     padding: 20px;
-    margin-left: 20px;
 }
 
 .right-flex-item p {
@@ -51,22 +64,24 @@ body.intropage {
 .rounded-btn {
     display: inline-block;
     background-color: brown;
-    color: white;                 /* text colour */
+    color: white;
     padding: 15px;
     margin-left: 5px;
     margin-right: 5px;
-    border-radius: 20px;            /* rounding corners */
-    text-decoration: none;          /* removes the hyperlink underline */
+    border-radius: 20px;
+    text-decoration: none;
     font-size: larger;
     font-weight: 600;
     margin-bottom: 32px;
 }
 
-
 /* Form Pages */
 body.formpage {
-    background-color: rgb(222, 179, 166);       /* in case browser doesn't support gradients */
-    background-image: linear-gradient(90deg, rgb(222, 179, 166), rgb(209, 209, 128));       /* gradient background */
+    background-color: rgb(222, 179, 166);
+    background-image: linear-gradient(90deg, rgb(222, 179, 166), rgb(209, 209, 128));
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
 }
 
 .centre {
@@ -76,12 +91,8 @@ body.formpage {
     box-shadow: 0px 0px 15px rgb(68, 68, 68);
     padding: 20px 70px 40px 70px;
     text-align: center;
-    
-    /* Centre Positioning */
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    max-width: 500px;
+    margin: 80px auto;
 }
 
 .input-field {
@@ -97,4 +108,13 @@ body.formpage {
     margin-bottom: 15px;
     display: flex;
     justify-content: flex-end;
+}
+
+/* Footer Styling */
+footer.main-footer {
+    text-align: center;
+    padding: 20px;
+    background-color: #eee;
+    font-size: 0.9rem;
+    margin-top: auto;
 }
