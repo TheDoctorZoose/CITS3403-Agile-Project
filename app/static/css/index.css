@@ -1,0 +1,154 @@
+/* 通用字体和背景 */
+body {
+    font-family: 'Segoe UI', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f3f3f3;
+    color: #333;
+}
+
+/* Header整体设置 */
+.main-header {
+    background-color: brown;
+    color: white;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+/* 标题h1单独设置 */
+.main-title {
+    margin: 0;
+    font-size: 2.5rem;
+}
+
+.main-nav {
+    display: flex;
+    justify-content: center; /* 先整体居中 */
+    align-items: center;
+    width: 100%;
+    margin-top: 10px;
+    padding: 0 20px;
+    box-sizing: border-box;
+    position: relative; /* 为了右上角定位 */
+}
+
+/* 中间的链接组 */
+.nav-center {
+    flex-grow: 1;
+    display: flex;
+    justify-content: center; /* 中间水平居中 */
+}
+
+.nav-list {
+    list-style: none;
+    display: flex;
+    gap: 20px;
+    padding: 0;
+    margin: 0;
+}
+
+.nav-list a {
+    color: white;
+    font-weight: bold;
+    text-decoration: none;
+    padding: 8px 12px;
+    transition: background-color 0.3s ease;
+}
+
+.nav-list a:hover {
+    background-color: #8b0000;
+    border-radius: 10px;
+}
+
+/* 右边的登录注册按钮 */
+.nav-right {
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.auth-button {
+    background-color: #27ae60;
+    color: white;
+    text-align: center;
+    padding: 8px 16px;
+    border-radius: 20px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
+
+.auth-button:hover {
+    background-color: #1e8449;
+}
+
+
+/* Toggle按钮样式 */
+#themeToggle {
+    margin-top: 15px;
+    background-color: #3498db;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+#themeToggle:hover {
+    background-color: #2980b9;
+}
+
+/* Main主内容区 */
+main.container {
+    max-width: 1000px;
+    margin: auto;
+    padding: 40px 20px;
+}
+
+/* 首页特有的intro样式 */
+.intro {
+    background-color: white;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0px 0px 10px #aaa;
+}
+
+/* Footer页脚样式 */
+footer.main-footer {
+    text-align: center;
+    padding: 15px;
+    font-size: 14px;
+    color: gray;
+    margin-top: 30px;
+    background-color: #ecf0f1;
+}
+
+/* 暗色模式 */
+body.dark-mode {
+    background-color: #1e1e1e;
+    color: #ddd;
+}
+
+body.dark-mode .intro {
+    background-color: #2e2e2e;
+    box-shadow: none;
+}
+
+body.dark-mode .main-header,
+body.dark-mode footer.main-footer {
+    background-color: #111;
+    color: #ccc;
+}
+
+body.dark-mode #themeToggle {
+    background-color: #555;
+    color: white;
+}
