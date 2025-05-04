@@ -1,3 +1,4 @@
+import io
 from flask import Blueprint, render_template, redirect, url_for, flash, request
 from flask_login import login_user, logout_user, current_user, login_required
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -9,6 +10,12 @@ from app import db
 
 from datetime import datetime
 
+from io import TextIOWrapper
+
+import csv, json
+
+from app.models import RawCSVEntry
+
 main = Blueprint('main', __name__)
 
 @main.route('/')
@@ -18,26 +25,26 @@ def index():
 @main.route('/register', methods=['GET', 'POST'])
 def register():
     if current_user.is_authenticated:
-        return redirect(url_for('main.index'))
-    
+        return redirect(url_for('main.homepage'))  # or wherever
+
     form = RegistrationForm()
+
     if form.validate_on_submit():
-        existing_user = User.query.filter_by(email=form.email.data).first()
+        existing_user = User.query.filter(
+            (User.username == form.username.data) | (User.email == form.email.data)
+        ).first()
+
         if existing_user:
-            flash("Email already registered.", "error")
-            return redirect(url_for('main.register'))
+            flash('Username or email already exists. Please choose another.', 'error')
+        else:
+            user = User(username=form.username.data, email=form.email.data)
+            user.set_password(form.password.data)
+            db.session.add(user)
+            db.session.commit()
+            flash('Registration successful. You can now log in.', 'success')
+            return redirect(url_for('main.login'))
 
-        user = User(
-            username=form.username.data,
-            email=form.email.data,
-            password_hash=generate_password_hash(form.password.data)
-        )
-        db.session.add(user)
-        db.session.commit()
-        flash("Registration successful. Please log in.", "success")
-        return redirect(url_for('main.login'))
-
-    return render_template("createaccount.html", form=form)
+    return render_template('createaccount.html', form=form)
 
 @main.route('/login', methods=['GET', 'POST'])
 def login():
@@ -143,3 +150,45 @@ def view_entry(entry_id):
         return redirect(url_for('main.view_entry', entry_id=entry.id))
 
     return render_template('entry_detail.html', entry=entry)
+
+@main.route('/upload_csv', methods=['POST'])
+@login_required
+def upload_csv():
+    file = request.files['file']
+    if file and file.filename.endswith('.csv'):
+        try:
+            stream = io.StringIO(file.stream.read().decode('utf-8'))
+        except UnicodeDecodeError:
+            stream = io.StringIO(file.stream.read().decode('ISO-8859-1'))
+
+        reader = csv.reader(stream)
+        for row in reader:
+            entry = RawCSVEntry(
+                raw_data=",".join(row),
+                user_id=current_user.id
+            )
+            db.session.add(entry)
+        db.session.commit()
+        flash("CSV uploaded successfully.")
+    else:
+        flash("Please upload a valid CSV file.")
+    return redirect(url_for('main.forum'))
+
+
+
+@main.route('/upload_json', methods=['POST'])
+@login_required
+def upload_json():
+    file = request.files['file']
+    if file and file.filename.endswith('.json'):
+        data = json.load(file.stream)
+        for item in data:
+            entry = GameEntry(
+                game_title=item['game_title'],
+                date_played=datetime.strptime(item['date_played'], "%Y-%m-%d").date(),
+                user_id=current_user.id
+            )
+            db.session.add(entry)
+        db.session.commit()
+        flash("JSON uploaded successfully.")
+    return redirect(url_for('main.forum'))

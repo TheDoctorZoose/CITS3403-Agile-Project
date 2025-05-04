@@ -39,3 +39,10 @@ class Comment(db.Model):
 
     user = db.relationship('User', backref='comments')
     entry = db.relationship('GameEntry', backref='comments')
+
+
+class RawCSVEntry(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    raw_data = db.Column(db.Text, nullable=False)
+    timestamp = db.Column(db.DateTime, default=datetime.utcnow)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))

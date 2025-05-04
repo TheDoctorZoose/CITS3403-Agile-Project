@@ -1,44 +1,82 @@
-document.addEventListener('DOMContentLoaded', function() {
-    const addPlayerBtn = document.getElementById('addPlayerBtn');
-    const playersContainer = document.getElementById('playersContainer');
-    let playerCount = 1; // Only Player 1 exists initially
-  
-    addPlayerBtn.addEventListener('click', function() {
-      playerCount += 1;
-  
-      if (playerCount > 10) {
-        alert("You have reached the maximum number of players (10).");
-        return;
-      }
-  
-      const fieldset = document.createElement('fieldset');
-      fieldset.classList.add('player-info');
-      fieldset.setAttribute('data-player', playerCount);
-  
-      fieldset.innerHTML = `
-        <legend>Player ${playerCount}</legend>
-  
-        <label for="player${playerCount}Name">Name:</label>
-        <input type="text" id="player${playerCount}Name" name="player${playerCount}Name" required placeholder="Player Name" />
-  
-        <label for="player${playerCount}Username">Username (optional):</label>
-        <input type="text" id="player${playerCount}Username" name="player${playerCount}Username" placeholder="Username" />
-  
-        <label><input type="checkbox" id="player${playerCount}Win" name="player${playerCount}Win"> Win?</label>
-        <label><input type="checkbox" id="player${playerCount}First" name="player${playerCount}First"> Went First?</label>
-        <label><input type="checkbox" id="player${playerCount}FirstTime" name="player${playerCount}FirstTime"> First Time Playing?</label>
-  
-        <label for="player${playerCount}Score">Score:</label>
-        <input type="number" id="player${playerCount}Score" name="player${playerCount}Score" placeholder="e.g., 50" />
-  
-        <button type="button" class="removePlayerBtn" style="margin-top: 10px;">❌ Remove Player</button>
-      `;
-  
-      playersContainer.appendChild(fieldset);
-  
-      fieldset.querySelector('.removePlayerBtn').addEventListener('click', function() {
-        fieldset.remove();
-      });
+document.addEventListener('DOMContentLoaded', function () {
+  const addPlayerBtn = document.getElementById('addPlayerBtn');
+  const playersContainer = document.getElementById('playersContainer');
+  const csvInput = document.getElementById('csvInput');
+  const loadCsvBtn = document.getElementById('loadCsvBtn');
+  let playerCount = 1;
+
+  addPlayerBtn.addEventListener('click', function () {
+    playerCount += 1;
+
+    if (playerCount > 10) {
+      alert("You have reached the maximum number of players (10).");
+      return;
+    }
+
+    const fieldset = document.createElement('fieldset');
+    fieldset.classList.add('player-info');
+    fieldset.setAttribute('data-player', playerCount);
+
+    fieldset.innerHTML = `
+      <legend>Player ${playerCount}</legend>
+
+      <label for="player${playerCount}Name">Name:</label>
+      <input type="text" id="player${playerCount}Name" name="player${playerCount}Name" required placeholder="Player Name" />
+
+      <label for="player${playerCount}Username">Username (optional):</label>
+      <input type="text" id="player${playerCount}Username" name="player${playerCount}Username" placeholder="Username" />
+
+      <label><input type="checkbox" id="player${playerCount}Win" name="player${playerCount}Win"> Win?</label>
+      <label><input type="checkbox" id="player${playerCount}First" name="player${playerCount}First"> Went First?</label>
+      <label><input type="checkbox" id="player${playerCount}FirstTime" name="player${playerCount}FirstTime"> First Time Playing?</label>
+
+      <label for="player${playerCount}Score">Score:</label>
+      <input type="number" id="player${playerCount}Score" name="player${playerCount}Score" placeholder="e.g., 50" />
+
+      <button type="button" class="removePlayerBtn" style="margin-top: 10px;">❌ Remove Player</button>
+    `;
+
+    playersContainer.appendChild(fieldset);
+
+    fieldset.querySelector('.removePlayerBtn').addEventListener('click', function () {
+      fieldset.remove();
     });
   });
-  
+
+  loadCsvBtn.addEventListener('click', function () {
+    const file = csvInput.files[0];
+    if (!file) return alert('Please select a CSV file first.');
+
+    const reader = new FileReader();
+    reader.onload = function (e) {
+      const lines = e.target.result.split(/\r?\n/);
+      const headers = lines[0].split(',');
+      const values = lines[1]?.split(',');
+      if (!values) return;
+
+      const data = {};
+      headers.forEach((h, i) => {
+        data[h.trim()] = values[i]?.trim();
+      });
+
+      // Basic Fields
+      if (data['game_title']) document.getElementById('gameTitle').value = data['game_title'];
+      if (data['date_played']) document.getElementById('datePlayed').value = data['date_played'];
+
+      // Auto fill players dynamically
+      for (let i = 1; i <= 10; i++) {
+        if (data[`player${i}Name`]) {
+          if (i > playerCount) addPlayerBtn.click(); // auto add player section
+
+          document.getElementById(`player${i}Name`).value = data[`player${i}Name`] || '';
+          document.getElementById(`player${i}Username`).value = data[`player${i}Username`] || '';
+          document.getElementById(`player${i}Win`).checked = data[`player${i}Win`] === 'true';
+          document.getElementById(`player${i}First`).checked = data[`player${i}First`] === 'true';
+          document.getElementById(`player${i}FirstTime`).checked = data[`player${i}FirstTime`] === 'true';
+          document.getElementById(`player${i}Score`).value = data[`player${i}Score`] || '';
+        }
+      }
+    };
+    reader.readAsText(file);
+  });
+});
