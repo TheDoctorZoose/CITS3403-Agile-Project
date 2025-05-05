@@ -26,7 +26,7 @@ def index():
 @main.route('/register', methods=['GET', 'POST'])
 def register():
     if current_user.is_authenticated:
-        return redirect(url_for('main.homepage'))  # or wherever
+        return redirect(url_for('main.index'))
 
     form = RegistrationForm()
 
