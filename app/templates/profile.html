@@ -1,40 +1,35 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>User Profile - Board Game Tracker</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/share-view.css') }}">
-</head>
-<body>
-    <header>
-        <h1>👤 Alice's Profile</h1>
-    </header>
+{% extends "base.html" %}
 
-    <main class="container">
-        <section class="profile-info">
-            <img src="avatars/alice.jpg" class="avatar-large">
-            <h2>Alice</h2>
-            <button class="friend-btn">➕ Add Friend</button>
-        </section>
+{% block title %}User Profile - Board Game Central{% endblock %}
 
-        <section class="history">
-            <h2>📦 Shared Data</h2>
-            <div class="share-card">
-                <div class="card-header">
-                    <img src="avatars/alice.jpg" class="avatar">
-                    <div>
-                        <strong>Alice</strong>
-                        <div class="timestamp">Shared on 2025-04-10</div>
-                    </div>
-                    <div class="privacy public">🌐 Public</div>
-                </div>
-                <p>🎲 Played 7 Wonders. I loved it!</p>
+{% block extra_styles %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/share-view.css') }}">
+{% endblock %}
+
+{% block body_class %}profile-page{% endblock %}
+
+{% block content %}
+<section class="profile-info">
+    <img src="{{ current_user.avatar or url_for('static', filename='profile-pictures/default_avatar.png') }}" class="avatar-large">
+    <h2>{{ current_user.username }}</h2>
+    <p>Email: {{ current_user.email }}</p>
+    <p>Joined: {{ current_user.joined_at.strftime('%Y-%m-%d') }}</p>
+    <p>Credit Points: {{ current_user.credit_points }}</p>
+    <button class="friend-btn">➕ Add Friend</button>
+</section>
+
+<section class="history">
+    <h2>📦 Shared Data</h2>
+    <div class="share-card">
+        <div class="card-header">
+            <img src="{{ current_user.avatar or url_for('static', filename='profile-pictures/default_avatar.png') }}" class="avatar">
+            <div>
+                <strong>{{ current_user.username }}</strong>
+                <div class="timestamp">Shared on 2025-04-10</div>
             </div>
-        </section>
-    </main>
-
-    <footer>
-        <p>© 2025 Board Game Tracker</p>
-    </footer>
-</body>
-</html>
+            <div class="privacy public">🌐 Public</div>
+        </div>
+        <p>🎲 Played 7 Wonders. I loved it!</p>
+    </div>
+</section>
+{% endblock %}
