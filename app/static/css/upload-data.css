@@ -5,7 +5,9 @@ body {
     padding: 0;
 }
 
+
 /* Main container */
+
 .container {
     max-width: 800px;
     margin: 40px auto;
@@ -19,13 +21,16 @@ h1, h2 {
     text-align: center;
 }
 
+
 /* Inputs and form elements */
 input, select, textarea {
+
     width: 100%;
     padding: 10px;
     margin: 10px 0;
     border: 1px solid #ccc;
     border-radius: 5px;
+
     box-sizing: border-box;
     background-color: white;
     color: black;
@@ -42,19 +47,23 @@ button {
     cursor: pointer;
     width: auto;
     display: inline-block;
+
 }
 
 button:hover {
     background-color: #45a049;
 }
 
+
 /* Upload Section */
+
 .file-upload {
     margin-top: 20px;
     border: 2px dashed #ccc;
     padding: 20px;
     text-align: center;
     color: #888;
+
     background-color: #fafafa;
     border-radius: 8px;
 }
@@ -215,4 +224,5 @@ body.dark-mode .favorite-btn.favorited {
 body.dark-mode .player-info {
     background-color: #333;
     border-color: #666;
+
 }

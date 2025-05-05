@@ -16,6 +16,7 @@ import csv, json
 
 from app.models import RawCSVEntry
 
+
 main = Blueprint('main', __name__)
 
 @main.route('/')
@@ -70,6 +71,7 @@ def logout():
     flash("You have been logged out.", "info")
     return redirect(url_for('main.index'))
 
+
 @main.route('/forgot-password')
 def forgot_password():
     return render_template("forgotpassword.html")
@@ -82,6 +84,7 @@ def intro():
 # def forum():
 #     return render_template("upload-data-view.html")
 
+
 @main.route('/share')
 def share_data_view():
     return render_template("share-data-view.html")
@@ -91,7 +94,9 @@ def entry():
     return render_template("entry.html")
 
 @main.route('/profile')
+
 @login_required
+
 def profile():
     return render_template("profile.html")
 
@@ -282,3 +287,4 @@ def auth():
     login_form = LoginForm()
     register_form = RegistrationForm()
     return render_template('auth.html', login_form=login_form, register_form=register_form)
+
