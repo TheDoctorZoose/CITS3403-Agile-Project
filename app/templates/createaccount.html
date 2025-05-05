@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+
+{% block title %}Create an Account | Board Game Central{% endblock %}
+
+{% block extra_styles %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/intro-styles.css') }}">
+{% endblock %}
+
+{% block body_class %}formpage{% endblock %}
+
+{% block content %}
+<div class="centre">
+    <h2>Create an Account</h2>
+
+    <!-- Flash messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <ul class="flashes">
+          {% for category, message in messages %}
+            <li class="{{ category }}">{{ message }}</li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+    {% endwith %}
+
+    <form method="POST" action="{{ url_for('main.register') }}">
+        {{ form.hidden_tag() }}
+
+        <div class="input-field">
+            {{ form.username.label }}<br>
+            {{ form.username(placeholder="Enter a username") }}
+            {% if form.username.errors %}
+                <div class="error">{{ form.username.errors[0] }}</div>
+            {% endif %}
+        </div>
+
+        <div class="input-field">
+            {{ form.email.label }}<br>
+            {{ form.email(placeholder="Enter your email address") }}
+            {% if form.email.errors %}
+                <div class="error">{{ form.email.errors[0] }}</div>
+            {% endif %}
+        </div>
+
+        <div class="input-field">
+            {{ form.password.label }}<br>
+            {{ form.password(placeholder="Enter a password") }}
+            {% if form.password.errors %}
+                <div class="error">{{ form.password.errors[0] }}</div>
+            {% endif %}
+        </div>
+
+        <div class="input-field">
+            {{ form.confirm_password.label }}<br>
+            {{ form.confirm_password(placeholder="Re-enter the password") }}
+            {% if form.confirm_password.errors %}
+                <div class="error">{{ form.confirm_password.errors[0] }}</div>
+            {% endif %}
+        </div>
+
+        <span class="submit-btn">
+            {{ form.submit() }}
+        </span>
+    </form>
+
+    <p>Already have an account? <a href="{{ url_for('main.login') }}">Log in</a> instead!</p>
+</div>
+{% endblock %}
