@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Board Game Entry Analysis Tool</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/upload-data.css') }}">
+</head>
+<body>
+<main class="container">
+  <h1>Board Game Entry Analysis Tool</h1>
+  <p>Please fill in the form below to record your board game session.</p>
+
+  <section aria-label="Manual Data Entry">
+    <h2>Manual Data Entry</h2>
+    <form id="entryForm" action="#" method="POST">
+
+      <label for="gameTitle">Game Title:</label>
+      <input type="text" id="gameTitle" name="gameTitle" required placeholder="e.g., Go" />
+
+      <label for="datePlayed">Date Played:</label>
+      <input type="date" id="datePlayed" name="datePlayed" required />
+
+      <div id="playersContainer">
+        <!-- Only Player 1 exists initially -->
+        <fieldset class="player-info">
+          <legend>Player 1</legend>
+
+          <label for="player1Name">Name:</label>
+          <input type="text" id="player1Name" name="player1Name" required placeholder="Player Name" />
+
+          <label for="player1Username">Username (optional):</label>
+          <input type="text" id="player1Username" name="player1Username" placeholder="Username" />
+
+          <label><input type="checkbox" id="player1Win" name="player1Win"> Win?</label>
+          <label><input type="checkbox" id="player1First" name="player1First"> Went First?</label>
+          <label><input type="checkbox" id="player1FirstTime" name="player1FirstTime"> First Time Playing?</label>
+
+          <label for="player1Score">Score:</label>
+          <input type="number" id="player1Score" name="player1Score" placeholder="e.g., 30" />
+        </fieldset>
+      </div>
+
+      <div id="playerButtons">
+        <button type="button" id="addPlayerBtn">+ Add Another Player</button>
+      </div>
+
+      <div class="submit-buttons">
+        <button type="submit">Submit Entry</button>
+        <button type="submit">Submit and Share</button>
+      </div>
+
+    </form>
+  </section>
+
+  <section class="file-upload" aria-label="Batch File Upload">
+    <h2>Batch File Upload</h2>
+    <input type="file" id="fileInput" accept=".csv, .json" />
+    <p>Upload your CSV or JSON file</p>
+  </section>
+
+  <section aria-label="External Data Integration">
+    <h2>External Data Integration</h2>
+    <input type="url" id="externalUrl" placeholder="Enter external API URL" />
+    <button type="button">Fetch External Data</button>
+  </section>
+
+  <section id="entryDisplay" aria-label="Submitted Entries" style="margin-top: 40px;">
+    <h2>Submitted Entries</h2>
+    <ul id="entryList"></ul>
+  </section>
+</main>
+<script src="{{ url_for('static', filename='js/forum.js') }}"></script>
+
+></script>
+</body>
+</html>
