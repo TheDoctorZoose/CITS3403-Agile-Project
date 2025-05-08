@@ -1,9 +1,10 @@
 import io
-from flask import Blueprint, render_template, redirect, url_for, flash, request, jsonify
+from os import abort
+from flask import Blueprint, render_template, redirect, url_for, flash, request, jsonify,current_app
 from flask_login import login_user, logout_user, current_user, login_required
 from werkzeug.security import generate_password_hash, check_password_hash
 
-from app.models import User, GameEntry, Comment, Like, Favorite
+from app.models import FriendRequest, Message, User, GameEntry, Comment, Like, Favorite
 
 from app.forms import RegistrationForm, LoginForm
 from app import db 
@@ -15,6 +16,8 @@ from io import TextIOWrapper
 import csv, json
 
 from app.models import RawCSVEntry
+from threading import Thread
+from itsdangerous import URLSafeTimedSerializer
 
 
 main = Blueprint('main', __name__)
@@ -26,7 +29,7 @@ def index():
 @main.route('/register', methods=['GET', 'POST'])
 def register():
     if current_user.is_authenticated:
-        return redirect(url_for('main.index'))
+        return redirect(url_for('main.homepage'))  # or wherever
 
     form = RegistrationForm()
 
@@ -71,7 +74,6 @@ def logout():
     flash("You have been logged out.", "info")
     return redirect(url_for('main.index'))
 
-
 @main.route('/forgot-password')
 def forgot_password():
     return render_template("forgotpassword.html")
@@ -84,7 +86,6 @@ def intro():
 # def forum():
 #     return render_template("upload-data-view.html")
 
-
 @main.route('/share')
 def share_data_view():
     return render_template("share-data-view.html")
@@ -93,12 +94,36 @@ def share_data_view():
 def entry():
     return render_template("entry.html")
 
-@main.route('/profile')
-
+@main.route('/profile/<int:user_id>')
 @login_required
+def profile(user_id):
+    user = User.query.get_or_404(user_id)
+    is_own_profile = (user.id == current_user.id)
+    posts = GameEntry.query.filter_by(user_id=user.id).order_by(GameEntry.timestamp.desc()).all()
 
-def profile():
-    return render_template("profile.html")
+    liked_entries = []
+    favorited_entries = []
+    if is_own_profile:
+        liked_entries = GameEntry.query.join(Like).filter(Like.user_id == user.id).order_by(GameEntry.timestamp.desc()).all()
+        favorited_entries = GameEntry.query.join(Favorite).filter(Favorite.user_id == user.id).order_by(GameEntry.timestamp.desc()).all()
+
+    request_sent = FriendRequest.query.filter_by(sender_id=current_user.id, receiver_id=user.id).first()
+    are_friends = user in current_user.friends
+
+    friends = user.friends.all() if is_own_profile else None
+
+    return render_template(
+        'profile.html',
+        user=user,
+        posts=posts,
+        liked_entries=liked_entries,
+        favorited_entries=favorited_entries,
+        is_own_profile=is_own_profile,
+        request_sent=request_sent,
+        are_friends=are_friends,
+        friends=friends 
+    )
+
 
 @main.route('/analysis')
 def analysis():
@@ -123,19 +148,19 @@ def forum():
 
         new_entry = GameEntry(
             game_title=game_title,
-            date_played=date_played,  
+            date_played=date_played,
             user_id=current_user.id
         )
         db.session.add(new_entry)
         db.session.commit()
         flash('Entry submitted!')
-
         return redirect(url_for('main.forum'))
 
-    entries_raw = GameEntry.query.order_by(GameEntry.timestamp.desc()).all()
+    page = request.args.get('page', 1, type=int)
+    pagination = GameEntry.query.order_by(GameEntry.timestamp.desc()).paginate(page=page, per_page=5, error_out=False)
 
     entries = []
-    for entry in entries_raw:
+    for entry in pagination.items:
         entries.append({
             'entry': entry,
             'like_count': entry.likes.count(),
@@ -144,7 +169,8 @@ def forum():
             'favorited': Favorite.query.filter_by(user_id=current_user.id, entry_id=entry.id).first() is not None,
         })
 
-    return render_template('upload-data-view.html', entries=entries)
+    return render_template('upload-data-view.html', entries=entries, pagination=pagination)
+
 
 
 @main.route('/forum/<int:entry_id>', methods=['GET', 'POST'])
@@ -209,6 +235,7 @@ def upload_json():
         db.session.commit()
         flash("JSON uploaded successfully.")
     return redirect(url_for('main.forum'))
+
 from flask import jsonify, request
 
 @main.route('/like/<int:entry_id>', methods=['POST'])
@@ -281,10 +308,130 @@ def delete_entry(entry_id):
     return redirect(url_for('main.forum'))
 
 
+def send_async_email(app, msg):
+    with app.app_context():
+        mail.send(msg)
 
-@main.route('/auth', methods=['GET'])
-def auth():
-    login_form = LoginForm()
-    register_form = RegistrationForm()
-    return render_template('auth.html', login_form=login_form, register_form=register_form)
+# 发送封装
 
+def send_email(subject, sender, recipients, text_body, html_body):
+    msg = Message(subject, sender=sender, recipients=recipients)
+    msg.body = text_body
+    msg.html = html_body
+    Thread(target=send_async_email, args=(current_app._get_current_object(), msg)).start()
+
+# 生成令牌（用于密码重置）
+def generate_reset_token(email, expires_sec=1800):
+    s = URLSafeTimedSerializer(current_app.config['SECRET_KEY'])
+    return s.dumps(email, salt='password-reset-salt')
+
+# 验证令牌
+def verify_reset_token(token, expires_sec=1800):
+    s = URLSafeTimedSerializer(current_app.config['SECRET_KEY'])
+    try:
+        email = s.loads(token, salt='password-reset-salt', max_age=expires_sec)
+    except Exception:
+        return None
+    return email
+
+# 发送密码重置邮件
+def send_password_reset_email(user):
+    token = generate_reset_token(user.email)
+    send_email('[CITS3403] Reset Your Password',
+               sender=current_app.config['MAIL_DEFAULT_SENDER'],
+               recipients=[user.email],
+               text_body=render_template('reset_password.txt', user=user, token=token),
+               html_body=render_template('reset_password.html', user=user, token=token))
+
+@main.route('/edit_bio', methods=['POST'])
+@login_required
+def edit_bio():
+    new_bio = request.form.get('bio', '').strip()
+    current_user.bio = new_bio
+    db.session.commit()
+    flash("Signature updated.")
+    return redirect(url_for('main.profile', user_id=current_user.id))
+
+#添加好友
+# routes.py
+
+@main.route('/send_request/<int:user_id>', methods=['POST'])
+@login_required
+def send_request(user_id):
+    receiver = User.query.get_or_404(user_id)
+    if receiver == current_user or receiver in current_user.friends:
+        flash("Invalid friend request.")
+        return redirect(url_for('main.profile', user_id=user_id))
+
+    existing = FriendRequest.query.filter_by(sender_id=current_user.id, receiver_id=user_id).first()
+    if existing:
+        flash("Friend request already sent.")
+    else:
+        request = FriendRequest(sender_id=current_user.id, receiver_id=user_id)
+        db.session.add(request)
+        db.session.commit()
+        flash("Friend request sent.")
+    return redirect(url_for('main.profile', user_id=user_id))
+
+@main.route('/friend_requests')
+@login_required
+def friend_requests():
+    requests = FriendRequest.query.filter_by(receiver_id=current_user.id).all()
+    return render_template('friend_requests.html', requests=requests)
+
+
+@main.route('/accept_request/<int:request_id>', methods=['POST'])
+@login_required
+def accept_request(request_id):
+    req = FriendRequest.query.get_or_404(request_id)
+    if req.receiver_id != current_user.id:
+        abort(403)
+
+    sender = req.sender
+    receiver = req.receiver
+
+    if sender not in receiver.friends:
+        receiver.friends.append(sender)
+    if receiver not in sender.friends:
+        sender.friends.append(receiver)
+
+    db.session.delete(req)
+    db.session.commit()
+
+    flash(f'You are now friends with {sender.username}!', 'success')
+    return redirect(url_for('main.friend_requests'))
+
+
+@main.route('/decline_request/<int:request_id>', methods=['POST'])
+@login_required
+def decline_request(request_id):
+    req = FriendRequest.query.get_or_404(request_id)
+    if req.receiver_id != current_user.id:
+        abort(403)
+
+    db.session.delete(req)
+    db.session.commit()
+    flash('Friend request declined.', 'info')
+    return redirect(url_for('main.friend_requests'))
+
+@main.route('/chat/<int:friend_id>')
+@login_required
+def chat_with_friend(friend_id):
+    friend = User.query.get_or_404(friend_id)
+    if friend not in current_user.friends:
+        flash("You can only chat with your friends.")
+        return redirect(url_for('main.profile', user_id=friend_id))
+
+    # 提取历史消息（双方互发的消息）
+    messages = Message.query.filter(
+        ((Message.sender_id == current_user.id) & (Message.receiver_id == friend_id)) |
+        ((Message.sender_id == friend_id) & (Message.receiver_id == current_user.id))
+    ).order_by(Message.timestamp.asc()).all()
+
+    history = [{
+        "from": msg.sender.username,
+        "message": msg.content,
+        "timestamp": msg.timestamp.strftime('%H:%M')
+    } for msg in messages]
+
+    return render_template("chat.html", users=current_user.friends, history=history)

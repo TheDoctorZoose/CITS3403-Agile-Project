@@ -74,7 +74,11 @@
       {% set entry = item.entry %}
       <li>
         <strong>{{ entry.game_title }}</strong> — played on {{ entry.date_played }} <br>
-        Submitted by <em>{{ entry.user.username }}</em> at {{ entry.timestamp.strftime('%Y-%m-%d %H:%M') }}<br>
+        Submitted by 
+        <a href="{{ url_for('main.profile', user_id=entry.user.id) }}">
+          <em>{{ entry.user.username }}</em>
+        </a> 
+        at {{ entry.timestamp.strftime('%Y-%m-%d %H:%M') }}<br>
 
         <!-- Like and Favorite Buttons -->
         <button type="button" class="like-btn {% if item.liked %}liked{% endif %}" data-entry-id="{{ entry.id }}">
@@ -88,7 +92,6 @@
         <br>
         <a href="{{ url_for('main.view_entry', entry_id=entry.id) }}">💬 View & Comment</a>
 
-        <!-- Delete Button (only visible to author) -->
         {% if current_user.id == entry.user.id %}
           <form action="{{ url_for('main.delete_entry', entry_id=entry.id) }}" method="POST" style="display:inline;">
             <button type="submit" class="delete-btn" onclick="return confirm('Are you sure you want to delete this entry?')">
@@ -99,6 +102,31 @@
       </li>
     {% endfor %}
   </ul>
+
+
+  <!-- Pagination Controls -->
+  {% if pagination %}
+  <div class="pagination">
+    {% if pagination.has_prev %}
+      <a href="{{ url_for('main.forum', page=1) }}">« First</a>
+      <a href="{{ url_for('main.forum', page=pagination.prev_num) }}">‹ Prev</a>
+    {% endif %}
+
+    {% for p in range(1, pagination.pages + 1) %}
+      {% if p == pagination.page %}
+        <strong>{{ p }}</strong>
+      {% else %}
+        <a href="{{ url_for('main.forum', page=p) }}">{{ p }}</a>
+      {% endif %}
+    {% endfor %}
+
+    {% if pagination.has_next %}
+      <a href="{{ url_for('main.forum', page=pagination.next_num) }}">Next ›</a>
+      <a href="{{ url_for('main.forum', page=pagination.pages) }}">Last »</a>
+    {% endif %}
+  </div>
+{% endif %}
+
 </section>
 
 {% endblock %}

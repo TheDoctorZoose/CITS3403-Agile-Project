@@ -1,6 +1,5 @@
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-
     margin: 0;
     padding: 0;
     background-color: #f3f3f3;
@@ -51,7 +50,6 @@ main.container {
 
 .right-flex-item {
     text-align: center;
-
 }
 
 .right-flex-item p {
@@ -62,7 +60,6 @@ main.container {
 .rounded-btn {
     display: inline-block;
     background-color: brown;
-
     color: white;
     padding: 15px;
     margin: 10px;
@@ -85,7 +82,6 @@ body.formpage {
     min-height: 100vh;
     display: flex;
     flex-direction: column;
-
 }
 
 .centre {
@@ -95,10 +91,8 @@ body.formpage {
     box-shadow: 0px 0px 15px rgb(68, 68, 68);
     padding: 20px 70px 40px 70px;
     text-align: center;
-
     max-width: 500px;
     margin: 80px auto;
-
 }
 
 .input-field {
@@ -107,9 +101,7 @@ body.formpage {
 }
 
 .input-field input {
-
     width: 96%;
-
 }
 
 .submit-btn {
@@ -117,7 +109,6 @@ body.formpage {
     display: flex;
     justify-content: flex-end;
 }
-
 
 /* ============================= */
 /* Footer Styling */
@@ -181,4 +172,3 @@ body.dark-mode footer.main-footer {
     background-color: #111;
     color: #aaa;
 }
-

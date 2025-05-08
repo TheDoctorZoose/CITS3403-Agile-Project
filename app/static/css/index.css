@@ -1,4 +1,4 @@
-/* General font and background */
+/* 通用字体和背景 */
 body {
     font-family: 'Segoe UI', sans-serif;
     margin: 0;
@@ -7,7 +7,7 @@ body {
     color: #333;
 }
 
-/* Header general settings */
+/* Header整体设置 */
 .main-header {
     background-color: brown;
     color: white;
@@ -18,7 +18,7 @@ body {
     text-align: center;
 }
 
-/* Specific h1 title settings */
+/* 标题h1单独设置 */
 .main-title {
     margin: 0;
     font-size: 2.5rem;
@@ -26,20 +26,20 @@ body {
 
 .main-nav {
     display: flex;
-    justify-content: center; /* Center the whole group */
+    justify-content: center; /* 先整体居中 */
     align-items: center;
     width: 100%;
     margin-top: 10px;
     padding: 0 20px;
     box-sizing: border-box;
-    position: relative; /* For top-right positioning */
+    position: relative; /* 为了右上角定位 */
 }
 
-/* Center link group */
+/* 中间的链接组 */
 .nav-center {
     flex-grow: 1;
     display: flex;
-    justify-content: center; /* Horizontal center */
+    justify-content: center; /* 中间水平居中 */
 }
 
 .nav-list {
@@ -63,7 +63,7 @@ body {
     border-radius: 10px;
 }
 
-/* Right-side login/register buttons */
+/* 右边的登录注册按钮 */
 .nav-right {
     position: absolute;
     right: 20px;
@@ -90,7 +90,7 @@ body {
 }
 
 
-/* Toggle button style */
+/* Toggle按钮样式 */
 #themeToggle {
     margin-top: 15px;
     background-color: #3498db;
@@ -106,14 +106,14 @@ body {
     background-color: #2980b9;
 }
 
-/* Main content area */
+/* Main主内容区 */
 main.container {
     max-width: 1000px;
     margin: auto;
     padding: 40px 20px;
 }
 
-/* Intro style specific to homepage */
+/* 首页特有的intro样式 */
 .intro {
     background-color: white;
     padding: 30px;
@@ -121,7 +121,7 @@ main.container {
     box-shadow: 0px 0px 10px #aaa;
 }
 
-/* Footer style */
+/* Footer页脚样式 */
 footer.main-footer {
     text-align: center;
     padding: 15px;
@@ -131,31 +131,31 @@ footer.main-footer {
     background-color: #ecf0f1;
 }
 
-/* Dark mode */
+/* 暗色模式 */
 body.dark-mode {
     background-color: #1e1e1e;
     color: #ddd;
 }
 
-/* Intro card style (dark mode) */
+/* Intro卡片样式（暗色） */
 body.dark-mode .intro {
     background-color: #2a2a2a;
     box-shadow: 0px 0px 10px rgba(255, 255, 255, 0.05);
 }
 
-/* Header and footer dark mode adaptation */
+/* Header 和 Footer 暗色适配 */
 body.dark-mode .main-header,
 body.dark-mode footer.main-footer {
     background-color: #121212;
     color: #ccc;
 }
 
-/* Footer text */
+/* 页脚文字 */
 body.dark-mode footer.main-footer {
     color: #999;
 }
 
-/* Toggle button dark mode */
+/* Toggle按钮暗色模式 */
 body.dark-mode #themeToggle {
     background-color: #444;
     color: #eee;
@@ -165,7 +165,7 @@ body.dark-mode #themeToggle:hover {
     background-color: #666;
 }
 
-/* Navigation links */
+/* 导航链接 */
 body.dark-mode .nav-list a {
     color: #eee;
 }
@@ -174,7 +174,7 @@ body.dark-mode .nav-list a:hover {
     background-color: #333;
 }
 
-/* Login/register button */
+/* 登录/注册按钮 */
 body.dark-mode .auth-button {
     background-color: #555;
     color: #eee;
@@ -184,37 +184,37 @@ body.dark-mode .auth-button:hover {
     background-color: #777;
 }
 
-/* Username shown after login */
+/* 登陆后显示的用户名 */
 body.dark-mode .auth-username {
     color: #eee;
 }
 
-/* Dark mode: form overall background and text */
+/* 暗色模式下：表单整体背景和文字 */
 body.dark-mode .centre {
     background-color: #2b2b2b;
     color: #f0f0f0;
     box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
 }
 
-/* Form input fields */
+/* 表单输入框 */
 body.dark-mode .centre input {
     background-color: #444;
     color: #f0f0f0;
     border: 1px solid #666;
 }
 
-/* Label color */
+/* Label颜色 */
 body.dark-mode .centre label span,
 body.dark-mode .centre label {
     color: #ddd;
 }
 
-/* h2 title */
+/* h2 标题 */
 body.dark-mode .centre h2 {
     color: #fff;
 }
 
-/* Submit button */
+/* 提交按钮 */
 body.dark-mode .submit-btn input,
 body.dark-mode .submit {
     background-color: #555 !important;
@@ -222,7 +222,8 @@ body.dark-mode .submit {
     border: none;
 }
 
-/* Link color adaptation */
+/* 链接颜色适配 */
 body.dark-mode a {
     color: #99c9ff;
 }
+
