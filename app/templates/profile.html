@@ -10,26 +10,115 @@
 
 {% block content %}
 <section class="profile-info">
-    <img src="{{ current_user.avatar or url_for('static', filename='profile-pictures/default_avatar.png') }}" class="avatar-large">
-    <h2>{{ current_user.username }}</h2>
-    <p>Email: {{ current_user.email }}</p>
-    <p>Joined: {{ current_user.joined_at.strftime('%Y-%m-%d') }}</p>
-    <p>Credit Points: {{ current_user.credit_points }}</p>
-    <button class="friend-btn">➕ Add Friend</button>
+    <h2>{{ user.username }}</h2>
+    <p>Email: {{ user.email }}</p>
+    <p>Joined: {{ user.joined_at.strftime('%Y-%m-%d') }}</p>
+    <p>Credit Points: {{ user.credit_points }}</p>
+
+    <!-- Signature -->
+    <div class="bio-section">
+        <p><strong>Signature:</strong></p>
+        {% if user.id == current_user.id %}
+            <div id="bio-display">
+                <p id="bio-text">{{ user.bio or "You haven't set a signature yet." }}</p>
+                <button type="button" onclick="toggleBioEdit()">✏️ Edit</button>
+            </div>
+            <form id="bio-form" action="{{ url_for('main.edit_bio') }}" method="POST" style="display: none;">
+                <textarea name="bio" rows="3" style="width:100%;">{{ user.bio }}</textarea>
+                <button type="submit" style="margin-top: 8px;">Update Signature</button>
+                <button type="button" onclick="toggleBioEdit()">Cancel</button>
+            </form>
+        {% else %}
+            <p>{{ user.bio or "This user hasn't set a signature yet." }}</p>
+        {% endif %}
+    </div>
+
+    <!-- Add Friend -->
+    {% if user.id != current_user.id %}
+        {% if are_friends %}
+            <p>✅ You are already friends.</p>
+            <a href="{{ url_for('main.chat_with_friend', friend_id=user.id) }}" class="btn">💬 Chat</a>
+        {% elif request_sent %}
+            <p>📨 Friend request already sent.</p>
+        {% else %}
+            <form action="{{ url_for('main.send_request', user_id=user.id) }}" method="POST">
+                <button type="submit" class="friend-btn">➕ Add Friend</button>
+            </form>
+        {% endif %}
+    {% endif %}
+</section>
+
+<!-- Forum Posts -->
+<section class="history">
+    <h2>🧾 Forum Entries</h2>
+    {% if entries %}
+        {% for entry in entries %}
+        <div class="share-card">
+            <div class="card-header">
+                <div>
+                    <strong>{{ user.username }}</strong>
+                    <div class="timestamp">Shared on {{ entry.timestamp.strftime('%Y-%m-%d') }}</div>
+                </div>
+            </div>
+            <p><strong>🎲 {{ entry.game_title }}</strong></p>
+            <p>🗓️ Played on {{ entry.date_played }}</p>
+            <a href="{{ url_for('main.view_entry', entry_id=entry.id) }}">🔍 View Details</a>
+        </div>
+        {% endfor %}
+    {% else %}
+        <p>This user hasn't posted anything in the forum yet.</p>
+    {% endif %}
+</section>
+
+<!-- Liked and Favorited Posts -->
+{% if is_own_profile %}
+<section class="history">
+    <h2>👍 Liked Posts</h2>
+    {% if liked_entries %}
+        {% for entry in liked_entries %}
+        <div class="share-card">
+            <p><strong>🎲 {{ entry.game_title }}</strong> — {{ entry.date_played }}</p>
+            <a href="{{ url_for('main.view_entry', entry_id=entry.id) }}">💬 View & Comment</a>
+        </div>
+        {% endfor %}
+    {% else %}
+        <p>You haven't liked any posts yet.</p>
+    {% endif %}
 </section>
 
 <section class="history">
-    <h2>📦 Shared Data</h2>
-    <div class="share-card">
-        <div class="card-header">
-            <img src="{{ current_user.avatar or url_for('static', filename='profile-pictures/default_avatar.png') }}" class="avatar">
-            <div>
-                <strong>{{ current_user.username }}</strong>
-                <div class="timestamp">Shared on 2025-04-10</div>
-            </div>
-            <div class="privacy public">🌐 Public</div>
+    <h2>⭐ Favorited Posts</h2>
+    {% if favorited_entries %}
+        {% for entry in favorited_entries %}
+        <div class="share-card">
+            <p><strong>🎲 {{ entry.game_title }}</strong> — {{ entry.date_played }}</p>
+            <a href="{{ url_for('main.view_entry', entry_id=entry.id) }}">💬 View & Comment</a>
         </div>
-        <p>🎲 Played 7 Wonders. I loved it!</p>
-    </div>
+        {% endfor %}
+    {% else %}
+        <p>You haven't favorited any posts yet.</p>
+    {% endif %}
 </section>
+
+<!-- Friends Section -->
+<section class="history">
+    <h2>👥 My Friends</h2>
+    {% if friends %}
+        <ul>
+        {% for friend in friends %}
+            <li>
+                <a href="{{ url_for('main.profile', user_id=friend.id) }}">{{ friend.username }}</a>
+                <a href="{{ url_for('main.chat_with_friend', friend_id=friend.id) }}" class="chat-link">💬 Chat</a>
+            </li>
+        {% endfor %}
+        </ul>
+    {% else %}
+        <p>You have no friends yet.</p>
+    {% endif %}
+</section>
+{% endif %}
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="{{ url_for('static', filename='js/profile.js') }}"></script>
 {% endblock %}

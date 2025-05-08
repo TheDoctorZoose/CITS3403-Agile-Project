@@ -20,8 +20,12 @@
           <li><a href="{{ url_for('main.intro') }}">Intro</a></li>
           <li><a href="{{ url_for('main.forum') }}">Forum</a></li>
           <li><a href="{{ url_for('main.analysis') }}">Analysis</a></li>
-          <li><a href="{{ url_for('main.profile') }}">Profile</a></li>
+          {% if current_user.is_authenticated %}
+            <li><a href="{{ url_for('main.profile', user_id=current_user.id) }}">Profile</a></li>
+          {% endif %}
           <li><a href="{{ url_for('main.visualisation') }}">Visualization</a></li>
+          <li><a href="{{ url_for('main.friend_requests') }}">Friend Requests</a></li>
+
         </ul>
       </div>
 
