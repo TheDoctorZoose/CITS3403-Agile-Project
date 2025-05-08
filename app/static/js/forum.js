@@ -79,4 +79,48 @@ document.addEventListener('DOMContentLoaded', function () {
     };
     reader.readAsText(file);
   });
+
+  // LIKE button AJAX
+  document.querySelectorAll('.like-btn').forEach(button => {
+    button.addEventListener('click', function () {
+      const entryId = this.dataset.entryId;
+      const likeCountSpan = this.querySelector('.like-count');
+      const btn = this;
+
+      fetch(`/like/${entryId}`, {
+        method: 'POST',
+        headers: { 'X-Requested-With': 'XMLHttpRequest' },
+        credentials: 'same-origin'
+      })
+        .then(res => res.json())
+        .then(data => {
+          if (data.success) {
+            likeCountSpan.textContent = data.like_count;
+            btn.classList.toggle('liked', data.liked);
+          }
+        });
+    });
+  });
+
+  // FAVORITE button AJAX
+  document.querySelectorAll('.favorite-btn').forEach(button => {
+    button.addEventListener('click', function () {
+      const entryId = this.dataset.entryId;
+      const favoriteCountSpan = this.querySelector('.favorite-count');
+      const btn = this;
+
+      fetch(`/favorite/${entryId}`, {
+        method: 'POST',
+        headers: { 'X-Requested-With': 'XMLHttpRequest' },
+        credentials: 'same-origin'
+      })
+        .then(res => res.json())
+        .then(data => {
+          if (data.success) {
+            favoriteCountSpan.textContent = data.favorite_count;
+            btn.classList.toggle('favorited', data.favorited);
+          }
+        });
+    });
+  });
 });

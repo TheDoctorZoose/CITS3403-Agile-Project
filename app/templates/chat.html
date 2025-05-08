@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block title %}Chat{% endblock %}
+
+{% block extra_styles %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/chat.css') }}">
+{% endblock %}
+
+{% block content %}
+<h2>💬 Chat Room</h2>
+
+<!-- 当前用户 ID 和历史记录传递给 JS -->
+<script>
+  window.CURRENT_USER_ID = {{ current_user.id }};
+  window.MESSAGE_HISTORY = {{ history | tojson }};
+</script>
+
+<!-- 用户选择器 -->
+<select id="userList">
+  {% for user in users %}
+    {% if user.id != current_user.id %}
+      <option value="{{ user.id }}">{{ user.username }}</option>
+    {% endif %}
+  {% endfor %}
+</select>
+
+<!-- 聊天内容区域 -->
+<div id="chatBox" class="chat-box"></div>
+
+<!-- 消息输入与发送 -->
+<input type="text" id="msgInput" placeholder="Type a message...">
+<button id="sendBtn">Send</button>
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="{{ url_for('static', filename='js/chat.js') }}"></script>
+{% endblock %}

@@ -137,18 +137,93 @@ body.dark-mode {
     color: #ddd;
 }
 
+/* Intro卡片样式（暗色） */
 body.dark-mode .intro {
-    background-color: #2e2e2e;
-    box-shadow: none;
+    background-color: #2a2a2a;
+    box-shadow: 0px 0px 10px rgba(255, 255, 255, 0.05);
 }
 
+/* Header 和 Footer 暗色适配 */
 body.dark-mode .main-header,
 body.dark-mode footer.main-footer {
-    background-color: #111;
+    background-color: #121212;
     color: #ccc;
 }
 
-body.dark-mode #themeToggle {
-    background-color: #555;
-    color: white;
+/* 页脚文字 */
+body.dark-mode footer.main-footer {
+    color: #999;
 }
+
+/* Toggle按钮暗色模式 */
+body.dark-mode #themeToggle {
+    background-color: #444;
+    color: #eee;
+}
+
+body.dark-mode #themeToggle:hover {
+    background-color: #666;
+}
+
+/* 导航链接 */
+body.dark-mode .nav-list a {
+    color: #eee;
+}
+
+body.dark-mode .nav-list a:hover {
+    background-color: #333;
+}
+
+/* 登录/注册按钮 */
+body.dark-mode .auth-button {
+    background-color: #555;
+    color: #eee;
+}
+
+body.dark-mode .auth-button:hover {
+    background-color: #777;
+}
+
+/* 登陆后显示的用户名 */
+body.dark-mode .auth-username {
+    color: #eee;
+}
+
+/* 暗色模式下：表单整体背景和文字 */
+body.dark-mode .centre {
+    background-color: #2b2b2b;
+    color: #f0f0f0;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+}
+
+/* 表单输入框 */
+body.dark-mode .centre input {
+    background-color: #444;
+    color: #f0f0f0;
+    border: 1px solid #666;
+}
+
+/* Label颜色 */
+body.dark-mode .centre label span,
+body.dark-mode .centre label {
+    color: #ddd;
+}
+
+/* h2 标题 */
+body.dark-mode .centre h2 {
+    color: #fff;
+}
+
+/* 提交按钮 */
+body.dark-mode .submit-btn input,
+body.dark-mode .submit {
+    background-color: #555 !important;
+    color: white !important;
+    border: none;
+}
+
+/* 链接颜色适配 */
+body.dark-mode a {
+    color: #99c9ff;
+}
+

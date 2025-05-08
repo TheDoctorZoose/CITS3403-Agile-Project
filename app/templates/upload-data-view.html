@@ -23,7 +23,7 @@
   {% endif %}
 {% endwith %}
 
-<!-- CSV Upload to populate form -->
+<!-- CSV Upload -->
 <section class="file-upload">
   <h2>Import CSV into Form</h2>
   <input type="file" id="csvInput" accept=".csv" />
@@ -43,17 +43,13 @@
     <div id="playersContainer">
       <fieldset class="player-info">
         <legend>Player 1</legend>
-
         <label for="player1Name">Name:</label>
         <input type="text" id="player1Name" name="player1Name" required placeholder="Player Name" />
-
         <label for="player1Username">Username (optional):</label>
         <input type="text" id="player1Username" name="player1Username" placeholder="Username" />
-
         <label><input type="checkbox" id="player1Win" name="player1Win"> Win?</label>
         <label><input type="checkbox" id="player1First" name="player1First"> Went First?</label>
         <label><input type="checkbox" id="player1FirstTime" name="player1FirstTime"> First Time Playing?</label>
-
         <label for="player1Score">Score:</label>
         <input type="number" id="player1Score" name="player1Score" placeholder="e.g., 30" />
       </fieldset>
@@ -74,17 +70,68 @@
 <section id="entryDisplay" aria-label="Submitted Entries" style="margin-top: 40px;">
   <h2>Submitted Entries</h2>
   <ul>
-    {% for entry in entries %}
+    {% for item in entries %}
+      {% set entry = item.entry %}
       <li>
         <strong>{{ entry.game_title }}</strong> — played on {{ entry.date_played }} <br>
-        Submitted by <em>{{ entry.user.username }}</em> at {{ entry.timestamp.strftime('%Y-%m-%d %H:%M') }}<br>
+        Submitted by 
+        <a href="{{ url_for('main.profile', user_id=entry.user.id) }}">
+          <em>{{ entry.user.username }}</em>
+        </a> 
+        at {{ entry.timestamp.strftime('%Y-%m-%d %H:%M') }}<br>
+
+        <!-- Like and Favorite Buttons -->
+        <button type="button" class="like-btn {% if item.liked %}liked{% endif %}" data-entry-id="{{ entry.id }}">
+          👍 Like (<span class="like-count">{{ item.like_count or 0 }}</span>)
+        </button>
+
+        <button type="button" class="favorite-btn {% if item.favorited %}favorited{% endif %}" data-entry-id="{{ entry.id }}">
+          ⭐ Favorite (<span class="favorite-count">{{ item.favorite_count or 0 }}</span>)
+        </button>
+
+        <br>
         <a href="{{ url_for('main.view_entry', entry_id=entry.id) }}">💬 View & Comment</a>
+
+        {% if current_user.id == entry.user.id %}
+          <form action="{{ url_for('main.delete_entry', entry_id=entry.id) }}" method="POST" style="display:inline;">
+            <button type="submit" class="delete-btn" onclick="return confirm('Are you sure you want to delete this entry?')">
+              🗑️ Delete
+            </button>
+          </form>
+        {% endif %}
       </li>
     {% endfor %}
   </ul>
+
+
+  <!-- Pagination Controls -->
+  {% if pagination %}
+  <div class="pagination">
+    {% if pagination.has_prev %}
+      <a href="{{ url_for('main.forum', page=1) }}">« First</a>
+      <a href="{{ url_for('main.forum', page=pagination.prev_num) }}">‹ Prev</a>
+    {% endif %}
+
+    {% for p in range(1, pagination.pages + 1) %}
+      {% if p == pagination.page %}
+        <strong>{{ p }}</strong>
+      {% else %}
+        <a href="{{ url_for('main.forum', page=p) }}">{{ p }}</a>
+      {% endif %}
+    {% endfor %}
+
+    {% if pagination.has_next %}
+      <a href="{{ url_for('main.forum', page=pagination.next_num) }}">Next ›</a>
+      <a href="{{ url_for('main.forum', page=pagination.pages) }}">Last »</a>
+    {% endif %}
+  </div>
+{% endif %}
+
 </section>
+
 {% endblock %}
 
 {% block extra_scripts %}
 <script src="{{ url_for('static', filename='js/forum.js') }}"></script>
+<script src="{{ url_for('static', filename='js/index.js') }}"></script>
 {% endblock %}

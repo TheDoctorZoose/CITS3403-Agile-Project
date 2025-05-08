@@ -28,9 +28,17 @@
         </p>
     </div>
     <div class="right-flex-item">
-        <p>To get started, log in or sign up below!</p>
-        <a class="rounded-btn" href="{{ url_for('main.login') }}">Log In</a>
-        <a class="rounded-btn" href="{{ url_for('main.register') }}">Sign Up</a>
+        {% if current_user.is_authenticated %}
+            <p>🎉 Welcome back, {{ current_user.username }}!</p>
+            <p>Ready to record your next game or view your stats?</p>
+            <a class="rounded-btn" href="{{ url_for('main.forum') }}">🎲 Record New Game</a>
+            <a class="rounded-btn" href="{{ url_for('main.forum') }}">📊 View My Stats</a>
+        {% else %}
+            <p>To get started, log in or sign up below!</p>
+            <a class="rounded-btn" href="{{ url_for('main.login') }}">Log In</a>
+            <a class="rounded-btn" href="{{ url_for('main.register') }}">Sign Up</a>
+        {% endif %}
     </div>
+    
 </div>
 {% endblock %}

@@ -12,7 +12,7 @@
 <body class="{% block body_class %}{% endblock %}">
   <header class="main-header">
     <h1 class="main-title">🎲 Board Game Central 🎲</h1>
-  
+
     <nav class="main-nav">
       <div class="nav-center">
         <ul class="nav-list">
@@ -20,11 +20,15 @@
           <li><a href="{{ url_for('main.intro') }}">Intro</a></li>
           <li><a href="{{ url_for('main.forum') }}">Forum</a></li>
           <li><a href="{{ url_for('main.analysis') }}">Analysis</a></li>
-          <li><a href="{{ url_for('main.profile') }}">Profile</a></li>
+          {% if current_user.is_authenticated %}
+            <li><a href="{{ url_for('main.profile', user_id=current_user.id) }}">Profile</a></li>
+          {% endif %}
           <li><a href="{{ url_for('main.visualisation') }}">Visualization</a></li>
+          <li><a href="{{ url_for('main.friend_requests') }}">Friend Requests</a></li>
+
         </ul>
       </div>
-  
+
       <div class="nav-right">
         {% if current_user.is_authenticated %}
           <span class="auth-username">👤 {{ current_user.username }}</span>
@@ -34,12 +38,10 @@
           <a href="{{ url_for('main.register') }}" class="auth-button">Sign Up</a>
         {% endif %}
       </div>
-      
     </nav>
-  
+
     <button id="themeToggle" class="theme-toggle">Toggle Theme</button>
   </header>
-  
 
   <main class="container">
     {% block content %}{% endblock %}
@@ -49,6 +51,8 @@
     &copy; 2025 Board Game Central. All rights reserved.
   </footer>
 
-  {% block extra_scripts %}{% endblock %}
+  {% block extra_scripts %}
+  <script src="{{ url_for('static', filename='js/index.js') }}"></script>
+  {% endblock %}
 </body>
 </html>
