@@ -7,7 +7,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from app.models import FriendRequest, Message, User, GameEntry, Comment, Like, Favorite
 
 from app.forms import RegistrationForm, LoginForm
-from app import db 
+from app import db , mail
 
 from datetime import datetime
 
@@ -18,7 +18,7 @@ import csv, json
 from app.models import RawCSVEntry
 from threading import Thread
 from itsdangerous import URLSafeTimedSerializer
-
+from flask_mail import Message
 
 main = Blueprint('main', __name__)
 
@@ -139,6 +139,7 @@ def forum():
     if request.method == 'POST':
         game_title = request.form.get('gameTitle')
         date_str = request.form.get('datePlayed')
+        visibility = request.form.get('visibility')  # 👈 新增字段
 
         try:
             date_played = datetime.strptime(date_str, "%Y-%m-%d").date()
@@ -146,21 +147,59 @@ def forum():
             flash("Invalid date format.", "error")
             return redirect(url_for('main.forum'))
 
+        # ✅ 根据可见性决定 allowed_users
+        if visibility == 'public':
+            # 可设为全部用户（或仅限朋友，如果不想所有注册用户都可见）
+            allowed_users = User.query.all()
+        else:
+            allowed_ids = request.form.getlist('allowed_users')  # 多选框
+            allowed_users = User.query.filter(User.id.in_(allowed_ids)).all()
+
+        # ✅ 创建 GameEntry 并附加 allowed_users
         new_entry = GameEntry(
             game_title=game_title,
             date_played=date_played,
-            user_id=current_user.id
+            user_id=current_user.id,
+            allowed_users=allowed_users
         )
         db.session.add(new_entry)
         db.session.commit()
+
         flash('Entry submitted!')
         return redirect(url_for('main.forum'))
 
+    # ✅ GET 请求：只显示“自己上传的”和“被授权查看”的记录
     page = request.args.get('page', 1, type=int)
-    pagination = GameEntry.query.order_by(GameEntry.timestamp.desc()).paginate(page=page, per_page=5, error_out=False)
+    all_entries = GameEntry.query.order_by(GameEntry.timestamp.desc()).all()
+
+    visible_entries = [
+        entry for entry in all_entries
+        if entry.user_id == current_user.id or current_user in entry.allowed_users
+    ]
+
+    # ✅ 手动分页
+    per_page = 5
+    total = len(visible_entries)
+    start = (page - 1) * per_page
+    end = start + per_page
+    paginated_items = visible_entries[start:end]
+
+    class ManualPagination:
+        def __init__(self, items, page, per_page, total):
+            self.items = items
+            self.page = page
+            self.per_page = per_page
+            self.total = total
+            self.pages = (total + per_page - 1) // per_page
+            self.has_prev = page > 1
+            self.has_next = page < self.pages
+            self.prev_num = page - 1
+            self.next_num = page + 1
+
+    pagination = ManualPagination(paginated_items, page, per_page, total)
 
     entries = []
-    for entry in pagination.items:
+    for entry in paginated_items:
         entries.append({
             'entry': entry,
             'like_count': entry.likes.count(),
@@ -169,14 +208,24 @@ def forum():
             'favorited': Favorite.query.filter_by(user_id=current_user.id, entry_id=entry.id).first() is not None,
         })
 
-    return render_template('upload-data-view.html', entries=entries, pagination=pagination)
+    friends = current_user.friends.all()
 
+    return render_template(
+        'upload-data-view.html',
+        entries=entries,
+        pagination=pagination,
+        friends=friends
+    )
 
 
 @main.route('/forum/<int:entry_id>', methods=['GET', 'POST'])
 @login_required
 def view_entry(entry_id):
     entry = GameEntry.query.get_or_404(entry_id)
+
+    # ✅ 权限校验：非本人 & 不在允许列表，禁止查看
+    if entry.user_id != current_user.id and current_user not in entry.allowed_users:
+        abort(403)
 
     if request.method == 'POST':
         comment_text = request.form.get('comment')
@@ -193,6 +242,7 @@ def view_entry(entry_id):
         return redirect(url_for('main.view_entry', entry_id=entry.id))
 
     return render_template('entry_detail.html', entry=entry)
+
 
 @main.route('/upload_csv', methods=['POST'])
 @login_required
@@ -308,41 +358,6 @@ def delete_entry(entry_id):
     return redirect(url_for('main.forum'))
 
 
-def send_async_email(app, msg):
-    with app.app_context():
-        mail.send(msg)
-
-# 发送封装
-
-def send_email(subject, sender, recipients, text_body, html_body):
-    msg = Message(subject, sender=sender, recipients=recipients)
-    msg.body = text_body
-    msg.html = html_body
-    Thread(target=send_async_email, args=(current_app._get_current_object(), msg)).start()
-
-# 生成令牌（用于密码重置）
-def generate_reset_token(email, expires_sec=1800):
-    s = URLSafeTimedSerializer(current_app.config['SECRET_KEY'])
-    return s.dumps(email, salt='password-reset-salt')
-
-# 验证令牌
-def verify_reset_token(token, expires_sec=1800):
-    s = URLSafeTimedSerializer(current_app.config['SECRET_KEY'])
-    try:
-        email = s.loads(token, salt='password-reset-salt', max_age=expires_sec)
-    except Exception:
-        return None
-    return email
-
-# 发送密码重置邮件
-def send_password_reset_email(user):
-    token = generate_reset_token(user.email)
-    send_email('[CITS3403] Reset Your Password',
-               sender=current_app.config['MAIL_DEFAULT_SENDER'],
-               recipients=[user.email],
-               text_body=render_template('reset_password.txt', user=user, token=token),
-               html_body=render_template('reset_password.html', user=user, token=token))
-
 @main.route('/edit_bio', methods=['POST'])
 @login_required
 def edit_bio():
@@ -435,3 +450,68 @@ def chat_with_friend(friend_id):
     } for msg in messages]
 
     return render_template("chat.html", users=current_user.friends, history=history)
+
+
+#找回密码
+@main.route('/reset_request', methods=['GET', 'POST'])
+def reset_request():
+    if request.method == 'POST':
+        email = request.form.get('email')
+        user = User.query.filter_by(email=email).first()
+        if user:
+            send_reset_email(user)
+            flash("Reset email sent!", "info")
+        else:
+            flash("Email not found.", "danger")
+        return redirect(url_for('main.login'))  # 登录页
+    return render_template('forgotpassword.html')  # 你已有的模板
+
+
+@main.route('/reset/<token>', methods=['GET', 'POST'])
+def reset_token(token):
+    email = verify_reset_token(token)
+    if email is None:
+        flash('Invalid or expired token.', 'danger')
+        return redirect(url_for('main.reset_request'))
+
+    user = User.query.filter_by(email=email).first_or_404()
+
+    if request.method == 'POST':
+        password = request.form.get('password')
+        user.set_password(password)
+        db.session.commit()
+        flash("Your password has been updated.", "success")
+        return redirect(url_for('main.login'))
+
+    # ✅ 传入 user 变量！
+    return render_template('reset_password.html', user=user,token=token)
+
+
+
+def generate_reset_token(email, expires_sec=3600):
+    s = URLSafeTimedSerializer(current_app.config['SECRET_KEY'])
+    return s.dumps(email, salt='reset-password')
+
+def verify_reset_token(token):
+    s = URLSafeTimedSerializer(current_app.config['SECRET_KEY'])
+    try:
+        return s.loads(token, salt='reset-password', max_age=3600)
+    except Exception:
+        return None
+
+def send_reset_email(user):
+    token = generate_reset_token(user.email)
+    reset_url = url_for('main.reset_token', token=token, _external=True)
+    msg = Message('Reset Your Password',
+                  recipients=[user.email])
+    msg.body = f'''Hi {user.username},
+
+To reset your password, click the link below:
+{reset_url}
+
+If you did not request this, please ignore this email.
+
+Thanks,
+Board Game Central
+'''
+    mail.send(msg)

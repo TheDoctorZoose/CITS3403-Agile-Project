@@ -9,6 +9,11 @@ friendships = db.Table('friendships',
     db.Column('friend_id', db.Integer, db.ForeignKey('user.id'))
 )
 
+gameentry_permissions = db.Table('gameentry_permissions',
+    db.Column('entry_id', db.Integer, db.ForeignKey('game_entry.id')),
+    db.Column('user_id', db.Integer, db.ForeignKey('user.id'))
+)
+
 
 class User(UserMixin, db.Model):
     __tablename__ = 'user'
@@ -95,12 +100,20 @@ class GameEntry(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     timestamp = db.Column(db.DateTime, default=datetime.now)
 
+    # 权限控制：哪些用户可以访问该上传记录
+    allowed_users = db.relationship(
+        'User',
+        secondary=gameentry_permissions,
+        backref='permitted_game_entries'
+    )
 
+    # 交互记录
     likes = db.relationship('Like', backref='entry', lazy='dynamic', cascade='all, delete-orphan')
     favorites = db.relationship('Favorite', backref='entry', lazy='dynamic', cascade='all, delete-orphan')
     comments = db.relationship('Comment', backref='entry', lazy='dynamic', cascade='all, delete-orphan')
 
     user = db.relationship('User', backref='entries')
+
 
 
 class Comment(db.Model):

@@ -1,4 +1,20 @@
 document.addEventListener('DOMContentLoaded', function () {
+  // ✅ 可见性选择逻辑
+  const visibilitySelect = document.getElementById('visibility');
+  const friendSelection = document.getElementById('friend-selection');
+
+  function toggleFriendSelection() {
+    if (visibilitySelect && friendSelection) {
+      friendSelection.style.display = (visibilitySelect.value === 'friends') ? 'block' : 'none';
+    }
+  }
+
+  if (visibilitySelect) {
+    visibilitySelect.addEventListener('change', toggleFriendSelection);
+    toggleFriendSelection(); // 初始化
+  }
+
+  // ✅ 添加玩家功能
   const addPlayerBtn = document.getElementById('addPlayerBtn');
   const playersContainer = document.getElementById('playersContainer');
   const csvInput = document.getElementById('csvInput');
@@ -43,6 +59,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   });
 
+  // ✅ 加载 CSV 填充表单
   loadCsvBtn.addEventListener('click', function () {
     const file = csvInput.files[0];
     if (!file) return alert('Please select a CSV file first.');
@@ -59,14 +76,14 @@ document.addEventListener('DOMContentLoaded', function () {
         data[h.trim()] = values[i]?.trim();
       });
 
-      // Basic Fields
+      // 填充基本字段
       if (data['game_title']) document.getElementById('gameTitle').value = data['game_title'];
       if (data['date_played']) document.getElementById('datePlayed').value = data['date_played'];
 
-      // Auto fill players dynamically
+      // 自动填充玩家
       for (let i = 1; i <= 10; i++) {
         if (data[`player${i}Name`]) {
-          if (i > playerCount) addPlayerBtn.click(); // auto add player section
+          if (i > playerCount) addPlayerBtn.click();
 
           document.getElementById(`player${i}Name`).value = data[`player${i}Name`] || '';
           document.getElementById(`player${i}Username`).value = data[`player${i}Username`] || '';
@@ -80,7 +97,7 @@ document.addEventListener('DOMContentLoaded', function () {
     reader.readAsText(file);
   });
 
-  // LIKE button AJAX
+  // ✅ 点赞功能
   document.querySelectorAll('.like-btn').forEach(button => {
     button.addEventListener('click', function () {
       const entryId = this.dataset.entryId;
@@ -102,7 +119,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   });
 
-  // FAVORITE button AJAX
+  // ✅ 收藏功能
   document.querySelectorAll('.favorite-btn').forEach(button => {
     button.addEventListener('click', function () {
       const entryId = this.dataset.entryId;
