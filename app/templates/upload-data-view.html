@@ -34,12 +34,46 @@
 <section aria-label="Manual Data Entry">
   <h2>Manual Data Entry</h2>
   <form id="entryForm" action="{{ url_for('main.forum') }}" method="POST">
+
+    <!-- 可见性选择 -->
+    <fieldset class="visibility-section">
+      <legend>Who can see this entry?</legend>
+
+      <div class="visibility-row">
+        <label for="visibility" class="visibility-label">Visibility:</label>
+        <select id="visibility" name="visibility" class="visibility-select">
+          <option value="public">Everyone</option>
+          <option value="friends">Only selected friends</option>
+        </select>
+      </div>
+
+      <div id="friend-selection" class="friend-selection">
+        {% if friends %}
+          <p><strong>Select friends allowed to view:</strong></p>
+          <div class="friend-checkboxes">
+            {% for friend in friends %}
+              <div class="friend-checkbox-row">
+                <div class="checkbox-col">
+                  <input type="checkbox" name="allowed_users" value="{{ friend.id }}">
+                </div>
+                <div class="label-col">{{ friend.username }}</div>
+              </div>
+            {% endfor %}
+          </div>
+        {% else %}
+          <p>You have no friends to share with.</p>
+        {% endif %}
+      </div>
+    </fieldset>
+
+    <!-- 游戏基本信息 -->
     <label for="gameTitle">Game Title:</label>
     <input type="text" id="gameTitle" name="gameTitle" required placeholder="e.g., Go" />
 
     <label for="datePlayed">Date Played:</label>
     <input type="date" id="datePlayed" name="datePlayed" required />
 
+    <!-- 玩家信息 -->
     <div id="playersContainer">
       <fieldset class="player-info">
         <legend>Player 1</legend>
@@ -103,8 +137,6 @@
     {% endfor %}
   </ul>
 
-
-  <!-- Pagination Controls -->
   {% if pagination %}
   <div class="pagination">
     {% if pagination.has_prev %}
@@ -125,13 +157,28 @@
       <a href="{{ url_for('main.forum', page=pagination.pages) }}">Last »</a>
     {% endif %}
   </div>
-{% endif %}
-
+  {% endif %}
 </section>
-
 {% endblock %}
 
 {% block extra_scripts %}
 <script src="{{ url_for('static', filename='js/forum.js') }}"></script>
 <script src="{{ url_for('static', filename='js/index.js') }}"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const visibilitySelect = document.getElementById('visibility');
+    const friendSelection = document.getElementById('friend-selection');
+
+    function toggleFriendSelection() {
+      if (visibilitySelect.value === 'friends') {
+        friendSelection.style.display = 'block';
+      } else {
+        friendSelection.style.display = 'none';
+      }
+    }
+
+    visibilitySelect.addEventListener('change', toggleFriendSelection);
+    toggleFriendSelection(); // Initialize on load
+  });
+</script>
 {% endblock %}

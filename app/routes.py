@@ -139,6 +139,7 @@ def forum():
     if request.method == 'POST':
         game_title = request.form.get('gameTitle')
         date_str = request.form.get('datePlayed')
+        visibility = request.form.get('visibility')  # 👈 新增字段
 
         try:
             date_played = datetime.strptime(date_str, "%Y-%m-%d").date()
@@ -146,21 +147,59 @@ def forum():
             flash("Invalid date format.", "error")
             return redirect(url_for('main.forum'))
 
+        # ✅ 根据可见性决定 allowed_users
+        if visibility == 'public':
+            # 可设为全部用户（或仅限朋友，如果不想所有注册用户都可见）
+            allowed_users = User.query.all()
+        else:
+            allowed_ids = request.form.getlist('allowed_users')  # 多选框
+            allowed_users = User.query.filter(User.id.in_(allowed_ids)).all()
+
+        # ✅ 创建 GameEntry 并附加 allowed_users
         new_entry = GameEntry(
             game_title=game_title,
             date_played=date_played,
-            user_id=current_user.id
+            user_id=current_user.id,
+            allowed_users=allowed_users
         )
         db.session.add(new_entry)
         db.session.commit()
+
         flash('Entry submitted!')
         return redirect(url_for('main.forum'))
 
+    # ✅ GET 请求：只显示“自己上传的”和“被授权查看”的记录
     page = request.args.get('page', 1, type=int)
-    pagination = GameEntry.query.order_by(GameEntry.timestamp.desc()).paginate(page=page, per_page=5, error_out=False)
+    all_entries = GameEntry.query.order_by(GameEntry.timestamp.desc()).all()
+
+    visible_entries = [
+        entry for entry in all_entries
+        if entry.user_id == current_user.id or current_user in entry.allowed_users
+    ]
+
+    # ✅ 手动分页
+    per_page = 5
+    total = len(visible_entries)
+    start = (page - 1) * per_page
+    end = start + per_page
+    paginated_items = visible_entries[start:end]
+
+    class ManualPagination:
+        def __init__(self, items, page, per_page, total):
+            self.items = items
+            self.page = page
+            self.per_page = per_page
+            self.total = total
+            self.pages = (total + per_page - 1) // per_page
+            self.has_prev = page > 1
+            self.has_next = page < self.pages
+            self.prev_num = page - 1
+            self.next_num = page + 1
+
+    pagination = ManualPagination(paginated_items, page, per_page, total)
 
     entries = []
-    for entry in pagination.items:
+    for entry in paginated_items:
         entries.append({
             'entry': entry,
             'like_count': entry.likes.count(),
@@ -169,14 +208,24 @@ def forum():
             'favorited': Favorite.query.filter_by(user_id=current_user.id, entry_id=entry.id).first() is not None,
         })
 
-    return render_template('upload-data-view.html', entries=entries, pagination=pagination)
+    friends = current_user.friends.all()
 
+    return render_template(
+        'upload-data-view.html',
+        entries=entries,
+        pagination=pagination,
+        friends=friends
+    )
 
 
 @main.route('/forum/<int:entry_id>', methods=['GET', 'POST'])
 @login_required
 def view_entry(entry_id):
     entry = GameEntry.query.get_or_404(entry_id)
+
+    # ✅ 权限校验：非本人 & 不在允许列表，禁止查看
+    if entry.user_id != current_user.id and current_user not in entry.allowed_users:
+        abort(403)
 
     if request.method == 'POST':
         comment_text = request.form.get('comment')
@@ -193,6 +242,7 @@ def view_entry(entry_id):
         return redirect(url_for('main.view_entry', entry_id=entry.id))
 
     return render_template('entry_detail.html', entry=entry)
+
 
 @main.route('/upload_csv', methods=['POST'])
 @login_required

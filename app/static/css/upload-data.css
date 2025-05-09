@@ -31,7 +31,7 @@ input, select, textarea {
     color: black;
 }
 
-/* Button defaults (self-sized, not full width) */
+/* Button defaults */
 button {
     padding: 10px 20px;
     margin: 10px 5px 10px 0;
@@ -217,23 +217,75 @@ body.dark-mode .player-info {
     border-color: #666;
 }
 
+/* Pagination */
 .pagination {
     margin-top: 20px;
     text-align: center;
-  }
-  .pagination a, .pagination strong {
+}
+.pagination a, .pagination strong {
     margin: 0 5px;
     text-decoration: none;
     padding: 4px 8px;
     border: 1px solid #ccc;
     border-radius: 4px;
     color: #333;
-  }
-  .pagination a:hover {
+}
+.pagination a:hover {
     background-color: #f0f0f0;
-  }
-  .pagination strong {
+}
+.pagination strong {
     font-weight: bold;
     background-color: #ddd;
-  }
-  
+}
+
+/* Visibility and Friend Selector */
+.visibility-section {
+    border: 1px solid #ccc;
+    padding: 1rem;
+    border-radius: 8px;
+    margin-bottom: 1.5rem;
+}
+
+.visibility-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 1rem;
+}
+
+.visibility-label {
+    font-weight: bold;
+    min-width: 100px;
+}
+
+.visibility-select {
+    flex: 1;
+    padding: 6px;
+}
+
+.friend-selection {
+    margin-left: 10px;
+}
+
+.friend-checkboxes {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.friend-checkbox-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* ✅ 关键：对齐复选框 */
+.checkbox-col {
+    width: 24px;
+    display: flex;
+    justify-content: center;
+}
+
+.label-col {
+    flex: 1;
+}
