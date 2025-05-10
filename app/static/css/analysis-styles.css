@@ -9,7 +9,6 @@
     /*max-width: 600px*/
 }
 
-
 #summary {
     border: 1px solid #ccc;
     border-radius: 8px;
@@ -129,52 +128,120 @@ body {
     color: #333;
 }
 
-/* Header */
+/* ==== 🔥 替换后的导航部分 ==== */
+
+/* Header整体设置 */
 .main-header {
-    background-color: #34495e;
+    background-color: brown;
     color: white;
-    padding: 1.5rem;
+    padding: 20px;
     display: flex;
-    justify-content: space-between;
+    flex-direction: column;
     align-items: center;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    text-align: center;
 }
 
-.notifications {
-    position: relative;
-    font-size: 1.5rem;
+/* 标题h1单独设置 */
+.main-title {
+    margin: 0;
+    font-size: 2.5rem;
 }
 
-.notif-count {
-    position: absolute;
-    top: -10px;
-    right: -10px;
-    background: #e74c3c;
+/* 导航栏整体 */
+.main-nav {
+    display: flex;
+    justify-content: center; /* 先整体居中 */
+    align-items: center;
+    width: 100%;
+    margin-top: 10px;
+    padding: 0 20px;
+    box-sizing: border-box;
+    position: relative; /* 为了右上角定位 */
+}
+
+/* 中间的链接组 */
+.nav-center {
+    flex-grow: 1;
+    display: flex;
+    justify-content: center; /* 中间水平居中 */
+}
+
+/* 链接列表 */
+.nav-list {
+    list-style: none;
+    display: flex;
+    gap: 20px;
+    padding: 0;
+    margin: 0;
+}
+
+.nav-list a {
     color: white;
-    padding: 2px 6px;
-    font-size: 0.8rem;
-    border-radius: 50%;
+    font-weight: bold;
+    text-decoration: none;
+    padding: 8px 12px;
+    transition: background-color 0.3s ease;
 }
 
- .card {
-     border: 1px solid #ccc;
-     border-radius: 8px;
-     padding: 1rem;
-     margin: 1rem 0;
-     box-shadow: 2px 2px 6px rgba(0,0,0,0.1);
-     background-color: #fafafa;
- }
+.nav-list a:hover {
+    background-color: #8b0000;
+    border-radius: 10px;
+}
+
+/* 右边的登录/登出按钮区域 */
+.nav-right {
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+/* 登录/登出按钮样式 */
+.auth-button {
+    background-color: #27ae60;
+    color: white;
+    text-align: center;
+    padding: 8px 16px;
+    border-radius: 20px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
+
+.auth-button:hover {
+    background-color: #1e8449;
+}
+
+/* 登陆后显示的用户名 */
+.auth-username {
+    color: white;
+    font-weight: bold;
+}
+
+/* ==== 🔥 END 导航部分 ==== */
+
+.card {
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 1rem;
+    margin: 1rem 0;
+    box-shadow: 2px 2px 6px rgba(0,0,0,0.1);
+    background-color: #fafafa;
+}
 
 .card h3 {
     margin-top: 0;
 }
 
- .card-actions {
-     margin-top: 1rem;
-     display: flex;
-     justify-content: flex-end;
-     gap: 0.5rem;
- }
+.card-actions {
+    margin-top: 1rem;
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5rem;
+}
 
 .card-actions button {
     padding: 0.5rem 1rem;
@@ -305,25 +372,6 @@ select, input[type="date"], input[type="text"], input[type="number"] {
 .form-actions button:hover {
     background-color: #125ca1;
 }
-
-/*.create-card select,*/
-/*.create-card button {*/
-/*    padding: 0.5rem;*/
-/*    font-size: 1rem;*/
-/*    border-radius: 4px;*/
-/*    border: 1px solid #ccc;*/
-/*}*/
-
-/*.create-card button {*/
-/*    background-color: #1976d2;*/
-/*    color: white;*/
-/*    border: none;*/
-/*    cursor: pointer;*/
-/*}*/
-
-/*.create-card button:hover {*/
-/*    background-color: #125ca1;*/
-/*}*/
 
 .filters {
     margin: 1rem 0;
