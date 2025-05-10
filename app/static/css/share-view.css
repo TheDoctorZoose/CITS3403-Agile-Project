@@ -6,31 +6,87 @@ body {
   color: #333;
 }
 
-/* Header */
 .main-header {
-  background-color: #34495e;
+  background-color: brown;
   color: white;
-  padding: 1.5rem;
+  padding: 20px;
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
   align-items: center;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  text-align: center;
 }
 
-.notifications {
+.main-title {
+  margin: 0;
+  font-size: 2.5rem;
+}
+
+.main-nav {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  margin-top: 10px;
+  padding: 0 20px;
+  box-sizing: border-box;
   position: relative;
-  font-size: 1.5rem;
 }
 
-.notif-count {
-  position: absolute;
-  top: -10px;
-  right: -10px;
-  background: #e74c3c;
+.nav-center {
+  flex-grow: 1;
+  display: flex;
+  justify-content: center;
+}
+
+.nav-list {
+  list-style: none;
+  display: flex;
+  gap: 20px;
+  padding: 0;
+  margin: 0;
+}
+
+.nav-list a {
   color: white;
-  padding: 2px 6px;
-  font-size: 0.8rem;
-  border-radius: 50%;
+  font-weight: bold;
+  text-decoration: none;
+  padding: 8px 12px;
+  transition: background-color 0.3s ease;
+}
+
+.nav-list a:hover {
+  background-color: #8b0000;
+  border-radius: 10px;
+}
+
+.nav-right {
+  position: absolute;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.auth-button {
+  background-color: #27ae60;
+  color: white;
+  text-align: center;
+  padding: 8px 16px;
+  border-radius: 20px;
+  text-decoration: none;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+}
+
+.auth-button:hover {
+  background-color: #1e8449;
+}
+
+.auth-username {
+  color: white;
+  font-weight: bold;
 }
 
 /* Layout */
@@ -283,7 +339,6 @@ footer {
   color: #777;
 }
 
-
 .data-preview {
   font-size: 0.9rem;
   background: #ffffff;
@@ -336,6 +391,7 @@ footer {
 .data-table td {
   background-color: #fff;
 }
+
 .data-note {
   font-size: 0.9rem;
   color: #666;
