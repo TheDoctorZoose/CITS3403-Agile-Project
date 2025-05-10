@@ -1,4 +1,4 @@
-/* 通用字体和背景 */
+/* Global font and background */
 body {
     font-family: 'Segoe UI', sans-serif;
     margin: 0;
@@ -7,7 +7,7 @@ body {
     color: #333;
 }
 
-/* Header整体设置 */
+/* Header layout */
 .main-header {
     background-color: brown;
     color: white;
@@ -18,30 +18,32 @@ body {
     text-align: center;
 }
 
-/* 标题h1单独设置 */
+/* Main title in header */
 .main-title {
     margin: 0;
     font-size: 2.5rem;
 }
 
+/* Navigation container */
 .main-nav {
     display: flex;
-    justify-content: center; /* 先整体居中 */
+    justify-content: center; /* Center the nav bar */
     align-items: center;
     width: 100%;
     margin-top: 10px;
     padding: 0 20px;
     box-sizing: border-box;
-    position: relative; /* 为了右上角定位 */
+    position: relative; /* To allow absolute-positioned nav-right */
 }
 
-/* 中间的链接组 */
+/* Center navigation links */
 .nav-center {
     flex-grow: 1;
     display: flex;
-    justify-content: center; /* 中间水平居中 */
+    justify-content: center;
 }
 
+/* Navigation list */
 .nav-list {
     list-style: none;
     display: flex;
@@ -63,7 +65,7 @@ body {
     border-radius: 10px;
 }
 
-/* 右边的登录注册按钮 */
+/* Login/Register area at top right */
 .nav-right {
     position: absolute;
     right: 20px;
@@ -74,6 +76,7 @@ body {
     gap: 10px;
 }
 
+/* Login/Logout button */
 .auth-button {
     background-color: #27ae60;
     color: white;
@@ -89,8 +92,7 @@ body {
     background-color: #1e8449;
 }
 
-
-/* Toggle按钮样式 */
+/* Theme toggle button */
 #themeToggle {
     margin-top: 15px;
     background-color: #3498db;
@@ -106,14 +108,14 @@ body {
     background-color: #2980b9;
 }
 
-/* Main主内容区 */
+/* Main content container */
 main.container {
     max-width: 1000px;
     margin: auto;
     padding: 40px 20px;
 }
 
-/* 首页特有的intro样式 */
+/* Intro section on homepage */
 .intro {
     background-color: white;
     padding: 30px;
@@ -121,7 +123,7 @@ main.container {
     box-shadow: 0px 0px 10px #aaa;
 }
 
-/* Footer页脚样式 */
+/* Footer style */
 footer.main-footer {
     text-align: center;
     padding: 15px;
@@ -131,31 +133,33 @@ footer.main-footer {
     background-color: #ecf0f1;
 }
 
-/* 暗色模式 */
+/* ==== DARK MODE STYLING ==== */
+
+/* Dark mode body */
 body.dark-mode {
     background-color: #1e1e1e;
     color: #ddd;
 }
 
-/* Intro卡片样式（暗色） */
+/* Dark mode intro card */
 body.dark-mode .intro {
     background-color: #2a2a2a;
     box-shadow: 0px 0px 10px rgba(255, 255, 255, 0.05);
 }
 
-/* Header 和 Footer 暗色适配 */
+/* Dark mode for header and footer */
 body.dark-mode .main-header,
 body.dark-mode footer.main-footer {
     background-color: #121212;
     color: #ccc;
 }
 
-/* 页脚文字 */
+/* Footer text in dark mode */
 body.dark-mode footer.main-footer {
     color: #999;
 }
 
-/* Toggle按钮暗色模式 */
+/* Theme toggle button (dark) */
 body.dark-mode #themeToggle {
     background-color: #444;
     color: #eee;
@@ -165,7 +169,7 @@ body.dark-mode #themeToggle:hover {
     background-color: #666;
 }
 
-/* 导航链接 */
+/* Nav links in dark mode */
 body.dark-mode .nav-list a {
     color: #eee;
 }
@@ -174,7 +178,7 @@ body.dark-mode .nav-list a:hover {
     background-color: #333;
 }
 
-/* 登录/注册按钮 */
+/* Login/Logout button in dark mode */
 body.dark-mode .auth-button {
     background-color: #555;
     color: #eee;
@@ -184,37 +188,37 @@ body.dark-mode .auth-button:hover {
     background-color: #777;
 }
 
-/* 登陆后显示的用户名 */
+/* Username text in dark mode */
 body.dark-mode .auth-username {
     color: #eee;
 }
 
-/* 暗色模式下：表单整体背景和文字 */
+/* Dark mode form container */
 body.dark-mode .centre {
     background-color: #2b2b2b;
     color: #f0f0f0;
     box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
 }
 
-/* 表单输入框 */
+/* Dark mode input fields */
 body.dark-mode .centre input {
     background-color: #444;
     color: #f0f0f0;
     border: 1px solid #666;
 }
 
-/* Label颜色 */
+/* Labels in dark mode */
 body.dark-mode .centre label span,
 body.dark-mode .centre label {
     color: #ddd;
 }
 
-/* h2 标题 */
+/* Form titles in dark mode */
 body.dark-mode .centre h2 {
     color: #fff;
 }
 
-/* 提交按钮 */
+/* Submit buttons in dark mode */
 body.dark-mode .submit-btn input,
 body.dark-mode .submit {
     background-color: #555 !important;
@@ -222,8 +226,7 @@ body.dark-mode .submit {
     border: none;
 }
 
-/* 链接颜色适配 */
+/* Link color in dark mode */
 body.dark-mode a {
     color: #99c9ff;
 }
-
