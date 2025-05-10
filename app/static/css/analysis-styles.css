@@ -6,7 +6,7 @@
 
 .left-column {
     flex: 3;
-    /*max-width: 600px*/
+    /* Optional max-width for left column */
 }
 
 #summary {
@@ -19,7 +19,7 @@
     margin: 2rem auto;
 }
 
-/* Heading */
+/* Summary section heading */
 #summary-header {
     text-align: left;
     font-size: 1.6rem;
@@ -28,12 +28,13 @@
     color: #333;
 }
 
-/* Only the columns flex */
+/* Summary columns layout */
 #summary-columns {
     display: flex;
     flex-direction: column;
     gap: 2rem;
 }
+
 @media (min-width: 350px) {
     #summary-columns {
         flex-direction: row;
@@ -44,7 +45,7 @@
     }
 }
 
-/* Summary items */
+/* Each summary item */
 .summary-column p:not(.h-index-note) {
     display: flex;
     justify-content: space-between;
@@ -54,7 +55,7 @@
     font-size: 1rem;
 }
 
-/* Numbers styling */
+/* Styling for numbers */
 .summary-column p:not(.h-index-note) span {
     margin-left: auto;
     text-align: right;
@@ -64,7 +65,7 @@
     color: #1976d2;
 }
 
-/* H-index note styling */
+/* Note under H-index */
 .h-index-note {
     font-style: italic;
     font-size: 0.9rem;
@@ -72,6 +73,7 @@
     margin-top: 1rem;
 }
 
+/* Divider line between sections */
 .section-divider {
     border: none;
     border-top: 1px solid #ccc;
@@ -79,19 +81,18 @@
     width: 80%;
 }
 
-/* Centered "Percent of Own Games Played" (if present) */
+/* Centered section: % of own games played */
 #percent-of-own-games-played {
     text-align: center;
     margin: 1em 2em;
 }
 
-/* Main table styles */
+/* Table wrapper (optional) */
 main > div {
-    /* Previously dashed black border; now optional */
-    /* border: 1px dashed black; */
+    /* Previously dashed border removed */
 }
 
-/* Table styling */
+/* General table styling */
 table {
     width: 100%;
     margin-bottom: 2em;
@@ -103,19 +104,18 @@ table {
     overflow: hidden;
 }
 
-/* Table cell spacing */
 table, th, td {
     padding: 0.75em;
 }
 
-/* Header cells */
+/* Table header row */
 th {
     background-color: lightgray;
     border-bottom: 1px solid black;
     text-align: right;
 }
 
-/* Make 2nd column left-aligned */
+/* Align second column to the left */
 table td:nth-child(2),
 table th:nth-child(2) {
     text-align: left;
@@ -128,9 +128,9 @@ body {
     color: #333;
 }
 
-/* ==== 🔥 替换后的导航部分 ==== */
+/* Replaced navigation styles */
 
-/* Header整体设置 */
+/* Header setup */
 .main-header {
     background-color: brown;
     color: white;
@@ -141,32 +141,32 @@ body {
     text-align: center;
 }
 
-/* 标题h1单独设置 */
+/* Header title styling */
 .main-title {
     margin: 0;
     font-size: 2.5rem;
 }
 
-/* 导航栏整体 */
+/* Navigation bar layout */
 .main-nav {
     display: flex;
-    justify-content: center; /* 先整体居中 */
+    justify-content: center;
     align-items: center;
     width: 100%;
     margin-top: 10px;
     padding: 0 20px;
     box-sizing: border-box;
-    position: relative; /* 为了右上角定位 */
+    position: relative;
 }
 
-/* 中间的链接组 */
+/* Center navigation links */
 .nav-center {
     flex-grow: 1;
     display: flex;
-    justify-content: center; /* 中间水平居中 */
+    justify-content: center;
 }
 
-/* 链接列表 */
+/* Navigation list */
 .nav-list {
     list-style: none;
     display: flex;
@@ -188,7 +188,7 @@ body {
     border-radius: 10px;
 }
 
-/* 右边的登录/登出按钮区域 */
+/* Top right login/logout area */
 .nav-right {
     position: absolute;
     right: 20px;
@@ -199,7 +199,7 @@ body {
     gap: 10px;
 }
 
-/* 登录/登出按钮样式 */
+/* Login/logout buttons */
 .auth-button {
     background-color: #27ae60;
     color: white;
@@ -215,14 +215,15 @@ body {
     background-color: #1e8449;
 }
 
-/* 登陆后显示的用户名 */
+/* Username display */
 .auth-username {
     color: white;
     font-weight: bold;
 }
 
-/* ==== 🔥 END 导航部分 ==== */
+/* 🔥 END navigation */
 
+/* Card container styling */
 .card {
     border: 1px solid #ccc;
     border-radius: 8px;
@@ -236,6 +237,7 @@ body {
     margin-top: 0;
 }
 
+/* Action buttons in card */
 .card-actions {
     margin-top: 1rem;
     display: flex;
@@ -258,6 +260,7 @@ body {
     background-color: #125ca1;
 }
 
+/* Placeholder for graphs */
 .placeholder-graph {
     margin-top: 1rem;
     height: 200px;
@@ -270,6 +273,7 @@ body {
     border-radius: 4px;
 }
 
+/* Basic table styling */
 table {
     width: 100%;
     border-collapse: collapse;
@@ -291,6 +295,7 @@ th {
     float: right;
 }
 
+/* Toolbar for creating analysis */
 .create-analysis-toolbar {
     width: 300px;
     z-index: 1000;
@@ -301,10 +306,10 @@ th {
     box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.2);
 }
 
-/* Style the Create Card a little differently */
+/* Special styling for create form card */
 .create-card {
-    background-color: #e3f2fd; /* soft light blue */
-    border: 1px solid #90caf9; /* light blue border */
+    background-color: #e3f2fd;
+    border: 1px solid #90caf9;
     border-radius: 8px;
     padding: 2rem;
     max-width: 700px;
@@ -312,7 +317,7 @@ th {
     box-shadow: 2px 2px 6px rgba(0,0,0,0.1);
 }
 
-/* Form inside the Create Card */
+/* Create form layout */
 .create-card form {
     display: flex;
     flex-direction: column;
@@ -343,6 +348,7 @@ select, input[type="date"], input[type="text"], input[type="number"] {
     font-size: 1rem;
 }
 
+/* Checkbox group layout */
 .create-card .checkbox-group {
     display: flex;
     flex-direction: column;
@@ -354,6 +360,7 @@ select, input[type="date"], input[type="text"], input[type="number"] {
     margin-right: 0.5rem;
 }
 
+/* Form action buttons */
 .form-actions {
     text-align: center;
     margin-top: 2rem;
@@ -373,6 +380,7 @@ select, input[type="date"], input[type="text"], input[type="number"] {
     background-color: #125ca1;
 }
 
+/* Filter area layout */
 .filters {
     margin: 1rem 0;
     display: flex;
