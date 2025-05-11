@@ -1,23 +1,30 @@
-/* ===== Overall Page Styling ===== */
+/* ===== Page Base Styling (一致对齐 Base 模板) ===== */
 body.visualisation-page {
     background-color: #f9f9f9;
-    padding: 2rem;
+    margin: 0;
+    padding: 0; /* ✅ 关键：不要有额外 padding 破坏 header 贴合感 */
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     line-height: 1.6;
     color: #333;
 }
 
+/* ===== Page Content Section (加内边距的是内容容器，而非 body 本身) ===== */
+.visualisation-page main,
+.visualisation-page .page-content {
+    padding: 2rem;
+}
+
 /* ===== Heading Colors ===== */
 h1 {
     text-align: center;
-    color: #ffffff;  /* White heading for dark header */
+    color: #ffffff;
 }
 h2 {
     text-align: center;
     color: #000000;
 }
 
-/* ===== Card Grid Layout ===== */
+/* ===== Grid of Cards ===== */
 .category-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -41,7 +48,6 @@ h2 {
     margin-bottom: 0.5rem;
 }
 
-/* Placeholder block for charts or visuals */
 .placeholder {
     margin-top: 1rem;
     height: 120px;
@@ -54,106 +60,9 @@ h2 {
     border-radius: 4px;
 }
 
+/* ===== Divider Line ===== */
 hr {
     margin: 3rem 0;
     border: none;
     border-top: 2px solid #ddd;
-}
-
-/* ===== Navigation Bar Styling ===== */
-.main-header {
-    background-color: brown;
-    color: white;
-    padding: 20px;
-    box-sizing: border-box;
-}
-
-/* Centered site title block */
-.main-header-top {
-    text-align: center;
-    margin-bottom: 10px;
-}
-
-.main-title {
-    font-size: 2.5rem;
-    margin: 0;
-}
-
-/* Top nav layout: nav items left, user info right */
-.main-nav {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
-}
-
-/* Navigation links list */
-.nav-list {
-    list-style: none;
-    display: flex;
-    gap: 20px;
-    padding: 0;
-    margin: 0;
-    flex-wrap: wrap;
-}
-
-/* Link appearance */
-.nav-list a {
-    color: white;
-    font-weight: bold;
-    text-decoration: none;
-    padding: 8px 12px;
-    transition: background-color 0.3s ease;
-}
-
-.nav-list a:hover {
-    background-color: #8b0000;
-    border-radius: 10px;
-}
-
-/* Right side: username + login/logout buttons */
-.nav-right {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.auth-username {
-    color: white;
-    font-weight: bold;
-}
-
-.auth-button {
-    background-color: #27ae60;
-    color: white;
-    padding: 8px 16px;
-    border-radius: 20px;
-    text-decoration: none;
-    font-weight: bold;
-    transition: background-color 0.3s ease;
-}
-
-.auth-button:hover {
-    background-color: #1e8449;
-}
-
-/* Theme toggle button (centered below nav) */
-.theme-toggle,
-#themeToggle {
-    margin-top: 15px;
-    background-color: #3498db;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 20px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
-}
-
-.theme-toggle:hover,
-#themeToggle:hover {
-    background-color: #2980b9;
 }
