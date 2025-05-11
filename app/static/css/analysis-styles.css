@@ -6,9 +6,8 @@
 
 .left-column {
     flex: 3;
-    /*max-width: 600px*/
+    /* Optional max-width for left column */
 }
-
 
 #summary {
     border: 1px solid #ccc;
@@ -20,7 +19,7 @@
     margin: 2rem auto;
 }
 
-/* Heading */
+/* Summary section heading */
 #summary-header {
     text-align: left;
     font-size: 1.6rem;
@@ -29,12 +28,13 @@
     color: #333;
 }
 
-/* Only the columns flex */
+/* Summary columns layout */
 #summary-columns {
     display: flex;
     flex-direction: column;
     gap: 2rem;
 }
+
 @media (min-width: 350px) {
     #summary-columns {
         flex-direction: row;
@@ -45,7 +45,7 @@
     }
 }
 
-/* Summary items */
+/* Each summary item */
 .summary-column p:not(.h-index-note) {
     display: flex;
     justify-content: space-between;
@@ -55,7 +55,7 @@
     font-size: 1rem;
 }
 
-/* Numbers styling */
+/* Styling for numbers */
 .summary-column p:not(.h-index-note) span {
     margin-left: auto;
     text-align: right;
@@ -65,7 +65,7 @@
     color: #1976d2;
 }
 
-/* H-index note styling */
+/* Note under H-index */
 .h-index-note {
     font-style: italic;
     font-size: 0.9rem;
@@ -73,6 +73,7 @@
     margin-top: 1rem;
 }
 
+/* Divider line between sections */
 .section-divider {
     border: none;
     border-top: 1px solid #ccc;
@@ -80,19 +81,18 @@
     width: 80%;
 }
 
-/* Centered "Percent of Own Games Played" (if present) */
+/* Centered section: % of own games played */
 #percent-of-own-games-played {
     text-align: center;
     margin: 1em 2em;
 }
 
-/* Main table styles */
+/* Table wrapper (optional) */
 main > div {
-    /* Previously dashed black border; now optional */
-    /* border: 1px dashed black; */
+    /* Previously dashed border removed */
 }
 
-/* Table styling */
+/* General table styling */
 table {
     width: 100%;
     margin-bottom: 2em;
@@ -104,19 +104,18 @@ table {
     overflow: hidden;
 }
 
-/* Table cell spacing */
 table, th, td {
     padding: 0.75em;
 }
 
-/* Header cells */
+/* Table header row */
 th {
     background-color: lightgray;
     border-bottom: 1px solid black;
     text-align: right;
 }
 
-/* Make 2nd column left-aligned */
+/* Align second column to the left */
 table td:nth-child(2),
 table th:nth-child(2) {
     text-align: left;
@@ -129,52 +128,122 @@ body {
     color: #333;
 }
 
-/* Header */
+/* Replaced navigation styles */
+
+/* Header setup */
 .main-header {
-    background-color: #34495e;
+    background-color: brown;
     color: white;
-    padding: 1.5rem;
+    padding: 20px;
     display: flex;
-    justify-content: space-between;
+    flex-direction: column;
     align-items: center;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    text-align: center;
 }
 
-.notifications {
+/* Header title styling */
+.main-title {
+    margin: 0;
+    font-size: 2.5rem;
+}
+
+/* Navigation bar layout */
+.main-nav {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    margin-top: 10px;
+    padding: 0 20px;
+    box-sizing: border-box;
     position: relative;
-    font-size: 1.5rem;
 }
 
-.notif-count {
-    position: absolute;
-    top: -10px;
-    right: -10px;
-    background: #e74c3c;
+/* Center navigation links */
+.nav-center {
+    flex-grow: 1;
+    display: flex;
+    justify-content: center;
+}
+
+/* Navigation list */
+.nav-list {
+    list-style: none;
+    display: flex;
+    gap: 20px;
+    padding: 0;
+    margin: 0;
+}
+
+.nav-list a {
     color: white;
-    padding: 2px 6px;
-    font-size: 0.8rem;
-    border-radius: 50%;
+    font-weight: bold;
+    text-decoration: none;
+    padding: 8px 12px;
+    transition: background-color 0.3s ease;
 }
 
- .card {
-     border: 1px solid #ccc;
-     border-radius: 8px;
-     padding: 1rem;
-     margin: 1rem 0;
-     box-shadow: 2px 2px 6px rgba(0,0,0,0.1);
-     background-color: #fafafa;
- }
+.nav-list a:hover {
+    background-color: #8b0000;
+    border-radius: 10px;
+}
+
+/* Top right login/logout area */
+.nav-right {
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+/* Login/logout buttons */
+.auth-button {
+    background-color: #27ae60;
+    color: white;
+    text-align: center;
+    padding: 8px 16px;
+    border-radius: 20px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
+
+.auth-button:hover {
+    background-color: #1e8449;
+}
+
+/* Username display */
+.auth-username {
+    color: white;
+    font-weight: bold;
+}
+
+/* 🔥 END navigation */
+
+/* Card container styling */
+.card {
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 1rem;
+    margin: 1rem 0;
+    box-shadow: 2px 2px 6px rgba(0,0,0,0.1);
+    background-color: #fafafa;
+}
 
 .card h3 {
     margin-top: 0;
 }
 
- .card-actions {
-     margin-top: 1rem;
-     display: flex;
-     justify-content: flex-end;
-     gap: 0.5rem;
- }
+/* Action buttons in card */
+.card-actions {
+    margin-top: 1rem;
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5rem;
+}
 
 .card-actions button {
     padding: 0.5rem 1rem;
@@ -191,6 +260,7 @@ body {
     background-color: #125ca1;
 }
 
+/* Placeholder for graphs */
 .placeholder-graph {
     margin-top: 1rem;
     height: 200px;
@@ -203,6 +273,7 @@ body {
     border-radius: 4px;
 }
 
+/* Basic table styling */
 table {
     width: 100%;
     border-collapse: collapse;
@@ -224,6 +295,7 @@ th {
     float: right;
 }
 
+/* Toolbar for creating analysis */
 .create-analysis-toolbar {
     width: 300px;
     z-index: 1000;
@@ -234,10 +306,10 @@ th {
     box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.2);
 }
 
-/* Style the Create Card a little differently */
+/* Special styling for create form card */
 .create-card {
-    background-color: #e3f2fd; /* soft light blue */
-    border: 1px solid #90caf9; /* light blue border */
+    background-color: #e3f2fd;
+    border: 1px solid #90caf9;
     border-radius: 8px;
     padding: 2rem;
     max-width: 700px;
@@ -245,7 +317,7 @@ th {
     box-shadow: 2px 2px 6px rgba(0,0,0,0.1);
 }
 
-/* Form inside the Create Card */
+/* Create form layout */
 .create-card form {
     display: flex;
     flex-direction: column;
@@ -276,6 +348,7 @@ select, input[type="date"], input[type="text"], input[type="number"] {
     font-size: 1rem;
 }
 
+/* Checkbox group layout */
 .create-card .checkbox-group {
     display: flex;
     flex-direction: column;
@@ -287,6 +360,7 @@ select, input[type="date"], input[type="text"], input[type="number"] {
     margin-right: 0.5rem;
 }
 
+/* Form action buttons */
 .form-actions {
     text-align: center;
     margin-top: 2rem;
@@ -306,25 +380,7 @@ select, input[type="date"], input[type="text"], input[type="number"] {
     background-color: #125ca1;
 }
 
-/*.create-card select,*/
-/*.create-card button {*/
-/*    padding: 0.5rem;*/
-/*    font-size: 1rem;*/
-/*    border-radius: 4px;*/
-/*    border: 1px solid #ccc;*/
-/*}*/
-
-/*.create-card button {*/
-/*    background-color: #1976d2;*/
-/*    color: white;*/
-/*    border: none;*/
-/*    cursor: pointer;*/
-/*}*/
-
-/*.create-card button:hover {*/
-/*    background-color: #125ca1;*/
-/*}*/
-
+/* Filter area layout */
 .filters {
     margin: 1rem 0;
     display: flex;
