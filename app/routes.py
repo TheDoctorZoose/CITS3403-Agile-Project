@@ -30,7 +30,7 @@ def index():
 @main.route('/register', methods=['GET', 'POST'])
 def register():
     if current_user.is_authenticated:
-        return redirect(url_for('main.homepage'))  # or wherever
+        return redirect(url_for('main.homepage')) 
 
     form = RegistrationForm()
 
@@ -82,10 +82,6 @@ def forgot_password():
 @main.route('/intro')
 def intro():
     return render_template("intropage.html")
-
-# @main.route('/forum')
-# def forum():
-#     return render_template("upload-data-view.html")
 
 @main.route('/share')
 def share_data_view():
@@ -140,7 +136,7 @@ def forum():
     if request.method == 'POST':
         game_title = request.form.get('gameTitle')
         date_str = request.form.get('datePlayed')
-        visibility = request.form.get('visibility')  # 👈 新增字段
+        visibility = request.form.get('visibility')  
 
         try:
             date_played = datetime.strptime(date_str, "%Y-%m-%d").date()
@@ -148,15 +144,14 @@ def forum():
             flash("Invalid date format.", "error")
             return redirect(url_for('main.forum'))
 
-        # ✅ 根据可见性决定 allowed_users
         if visibility == 'public':
-            # 可设为全部用户（或仅限朋友，如果不想所有注册用户都可见）
+           
             allowed_users = User.query.all()
         else:
-            allowed_ids = request.form.getlist('allowed_users')  # 多选框
+            allowed_ids = request.form.getlist('allowed_users')  
             allowed_users = User.query.filter(User.id.in_(allowed_ids)).all()
 
-        # ✅ 创建 GameEntry 并附加 allowed_users
+
         new_entry = GameEntry(
             game_title=game_title,
             date_played=date_played,
@@ -169,7 +164,6 @@ def forum():
         flash('Entry submitted!')
         return redirect(url_for('main.forum'))
 
-    # ✅ GET 请求：只显示“自己上传的”和“被授权查看”的记录
     page = request.args.get('page', 1, type=int)
     all_entries = GameEntry.query.order_by(GameEntry.timestamp.desc()).all()
 
@@ -178,7 +172,6 @@ def forum():
         if entry.user_id == current_user.id or current_user in entry.allowed_users
     ]
 
-    # ✅ 手动分页
     per_page = 5
     total = len(visible_entries)
     start = (page - 1) * per_page
@@ -224,7 +217,6 @@ def forum():
 def view_entry(entry_id):
     entry = GameEntry.query.get_or_404(entry_id)
 
-    # ✅ 权限校验：非本人 & 不在允许列表，禁止查看
     if entry.user_id != current_user.id and current_user not in entry.allowed_users:
         abort(403)
 
@@ -312,7 +304,7 @@ def like_entry(entry_id):
             'like_count': entry.likes.count()
         })
 
-    # Fallback for non-AJAX
+
     flash("You liked this entry!" if liked else "You unliked this entry.", "success" if liked else "info")
     return redirect(url_for('main.forum'))
 
@@ -339,7 +331,7 @@ def favorite_entry(entry_id):
             'favorite_count': entry.favorites.count()
         })
 
-    # Fallback for non-AJAX
+
     flash("Added to favorites!" if favorited else "Removed from favorites.", "success" if favorited else "info")
     return redirect(url_for('main.forum'))
 
@@ -367,9 +359,6 @@ def edit_bio():
     db.session.commit()
     flash("Signature updated.")
     return redirect(url_for('main.profile', user_id=current_user.id))
-
-#添加好友
-# routes.py
 
 @main.route('/send_request/<int:user_id>', methods=['POST'])
 @login_required
