@@ -279,7 +279,7 @@ body.dark-mode .player-info {
     gap: 8px;
 }
 
-/* ✅ 关键：对齐复选框 */
+
 .checkbox-col {
     width: 24px;
     display: flex;

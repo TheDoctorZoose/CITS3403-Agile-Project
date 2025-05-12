@@ -7,7 +7,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from app.models import FriendRequest, Message, User, GameEntry, Comment, Like, Favorite
 
 from app.forms import RegistrationForm, LoginForm
-from app import db 
+from app import db , mail
 
 from datetime import datetime
 
@@ -18,6 +18,7 @@ import csv, json
 from app.models import RawCSVEntry
 from threading import Thread
 from itsdangerous import URLSafeTimedSerializer
+from flask_mail import Message as MailMessage
 
 
 main = Blueprint('main', __name__)
@@ -358,41 +359,6 @@ def delete_entry(entry_id):
     return redirect(url_for('main.forum'))
 
 
-def send_async_email(app, msg):
-    with app.app_context():
-        mail.send(msg)
-
-# 发送封装
-
-def send_email(subject, sender, recipients, text_body, html_body):
-    msg = Message(subject, sender=sender, recipients=recipients)
-    msg.body = text_body
-    msg.html = html_body
-    Thread(target=send_async_email, args=(current_app._get_current_object(), msg)).start()
-
-# 生成令牌（用于密码重置）
-def generate_reset_token(email, expires_sec=1800):
-    s = URLSafeTimedSerializer(current_app.config['SECRET_KEY'])
-    return s.dumps(email, salt='password-reset-salt')
-
-# 验证令牌
-def verify_reset_token(token, expires_sec=1800):
-    s = URLSafeTimedSerializer(current_app.config['SECRET_KEY'])
-    try:
-        email = s.loads(token, salt='password-reset-salt', max_age=expires_sec)
-    except Exception:
-        return None
-    return email
-
-# 发送密码重置邮件
-def send_password_reset_email(user):
-    token = generate_reset_token(user.email)
-    send_email('[CITS3403] Reset Your Password',
-               sender=current_app.config['MAIL_DEFAULT_SENDER'],
-               recipients=[user.email],
-               text_body=render_template('reset_password.txt', user=user, token=token),
-               html_body=render_template('reset_password.html', user=user, token=token))
-
 @main.route('/edit_bio', methods=['POST'])
 @login_required
 def edit_bio():
@@ -485,3 +451,68 @@ def chat_with_friend(friend_id):
     } for msg in messages]
 
     return render_template("chat.html", users=current_user.friends, history=history)
+
+
+#找回密码
+@main.route('/reset_request', methods=['GET', 'POST'])
+def reset_request():
+    if request.method == 'POST':
+        email = request.form.get('email')
+        user = User.query.filter_by(email=email).first()
+        if user:
+            send_reset_email(user)
+            flash("Reset email sent!", "info")
+        else:
+            flash("Email not found.", "danger")
+        return redirect(url_for('main.login'))  # 登录页
+    return render_template('forgotpassword.html')  # 你已有的模板
+
+
+@main.route('/reset/<token>', methods=['GET', 'POST'])
+def reset_token(token):
+    email = verify_reset_token(token)
+    if email is None:
+        flash('Invalid or expired token.', 'danger')
+        return redirect(url_for('main.reset_request'))
+
+    user = User.query.filter_by(email=email).first_or_404()
+
+    if request.method == 'POST':
+        password = request.form.get('password')
+        user.set_password(password)
+        db.session.commit()
+        flash("Your password has been updated.", "success")
+        return redirect(url_for('main.login'))
+
+    # ✅ 传入 user 变量！
+    return render_template('reset_password.html', user=user,token=token)
+
+
+
+def generate_reset_token(email, expires_sec=3600):
+    s = URLSafeTimedSerializer(current_app.config['SECRET_KEY'])
+    return s.dumps(email, salt='reset-password')
+
+def verify_reset_token(token):
+    s = URLSafeTimedSerializer(current_app.config['SECRET_KEY'])
+    try:
+        return s.loads(token, salt='reset-password', max_age=3600)
+    except Exception:
+        return None
+
+def send_reset_email(user):
+    token = generate_reset_token(user.email)
+    reset_url = url_for('main.reset_token', token=token, _external=True)
+    msg = MailMessage('Reset Your Password',
+                  recipients=[user.email])
+    msg.body = f'''Hi {user.username},
+
+To reset your password, click the link below:
+{reset_url}
+
+If you did not request this, please ignore this email.
+
+Thanks,
+Board Game Central
+'''
+    mail.send(msg)
