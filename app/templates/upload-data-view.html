@@ -14,7 +14,7 @@
 
 {% block content %}
 <div class="container my-4">
-  <h1 class="text-center">Board Game Entry Analysis Tool</h1>
+  <h1 class="text-center">Upload Data</h1>
   <p class="text-center">Please fill in the form below to record your board game session.</p>
 
   <!-- Flash Messages -->
@@ -88,16 +88,11 @@
       <!-- 玩家信息 -->
       <div id="playersContainer">
         <fieldset class="player-info">
-          <legend class="fw-semibold">Player 1</legend>
+          <legend class="fw-semibold">Player 1 (You)</legend>
 
           <div class="mb-3">
             <label for="player1Name" class="form-label">Name:</label>
             <input type="text" id="player1Name" name="player1Name" class="form-control" required placeholder="Player Name">
-          </div>
-
-          <div class="mb-3">
-            <label for="player1Username" class="form-label">Username (optional):</label>
-            <input type="text" id="player1Username" name="player1Username" class="form-control" placeholder="Username">
           </div>
 
           <div class="form-check mb-2">
