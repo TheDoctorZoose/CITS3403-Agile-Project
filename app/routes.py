@@ -134,8 +134,9 @@ def visualisation():
 @login_required
 def forum():
     if request.method == 'POST':
+        # 1. 基本游戏信息
         game_title = request.form.get('gameTitle')
-        date_str = request.form.get('datePlayed')
+        date_str   = request.form.get('datePlayed')
         visibility = request.form.get('visibility')
         try:
             date_played = datetime.strptime(date_str, "%Y-%m-%d").date()
@@ -143,20 +144,20 @@ def forum():
             flash("Invalid date format.", "error")
             return redirect(url_for('main.forum'))
 
-        # 1. 权限
+        # 2. 权限控制
         if visibility == 'public':
             allowed_users = User.query.all()
         else:
-            allowed_ids = request.form.getlist('allowed_users')
+            allowed_ids   = request.form.getlist('allowed_users')
             allowed_users = User.query.filter(User.id.in_(allowed_ids)).all()
 
-        # 2. 按玩家拆分
-        names = request.form.getlist('player_name')
-        usernames = request.form.getlist('player_username')
-        scores = request.form.getlist('score')
-        win_checked = request.form.getlist('win')
-        first_checked = request.form.getlist('first_time_playing')
+        # 3. 拆分每个玩家
+        names              = request.form.getlist('player_name')
+        usernames          = request.form.getlist('player_username')
+        scores             = request.form.getlist('score')
+        win_checked        = request.form.getlist('win')
         went_first_checked = request.form.getlist('went_first')
+        first_checked      = request.form.getlist('first_time_playing')
 
         for idx, name in enumerate(names):
             uname = usernames[idx].strip()
@@ -176,55 +177,46 @@ def forum():
             db.session.add(entry)
         db.session.commit()
 
-        flash('Entry submitted!')
+        flash('Entry submitted!', 'success')
         return redirect(url_for('main.forum'))
 
-    # GET 请求：分页展示
-    page = request.args.get('page', 1, type=int)
+    # GET: 列表 & 分页
+    page        = request.args.get('page', 1, type=int)
     all_entries = GameEntry.query.order_by(GameEntry.timestamp.desc()).all()
-    visible_entries = [
-        entry for entry in all_entries
-        if entry.user_id == current_user.id or current_user in entry.allowed_users
+    visible     = [
+        e for e in all_entries
+        if e.user_id == current_user.id or current_user in e.allowed_users
     ]
 
     per_page = 5
-    total = len(visible_entries)
-    start = (page - 1) * per_page
-    end = start + per_page
-    paginated_items = visible_entries[start:end]
+    total    = len(visible)
+    start    = (page-1)*per_page
+    end      = start + per_page
+    items    = visible[start:end]
 
-    class ManualPagination:
-        def __init__(self, items, page, per_page, total):
-            self.items = items
-            self.page = page
-            self.per_page = per_page
-            self.total = total
-            self.pages = (total + per_page - 1) // per_page
+    class Pagination:
+        def __init__(self, page, per_page, total):
+            self.page, self.per_page, self.total = page, per_page, total
+            self.pages = (total + per_page - 1)//per_page
             self.has_prev = page > 1
             self.has_next = page < self.pages
             self.prev_num = page - 1
             self.next_num = page + 1
 
-    pagination = ManualPagination(paginated_items, page, per_page, total)
+    pagination = Pagination(page, per_page, total)
 
     entries = []
-    for entry in paginated_items:
+    for e in items:
         entries.append({
-            'entry':            entry,
-            'like_count':       entry.likes.count(),
-            'favorite_count':   entry.favorites.count(),
-            'liked':            Like.query.filter_by(
-                                     user_id=current_user.id,
-                                     entry_id=entry.id
-                                 ).first() is not None,
-            'favorited':        Favorite.query.filter_by(
-                                     user_id=current_user.id,
-                                     entry_id=entry.id
-                                 ).first() is not None,
-            'win':              entry.win,
-            'went_first':       entry.went_first,
-            'first_time_playing': entry.first_time_playing,
-            'score':            entry.score,
+            'entry':              e,
+            'like_count':         e.likes.count(),
+            'favorite_count':     e.favorites.count(),
+            'liked':              Like.query.filter_by(user_id=current_user.id, entry_id=e.id).first() is not None,
+            'favorited':          Favorite.query.filter_by(user_id=current_user.id, entry_id=e.id).first() is not None,
+            'win':                e.win,
+            'went_first':         e.went_first,
+            'first_time_playing': e.first_time_playing,
+            'score':              e.score
         })
 
     friends = current_user.friends.all()
