@@ -94,6 +94,8 @@ class FriendRequest(db.Model):
     )
 
 class GameEntry(db.Model):
+    __tablename__ = 'game_entry'
+
     id = db.Column(db.Integer, primary_key=True)
     game_title = db.Column(db.String(100))
     date_played = db.Column(db.Date)
@@ -113,6 +115,25 @@ class GameEntry(db.Model):
     comments = db.relationship('Comment', backref='entry', lazy='dynamic', cascade='all, delete-orphan')
 
     user = db.relationship('User', backref='entries')
+
+
+# Database representing individual player data from specific games
+class PlayerGameEntry(db.Model):
+    __tablename__ = 'player_game_entry'
+
+    # Primary key
+    id = db.Column(db.Integer, primary_key=True)
+
+    # Foreign keys
+    game_entry_id = db.Column(db.Integer, db.ForeignKey('game_entry.id'))
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+
+    # Player game data
+    name = db.Column(db.String(30))   # not stored in user table because it could vary across games (e.g. nicknames)
+    win = db.Column(db.String(3))          # boolean checkbox
+    went_first = db.Column(db.String(3))   # boolean checkbox
+    first_time = db.Column(db.String(3))   # boolean checkbox
+    score = db.Column(db.Integer)   # assuming integer scores only (most board games)
 
 
 
