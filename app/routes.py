@@ -21,6 +21,7 @@ from itsdangerous import URLSafeTimedSerializer
 from flask_mail import Message as MailMessage
 
 from sqlalchemy import func, extract, cast, Integer
+from collections import Counter
 
 main = Blueprint('main', __name__)
 
@@ -131,7 +132,7 @@ def visualisation():
 @login_required
 def forum():
     if request.method == 'POST':
-        # 1. 基本游戏信息
+        # 1. basic data
         game_title = request.form.get('gameTitle')
         date_str   = request.form.get('datePlayed')
         visibility = request.form.get('visibility')
@@ -141,14 +142,14 @@ def forum():
             flash("Invalid date format.", "error")
             return redirect(url_for('main.forum'))
 
-        # 2. 权限控制
+        # 2. allowed users
         if visibility == 'public':
             allowed_users = User.query.all()
         else:
             allowed_ids   = request.form.getlist('allowed_users')
             allowed_users = User.query.filter(User.id.in_(allowed_ids)).all()
 
-        # 3. 拆分每个玩家
+        # 3. game entries
         names              = request.form.getlist('player_name')
         usernames          = request.form.getlist('player_username')
         scores             = request.form.getlist('score')
@@ -177,7 +178,7 @@ def forum():
         flash('Entry submitted!', 'success')
         return redirect(url_for('main.forum'))
 
-    # GET: 列表 & 分页
+    # Pagination
     page        = request.args.get('page', 1, type=int)
     all_entries = GameEntry.query.order_by(GameEntry.timestamp.desc()).all()
     visible     = [
@@ -440,7 +441,7 @@ def chat_with_friend(friend_id):
         flash("You can only chat with your friends.")
         return redirect(url_for('main.profile', user_id=friend_id))
 
-    # 提取历史消息（双方互发的消息）
+    # Fetch chat history
     messages = Message.query.filter(
         ((Message.sender_id == current_user.id) & (Message.receiver_id == friend_id)) |
         ((Message.sender_id == friend_id) & (Message.receiver_id == current_user.id))
@@ -455,7 +456,6 @@ def chat_with_friend(friend_id):
     return render_template("chat.html", users=current_user.friends, history=history)
 
 
-#找回密码
 @main.route('/reset_request', methods=['GET', 'POST'])
 def reset_request():
     if request.method == 'POST':
@@ -486,7 +486,7 @@ def reset_token(token):
         flash("Your password has been updated.", "success")
         return redirect(url_for('main.login'))
 
-    # ✅ 传入 user 变量！
+    # 传入 user 变量！
     return render_template('reset_password.html', user=user,token=token)
 
 
@@ -520,138 +520,144 @@ Board Game Central
     mail.send(msg)
 
 
-# 在文件顶部，确保有这些导入：
 from flask import Blueprint, render_template
 from flask_login import login_required, current_user
 from sqlalchemy import func, extract, cast, Integer
 from app.models import GameEntry, User
 from app import db
 
-# … 你的其它路由 …
-
-@main.route('/analysis')
+@main.route('/analysis', methods=['GET', 'POST'])
 @login_required
 def analysis():
-    # 1) 总局数
-    plays = GameEntry.query.filter_by(user_id=current_user.id).count()
+    if request.method == 'POST':
+        flash('New analysis view created!', 'success')
+        return redirect(url_for('main.analysis'))
 
-    # 2) 不同游戏数
-    games = (
-        db.session.query(GameEntry.game_title)
-        .filter_by(user_id=current_user.id)
-        .distinct()
-        .count()
-    )
 
-    # 3) 不同天数
-    days = (
-        db.session.query(GameEntry.date_played)
-        .filter_by(user_id=current_user.id)
-        .distinct()
-        .count()
-    )
-
-    # 4) 计算 H-index
-    counts = (
-        db.session.query(
-            GameEntry.game_title,
-            func.count(GameEntry.id).label('cnt')
+    entries = (
+        GameEntry.query
+        .filter(
+            (GameEntry.user_id == current_user.id) |
+            (GameEntry.allowed_users.any(id=current_user.id))
         )
-        .filter_by(user_id=current_user.id)
-        .group_by(GameEntry.game_title)
-        .order_by(func.count(GameEntry.id).desc())
+        .order_by(GameEntry.timestamp.desc())
         .all()
+    )
+
+    # —— Summary —— 
+    plays        = len(entries)
+    unique_games = len({e.game_title for e in entries})
+    unique_days  = len({e.date_played   for e in entries})
+
+    # H-index
+    freqs = sorted(
+        Counter(e.game_title for e in entries).values(),
+        reverse=True
     )
     h_index = 0
-    for rank, (_, cnt) in enumerate(counts, start=1):
-        if cnt >= rank:
-            h_index = rank
+    for i, cnt in enumerate(freqs, start=1):
+        if cnt >= i:
+            h_index = i
         else:
             break
+    h_note = f"{h_index} games were played at least {h_index} times"
 
-    # 5) 合作过的玩家（排除自己）
-    co_ids = (
-        db.session.query(GameEntry.user_id)
-        .filter(GameEntry.user_id != current_user.id)
-        .distinct()
+    # co_players
+    co_ids     = {e.user_id for e in entries if e.user_id != current_user.id}
+    co_players = (
+        User.query
+            .filter(User.id.in_(co_ids))
+            .order_by(User.username)
+            .all()
+    )
+    players = len(co_ids)
+
+    # A) Monthly plays
+    ppm_rows = (
+        db.session.query(
+            extract('year', GameEntry.date_played).label('year'),
+            extract('month', GameEntry.date_played).label('month'),
+            func.count(GameEntry.id).label('count'),
+        )
+        .filter_by(user_id=current_user.id)
+        .group_by('year', 'month')
+        .order_by('year', 'month')
         .all()
     )
-    co_ids = [uid for (uid,) in co_ids]
-    co_players = User.query.filter(User.id.in_(co_ids)).order_by(User.username).all()
-    players = len(co_players)
-
-    # —— Chart 数据 —— #
-
-    # A) Plays Per Month
-    ppm_rows = db.session.query(
-        extract('year', GameEntry.date_played).label('year'),
-        extract('month', GameEntry.date_played).label('month'),
-        func.count(GameEntry.id).label('count')
-    ).filter_by(user_id=current_user.id)\
-     .group_by('year','month')\
-     .order_by('year','month')\
-     .all()
     plays_per_month = [
         {'year': int(r.year), 'month': int(r.month), 'count': r.count}
         for r in ppm_rows
     ]
 
-    # B) Top 5 Most Played Games
-    tg_rows = db.session.query(
-        GameEntry.game_title,
-        func.count(GameEntry.id).label('count')
-    ).filter_by(user_id=current_user.id)\
-     .group_by(GameEntry.game_title)\
-     .order_by(func.count(GameEntry.id).desc())\
-     .limit(5)\
-     .all()
-    top_games = [
-        {'game': r.game_title, 'count': r.count}
-        for r in tg_rows
-    ]
+    # B) Top 5 games played by current user
+    tg_rows = (
+        db.session.query(
+            GameEntry.game_title.label('game'),
+            func.count(GameEntry.id).label('count'),
+        )
+        .filter_by(user_id=current_user.id)
+        .group_by(GameEntry.game_title)
+        .order_by(func.count(GameEntry.id).desc())
+        .limit(5)
+        .all()
+    )
+    top_games = [{'game': r.game, 'count': r.count} for r in tg_rows]
 
-    # C) Player Leaderboard (global top 5 by plays & wins)
-    lb_rows = db.session.query(
-        GameEntry.user_id,
-        func.count(GameEntry.id).label('plays'),
-        func.sum(cast(GameEntry.win, Integer)).label('wins')
-    ).group_by(GameEntry.user_id)\
-     .order_by(func.count(GameEntry.id).desc())\
-     .limit(5)\
-     .all()
+    # C) Leaderboard
+    lb_rows = (
+        db.session.query(
+            GameEntry.user_id,
+            func.count(GameEntry.id).label('plays'),
+            func.sum(cast(GameEntry.win, Integer)).label('wins'),
+        )
+        .group_by(GameEntry.user_id)
+        .order_by(func.count(GameEntry.id).desc())
+        .limit(5)
+        .all()
+    )
     leaderboard = []
     for r in lb_rows:
-        user = User.query.get(r.user_id)
+        u = User.query.get(r.user_id)
         wins = int(r.wins or 0)
-        plays_count = r.plays
-        win_rate = round(wins / plays_count * 100, 1) if plays_count else 0
+        rate = round(wins / r.plays * 100, 1) if r.plays else 0
         leaderboard.append({
-            'username': user.username,
-            'plays': plays_count,
-            'wins': wins,
-            'win_rate': win_rate
+            'username': u.username,
+            'plays':    r.plays,
+            'wins':     wins,
+            'win_rate': rate
         })
 
-    # D) First Play Success Rate (当前用户)
-    total_first = db.session.query(func.count(GameEntry.id))\
-        .filter_by(user_id=current_user.id, first_time_playing=True)\
-        .scalar()
-    wins_first = db.session.query(func.count(GameEntry.id))\
-        .filter_by(user_id=current_user.id, first_time_playing=True, win=True)\
-        .scalar()
-    first_play_rate = round(wins_first / total_first * 100, 1) if total_first else 0
+    # D) First-time plays
+    total_first = (
+        db.session.query(func.count(GameEntry.id))
+        .filter_by(
+            user_id=current_user.id,
+            first_time_playing=True
+        )
+        .scalar() or 0
+    )
+    wins_first = (
+        db.session.query(func.count(GameEntry.id))
+        .filter_by(
+            user_id=current_user.id,
+            first_time_playing=True,
+            win=True
+        )
+        .scalar() or 0
+    )
     first_play_stats = {
         'total': total_first,
-        'wins': wins_first,
-        'rate': first_play_rate
+        'wins':  wins_first,
+        'rate':  round(wins_first / total_first * 100, 1) if total_first else 0
     }
 
     return render_template(
         'analysis.html',
         plays=plays,
-        games=games,
-        days=days,
+        games=unique_games,
+        days=unique_days,
         h_index=h_index,
+        h_note=h_note,
         players=players,
         co_players=co_players,
         plays_per_month=plays_per_month,
