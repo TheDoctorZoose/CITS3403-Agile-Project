@@ -1,10 +1,11 @@
+{# templates/analysis.html #}
 {% extends "base.html" %}
 
 {% block title %}Analysis View{% endblock %}
 
 {% block extra_styles %}
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/analysis-styles.css') }}">
-  <!-- Chart.js -->
+  <link rel="stylesheet"
+        href="{{ url_for('static', filename='css/analysis-styles.css') }}">
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
 {% endblock %}
 
@@ -14,38 +15,109 @@
 <main class="container">
   <section class="left-column">
 
-    <!-- Summary -->
     <div id="summary">
       <h2 id="summary-header">At a glance...</h2>
       <div id="summary-columns">
         <div class="summary-column">
-          <p id="plays">Plays: <span>{{ plays }}</span></p>
-          <p id="players">Players: <span>{{ players }}</span></p>
-          <p id="h-index">H-index: <span>{{ h_index }}</span></p>
-          <p class="h-index-note">
-            <span>{{ h_index }}</span> games were played at least <span>{{ h_index }}</span> times
-          </p>
+          <p>Plays: <span>{{ plays }}</span></p>
+          <p>H-index: <span>{{ h_index }}</span></p>
+          <p class="h-index-note">{{ h_note }}</p>
         </div>
         <div class="summary-column">
-          <p id="games">Games: <span>{{ games }}</span></p>
-          <p id="days">Days: <span>{{ days }}</span></p>
+          <p>Games: <span>{{ games }}</span></p>
+          <p>Days: <span>{{ days }}</span></p>
         </div>
       </div>
     </div>
 
     <hr class="section-divider">
 
-    <!-- Create New Analysis -->
-    <div class="card create-card">
-      <h3>Create New Analysis View</h3>
-      <form action="/save-view" method="POST">
-        <!-- ... 保持不变 … -->
-      </form>
-    </div>
+
+    <section class="card mb-4 create-card">
+      <div class="card-body bg-light">
+        <h3>Create New Analysis View</h3>
+        <form method="POST" action="{{ url_for('main.analysis') }}">
+          <div class="mb-3">
+            <label for="view-title">Title</label>
+            <input type="text" id="view-title" name="view-title"
+                   class="form-control" placeholder="e.g., Win Rate by Game"
+                   required>
+          </div>
+
+          <div class="mb-3">
+            <label for="chart-type">Chart Type</label>
+            <select id="chart-type" name="chart-type" class="form-select" required>
+              <option value="bar">Bar</option>
+              <option value="line">Line</option>
+              <option value="pie">Pie</option>
+              <option value="table">Table</option>
+            </select>
+          </div>
+
+          <div class="mb-3">
+            <label for="game">Game</label>
+            <select id="game" name="game" class="form-select">
+              <option value="">All Games</option>
+              {% for name in co_players|map(attribute='username')|unique %}
+                <option value="{{ name }}">{{ name }}</option>
+              {% endfor %}
+            </select>
+          </div>
+
+          <div class="mb-3">
+            <label>Player</label>
+            <div class="checkbox-group">
+              {% for p in co_players %}
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input"
+                         type="checkbox"
+                         name="player"
+                         id="player{{ loop.index }}"
+                         value="{{ p.id }}">
+                  <label class="form-check-label"
+                         for="player{{ loop.index }}">
+                    {{ p.username }}
+                  </label>
+                </div>
+              {% endfor %}
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label>Date Range</label>
+            <div class="d-flex gap-2">
+              <input type="date" name="start-date" class="form-control">
+              <input type="date" name="end-date"   class="form-control">
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label for="outcome">Outcome</label>
+            <select id="outcome" name="outcome" class="form-select">
+              <option value="">All</option>
+              <option value="win">Wins Only</option>
+              <option value="loss">Losses Only</option>
+            </select>
+          </div>
+
+          <div class="form-check mb-3">
+            <input class="form-check-input" type="checkbox"
+                   id="first-play" name="first-play">
+            <label class="form-check-label" for="first-play">
+              First Plays Only
+            </label>
+          </div>
+
+          <button type="submit" class="btn btn-primary">
+            Create Analysis View
+          </button>
+        </form>
+      </div>
+    </section>
 
     <hr class="section-divider">
 
-    <!-- Charts Grid -->
+    <!-- —— Charts —— -->
     <div class="cards-grid">
       <div class="card">
         <h3>Plays Per Month</h3>
@@ -70,70 +142,84 @@
 
 {% block extra_scripts %}
 <script>
-  // 注入后端数据
+  // —— Inject back-end data —— 
   window.playsPerMonth  = {{ plays_per_month  | tojson }};
   window.topGames       = {{ top_games       | tojson }};
   window.leaderboard    = {{ leaderboard     | tojson }};
   window.firstPlayStats = {{ first_play_stats | tojson }};
 
   document.addEventListener('DOMContentLoaded', function() {
-    // 1) Plays Per Month
+    // 1) Monthly bureau count
     new Chart(
       document.getElementById('plays-per-month-chart').getContext('2d'),
       {
         type: 'line',
         data: {
-          labels: window.playsPerMonth.map(r=>`${r.year}-${String(r.month).padStart(2,'0')}`),
-          datasets: [{ label:'Plays', data: window.playsPerMonth.map(r=>r.count), fill:true }]
-        }
-      }
-    );
-
-    // 2) Top Games
-    new Chart(
-      document.getElementById('top-games-chart').getContext('2d'),
-      {
-        type:'bar',
-        data:{
-          labels: window.topGames.map(r=>r.game),
-          datasets:[{ label:'Plays', data: window.topGames.map(r=>r.count) }]
-        }
-      }
-    );
-
-    // 3) Leaderboard (Win %)
-    new Chart(
-      document.getElementById('leaderboard-chart').getContext('2d'),
-      {
-        type:'bar',
-        data:{
-          labels: window.leaderboard.map(r=>r.username),
-          datasets:[{ label:'Win %', data: window.leaderboard.map(r=>r.win_rate) }]
-        },
-        options:{
-          scales:{ y:{ beginAtZero:true, max:100 } }
-        }
-      }
-    );
-
-    // 4) First Play Success Rate (Doughnut)
-    new Chart(
-      document.getElementById('first-play-chart').getContext('2d'),
-      {
-        type:'doughnut',
-        data:{
-          labels:['Wins','Losses'],
-          datasets:[{
-            label:'First Play',
-            data:[
-              window.firstPlayStats.wins,
-              window.firstPlayStats.total - window.firstPlayStats.wins
-            ]
+          labels: window.playsPerMonth.map(r=>
+            `${r.year}-${String(r.month).padStart(2,'0')}`),
+          datasets: [{
+            label: 'Plays',
+            data: window.playsPerMonth.map(r=>r.count),
+            borderColor: '#1976d2',
+            backgroundColor: 'rgba(25,118,210,0.2)',
+            fill: true
           }]
         }
       }
     );
 
+    // 2) Top 5
+    new Chart(
+      document.getElementById('top-games-chart').getContext('2d'),
+      {
+        type: 'bar',
+        data: {
+          labels: window.topGames.map(r=>r.game),
+          datasets:[{
+            label: 'Plays',
+            data: window.topGames.map(r=>r.count),
+            backgroundColor: '#1976d2'
+          }]
+        }
+      }
+    );
+
+    // 3) Win %）
+    new Chart(
+      document.getElementById('leaderboard-chart').getContext('2d'),
+      {
+        type: 'bar',
+        data: {
+          labels: window.leaderboard.map(r=>r.username),
+          datasets:[{
+            label: '% Win',
+            data: window.leaderboard.map(r=>r.win_rate),
+            backgroundColor: '#1976d2'
+          }]
+        },
+        options: {
+          scales: { y: { beginAtZero: true, max: 100 } }
+        }
+      }
+    );
+
+    // 4) Doughnut
+    new Chart(
+      document.getElementById('first-play-chart').getContext('2d'),
+      {
+        type: 'doughnut',
+        data: {
+          labels: ['Wins','Losses'],
+          datasets:[{
+            data: [
+              window.firstPlayStats.wins,
+              window.firstPlayStats.total - window.firstPlayStats.wins
+            ],
+            backgroundColor: ['#1976d2','#ccc']
+          }]
+        }
+      }
+    );
   });
 </script>
 {% endblock %}
