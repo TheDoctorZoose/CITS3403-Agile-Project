@@ -98,7 +98,8 @@ def entry():
 def profile(user_id):
     user = User.query.get_or_404(user_id)
     is_own_profile = (user.id == current_user.id)
-    posts = GameEntry.query.filter_by(user_id=user.id).order_by(GameEntry.timestamp.desc()).all()
+
+    entries = GameEntry.query.filter_by(user_id=user.id).order_by(GameEntry.timestamp.desc()).all()
 
     liked_entries = []
     favorited_entries = []
@@ -114,7 +115,7 @@ def profile(user_id):
     return render_template(
         'profile.html',
         user=user,
-        posts=posts,
+        entries=entries,  # ✅ 确保模板中用的变量名一致
         liked_entries=liked_entries,
         favorited_entries=favorited_entries,
         is_own_profile=is_own_profile,
