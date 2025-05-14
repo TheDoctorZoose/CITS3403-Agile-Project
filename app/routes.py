@@ -136,37 +136,52 @@ def forum():
     if request.method == 'POST':
         game_title = request.form.get('gameTitle')
         date_str = request.form.get('datePlayed')
-        visibility = request.form.get('visibility')  
-
+        visibility = request.form.get('visibility')
         try:
             date_played = datetime.strptime(date_str, "%Y-%m-%d").date()
         except ValueError:
             flash("Invalid date format.", "error")
             return redirect(url_for('main.forum'))
 
+        # 1. 权限
         if visibility == 'public':
-           
             allowed_users = User.query.all()
         else:
-            allowed_ids = request.form.getlist('allowed_users')  
+            allowed_ids = request.form.getlist('allowed_users')
             allowed_users = User.query.filter(User.id.in_(allowed_ids)).all()
 
+        # 2. 按玩家拆分
+        names = request.form.getlist('player_name')
+        usernames = request.form.getlist('player_username')
+        scores = request.form.getlist('score')
+        win_checked = request.form.getlist('win')
+        first_checked = request.form.getlist('first_time_playing')
+        went_first_checked = request.form.getlist('went_first')
 
-        new_entry = GameEntry(
-            game_title=game_title,
-            date_played=date_played,
-            user_id=current_user.id,
-            allowed_users=allowed_users
-        )
-        db.session.add(new_entry)
+        for idx, name in enumerate(names):
+            uname = usernames[idx].strip()
+            user = User.query.filter_by(username=uname).first() if uname else None
+            entry_user = user or current_user
+
+            entry = GameEntry(
+                game_title         = game_title,
+                date_played        = date_played,
+                user_id            = entry_user.id,
+                win                = str(idx) in win_checked,
+                went_first         = str(idx) in went_first_checked,
+                first_time_playing = str(idx) in first_checked,
+                score              = int(scores[idx]) if scores[idx] else None,
+                allowed_users      = allowed_users
+            )
+            db.session.add(entry)
         db.session.commit()
 
         flash('Entry submitted!')
         return redirect(url_for('main.forum'))
 
+    # GET 请求：分页展示
     page = request.args.get('page', 1, type=int)
     all_entries = GameEntry.query.order_by(GameEntry.timestamp.desc()).all()
-
     visible_entries = [
         entry for entry in all_entries
         if entry.user_id == current_user.id or current_user in entry.allowed_users
@@ -195,11 +210,21 @@ def forum():
     entries = []
     for entry in paginated_items:
         entries.append({
-            'entry': entry,
-            'like_count': entry.likes.count(),
-            'favorite_count': entry.favorites.count(),
-            'liked': Like.query.filter_by(user_id=current_user.id, entry_id=entry.id).first() is not None,
-            'favorited': Favorite.query.filter_by(user_id=current_user.id, entry_id=entry.id).first() is not None,
+            'entry':            entry,
+            'like_count':       entry.likes.count(),
+            'favorite_count':   entry.favorites.count(),
+            'liked':            Like.query.filter_by(
+                                     user_id=current_user.id,
+                                     entry_id=entry.id
+                                 ).first() is not None,
+            'favorited':        Favorite.query.filter_by(
+                                     user_id=current_user.id,
+                                     entry_id=entry.id
+                                 ).first() is not None,
+            'win':              entry.win,
+            'went_first':       entry.went_first,
+            'first_time_playing': entry.first_time_playing,
+            'score':            entry.score,
         })
 
     friends = current_user.friends.all()
@@ -210,7 +235,6 @@ def forum():
         pagination=pagination,
         friends=friends
     )
-
 
 @main.route('/forum/<int:entry_id>', methods=['GET', 'POST'])
 @login_required
