@@ -97,6 +97,10 @@ class GameEntry(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     game_title = db.Column(db.String(100))
     date_played = db.Column(db.Date)
+    win = db.Column(db.Boolean, default=False, nullable=False)
+    went_first = db.Column(db.Boolean, default=False, nullable=False)
+    first_time_playing = db.Column(db.Boolean, default=False, nullable=False)
+    score = db.Column(db.Integer, nullable=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     timestamp = db.Column(db.DateTime, default=datetime.now)
 
