@@ -56,6 +56,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     fieldset.querySelector('.removePlayerBtn').addEventListener('click', function () {
       fieldset.remove();
+      playerCount -= 1;   // Ensures player count can still be maximum 10 even after removing players
     });
   });
 
