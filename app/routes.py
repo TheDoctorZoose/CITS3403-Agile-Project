@@ -4,7 +4,7 @@ from flask import Blueprint, render_template, redirect, url_for, flash, request,
 from flask_login import login_user, logout_user, current_user, login_required
 from werkzeug.security import generate_password_hash, check_password_hash
 
-from app.models import FriendRequest, Message, User, GameEntry, Comment, Like, Favorite
+from app.models import FriendRequest, Message, User, GameEntry, PlayerGameEntry, Comment, Like, Favorite
 
 from app.forms import RegistrationForm, LoginForm
 from app import db , mail
@@ -136,24 +136,26 @@ def visualisation():
 @login_required
 def forum():
     if request.method == 'POST':
+        # Retrieving form POST data
         game_title = request.form.get('gameTitle')
         date_str = request.form.get('datePlayed')
-        visibility = request.form.get('visibility')  
+        visibility = request.form.get('visibility')
 
+        # Error handling date entry
         try:
             date_played = datetime.strptime(date_str, "%Y-%m-%d").date()
         except ValueError:
             flash("Invalid date format.", "error")
             return redirect(url_for('main.forum'))
 
+        # Visibility control
         if visibility == 'public':
-           
             allowed_users = User.query.all()
         else:
             allowed_ids = request.form.getlist('allowed_users')  
             allowed_users = User.query.filter(User.id.in_(allowed_ids)).all()
 
-
+        # Enter upload data view data into game entry table
         new_entry = GameEntry(
             game_title=game_title,
             date_played=date_played,
@@ -161,6 +163,54 @@ def forum():
             allowed_users=allowed_users
         )
         db.session.add(new_entry)
+        db.session.commit()
+
+        # Enter upload data view data into RDBMS for each *player* in a game entry
+        game_entry_id = new_entry.id   # same for all players
+
+        # Player 1 (the user)
+        user_player_entry = PlayerGameEntry(
+            game_entry_id = game_entry_id,
+            user_id = current_user.id,
+            name = request.form.get('player1Name'),
+            win = request.form.get('player1Win'),
+            went_first = request.form.get('player1First'),
+            first_time = request.form.get('player1FirstTime'),
+            score = request.form.get('player1Score'),
+        )
+        db.session.add(user_player_entry)
+
+        # Other players (max players - 1)
+        for i in range(9):
+            if request.form.get(f'player{i + 2}Name') is not None:   # if player exists in form (as Name is the only required field)
+                # Retreive player name from form
+                username = request.form.get(f'player{i + 2}Username')
+                
+                # Error checking: Entered Username
+                if username:
+                    # Query the database to find corresponding user_id
+                    user_id = User.query.\
+                        add_columns(User.id).\
+                        filter(User.username == username).all()
+                    
+                    # Error handling: Username doesn't exist
+                    if not user_id:   # if list is empty (i.e. query didn't find a username match)
+                        flash("Invalid Username.", "error")
+                        return redirect(url_for('main.forum'))
+
+                # Add player game data entry to database
+                other_player_entry = PlayerGameEntry(
+                    game_entry_id = game_entry_id,
+                    user_id = None if not username else user_id[0][1],   # list should only contain a single user_id
+                    name = request.form.get(f'player{i + 2}Name'),
+                    win = request.form.get(f'player{i + 2}Win'),
+                    went_first = request.form.get(f'player{i + 2}First'),
+                    first_time = request.form.get(f'player{i + 2}FirstTime'),
+                    score = request.form.get(f'player{i + 2}Score')
+                )
+                db.session.add(other_player_entry)
+
+        # Commit changes to database
         db.session.commit()
 
         flash('Entry submitted!')
