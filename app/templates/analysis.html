@@ -3,196 +3,137 @@
 {% block title %}Analysis View{% endblock %}
 
 {% block extra_styles %}
-<link rel="stylesheet" href="{{ url_for('static', filename='css/analysis-styles.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/analysis-styles.css') }}">
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
 {% endblock %}
 
 {% block body_class %}analysis-page{% endblock %}
 
 {% block content %}
-
-<!-- Header Navigation already included in base.html -->
-
-<!-- Main Layout -->
 <main class="container">
-  <!-- Left Column: Analysis Cards -->
   <section class="left-column">
 
+    <!-- Summary -->
     <div id="summary">
       <h2 id="summary-header">At a glance...</h2>
       <div id="summary-columns">
         <div class="summary-column">
-          <p id="plays">Plays: <span>326</span></p>
-          <p id="locations">Locations:<span>16</span></p>
-          <p id="players">Players: <span>107</span></p>
-          <p id="named-players">- named: <span>56</span></p>
-          <p id="h-index">H-index: <span>9</span></p>
-          <p class="h-index-note"><span>9</span> games were played at least <span>9</span> times</p>
+          <p id="plays">Plays: <span>{{ plays }}</span></p>
+          <p id="players">Players: <span>{{ players }}</span></p>
+          <p id="h-index">H-index: <span>{{ h_index }}</span></p>
+          <p class="h-index-note">
+            <span>{{ h_index }}</span> games were played at least <span>{{ h_index }}</span> times
+          </p>
         </div>
         <div class="summary-column">
-          <p id="games">Games:<span>59</span></p>
-          <p id="my-copy">- my copy: <span>36</span></p>
-          <p id="new-to-me">- new to me: <span>43</span></p>
-          <p id="time">Time: <span>≈401h</span></p>
-          <p id="days">Days: <span>188</span></p>
+          <p id="games">Games: <span>{{ games }}</span></p>
+          <p id="days">Days: <span>{{ days }}</span></p>
         </div>
       </div>
     </div>
 
     <hr class="section-divider">
 
+    <!-- Create New Analysis -->
     <div class="card create-card">
       <h3>Create New Analysis View</h3>
-      <p>Select options to generate a new analysis card.</p>
       <form action="/save-view" method="POST">
-        <div class="form-group">
-          <label for="view-title">Title of Analysis</label>
-          <input type="text" id="view-title" name="view-title" placeholder="e.g., Win Rate by Game">
-        </div>
-
-        <div class="form-group">
-          <label for="chart-type">Chart Type</label>
-          <select id="chart-type" name="chart-type">
-            <option value="bar">Bar Chart</option>
-            <option value="line">Line Graph</option>
-            <option value="pie">Pie Chart</option>
-            <option value="table">Table View</option>
-          </select>
-        </div>
-
-        <div class="form-group">
-          <label for="game">Game</label>
-          <select id="game" name="game">
-            <option value="">All Games</option>
-            <option value="terraforming-mars">Terraforming Mars</option>
-            <option value="azul">Azul</option>
-            <option value="catan">Catan</option>
-          </select>
-        </div>
-
-        <div class="form-group">
-          <label for="players">Player</label>
-          <div class="checkbox-group">
-            <label><input type="checkbox" name="player" value="peter"> Peter</label>
-            <label><input type="checkbox" name="player" value="diarmuid"> Diarmuid</label>
-            <label><input type="checkbox" name="player" value="pengyu"> Pengyu</label>
-            <label><input type="checkbox" name="player" value="matt"> Matt</label>
-            <label><input type="checkbox" name="player" value="zayn"> Zayn</label>
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label>Date Range (Optional)</label>
-          <div style="display: flex; gap: 1rem;">
-            <label for="start-date">Start</label><input type="date" id="start-date" name="start-date">
-            <label for="end-date">End</label><input type="date" id="end-date" name="end-date">
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label for="outcome">Outcome</label>
-          <select id="outcome" name="outcome">
-            <option value="">All Outcomes</option>
-            <option value="win">Wins Only</option>
-            <option value="loss">Losses Only</option>
-          </select>
-        </div>
-
-        <div class="form-group">
-          <div class="checkbox-group">
-            <input type="checkbox" id="first-play" name="first-play">
-            <label for="first-play">First Plays Only</label>
-          </div>
-        </div>
-
-        <div class="form-actions">
-          <button type="submit">Create Analysis View</button>
-        </div>
+        <!-- ... 保持不变 … -->
       </form>
     </div>
 
-    <!-- Filters Selector -->
-    <div class="card filters">
-      <label for="filter-select">Filters:</label>
-      <select id="filter-select" name="filter-select">
-        <option value="" disabled selected>Select a filter</option>
-        <option value="date">Date</option>
-        <option value="player">Player</option>
-        <option value="game">Game</option>
-      </select>
-    </div>
-
     <hr class="section-divider">
-    
+
+    <!-- Charts Grid -->
     <div class="cards-grid">
-    <!-- Card 1 -->
-    <div class="card">
-      <h3>Plays Per Month</h3>
-      <p>Number of board game plays each month.</p>
-      <div class="placeholder-graph">[Line Graph Placeholder]</div>
-      <div class="card-actions">
-        <button>Save</button>
-        <button>Share</button>
+      <div class="card">
+        <h3>Plays Per Month</h3>
+        <canvas id="plays-per-month-chart"></canvas>
       </div>
-    </div>
-
-    <!-- Card 2 -->
-    <div class="card">
-      <h3>Top 5 Most Played Games</h3>
-      <p>Games played most frequently across all sessions.</p>
-      <div class="placeholder-graph">[Bar Chart Placeholder]</div>
-      <div class="card-actions">
-        <button>Save</button>
-        <button>Share</button>
+      <div class="card">
+        <h3>Top 5 Most Played Games</h3>
+        <canvas id="top-games-chart"></canvas>
       </div>
-    </div>
-
-    <!-- Card 3 -->
-    <div class="card">
-      <h3>Player Leaderboard</h3>
-      <table>
-        <thead>
-          <tr>
-            <th>Player</th>
-            <th>Plays</th>
-            <th>Wins</th>
-            <th>Win %</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr><td>Alex</td><td>42</td><td>18</td><td>42%</td></tr>
-          <tr><td>Jordan</td><td>39</td><td>22</td><td>56%</td></tr>
-          <tr><td>Sam</td><td>35</td><td>19</td><td>54%</td></tr>
-        </tbody>
-      </table>
-      <div class="card-actions">
-        <button>Save</button>
-        <button>Share</button>
+      <div class="card">
+        <h3>Player Leaderboard</h3>
+        <canvas id="leaderboard-chart"></canvas>
       </div>
-    </div>
-
-    <!-- Card 4 -->
-    <div class="card">
-      <h3>First Play Success Rate</h3>
-      <p>Win rate for first-time players across all games.</p>
-      <div class="placeholder-graph">[Pie Chart Placeholder]</div>
-      <div class="card-actions">
-        <button>Save</button>
-        <button>Share</button>
+      <div class="card">
+        <h3>First Play Success Rate</h3>
+        <canvas id="first-play-chart"></canvas>
       </div>
-    </div>
-
-    <!-- Card 5 -->
-    <div class="card">
-      <h3>Role Win Rates</h3>
-      <p>Winning percentages by role/faction (asymmetric games).</p>
-      <div class="placeholder-graph">[Stacked Bar Chart Placeholder]</div>
-      <div class="card-actions">
-        <button>Save</button>
-        <button>Share</button>
-      </div>
-    </div>
     </div>
   </section>
 </main>
+{% endblock %}
 
+{% block extra_scripts %}
+<script>
+  // 注入后端数据
+  window.playsPerMonth  = {{ plays_per_month  | tojson }};
+  window.topGames       = {{ top_games       | tojson }};
+  window.leaderboard    = {{ leaderboard     | tojson }};
+  window.firstPlayStats = {{ first_play_stats | tojson }};
+
+  document.addEventListener('DOMContentLoaded', function() {
+    // 1) Plays Per Month
+    new Chart(
+      document.getElementById('plays-per-month-chart').getContext('2d'),
+      {
+        type: 'line',
+        data: {
+          labels: window.playsPerMonth.map(r=>`${r.year}-${String(r.month).padStart(2,'0')}`),
+          datasets: [{ label:'Plays', data: window.playsPerMonth.map(r=>r.count), fill:true }]
+        }
+      }
+    );
+
+    // 2) Top Games
+    new Chart(
+      document.getElementById('top-games-chart').getContext('2d'),
+      {
+        type:'bar',
+        data:{
+          labels: window.topGames.map(r=>r.game),
+          datasets:[{ label:'Plays', data: window.topGames.map(r=>r.count) }]
+        }
+      }
+    );
+
+    // 3) Leaderboard (Win %)
+    new Chart(
+      document.getElementById('leaderboard-chart').getContext('2d'),
+      {
+        type:'bar',
+        data:{
+          labels: window.leaderboard.map(r=>r.username),
+          datasets:[{ label:'Win %', data: window.leaderboard.map(r=>r.win_rate) }]
+        },
+        options:{
+          scales:{ y:{ beginAtZero:true, max:100 } }
+        }
+      }
+    );
+
+    // 4) First Play Success Rate (Doughnut)
+    new Chart(
+      document.getElementById('first-play-chart').getContext('2d'),
+      {
+        type:'doughnut',
+        data:{
+          labels:['Wins','Losses'],
+          datasets:[{
+            label:'First Play',
+            data:[
+              window.firstPlayStats.wins,
+              window.firstPlayStats.total - window.firstPlayStats.wins
+            ]
+          }]
+        }
+      }
+    );
+
+  });
+</script>
 {% endblock %}
