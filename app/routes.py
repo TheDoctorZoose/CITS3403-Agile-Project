@@ -133,6 +133,7 @@ def visualisation():
 @login_required
 def forum():
     if request.method == 'POST':
+
         # 1. basic data
         game_title = request.form.get('gameTitle')
         date_str   = request.form.get('datePlayed')
@@ -149,6 +150,7 @@ def forum():
         else:
             allowed_ids   = request.form.getlist('allowed_users')
             allowed_users = User.query.filter(User.id.in_(allowed_ids)).all()
+
 
         # 3. game entries
         names              = request.form.getlist('player_name')
