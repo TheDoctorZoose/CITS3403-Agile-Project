@@ -99,7 +99,6 @@ class GameEntry(db.Model):
     game_title = db.Column(db.String(100))
     date_played = db.Column(db.Date)
 
-    # 新增四个字段
     win = db.Column(db.Boolean, default=False, nullable=False)
     went_first = db.Column(db.Boolean, default=False, nullable=False)
     first_time_playing = db.Column(db.Boolean, default=False, nullable=False)
