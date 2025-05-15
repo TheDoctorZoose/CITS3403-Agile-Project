@@ -113,7 +113,7 @@ def profile(user_id):
     return render_template(
         'profile.html',
         user=user,
-        entries=entries,  # ✅ 确保模板中用的变量名一致
+        entries=entries, 
         liked_entries=liked_entries,
         favorited_entries=favorited_entries,
         is_own_profile=is_own_profile,

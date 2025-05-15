@@ -2,6 +2,7 @@ from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
 from datetime import datetime, timezone
+from sqlalchemy import func
 from app import db 
 
 friendships = db.Table('friendships',
@@ -69,6 +70,8 @@ class User(UserMixin, db.Model):
         cascade='all, delete-orphan',
         lazy='dynamic'
     )
+
+    
 
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
@@ -140,6 +143,7 @@ class Like(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     entry_id = db.Column(db.Integer, db.ForeignKey('game_entry.id'))
     timestamp = db.Column(db.DateTime, default=datetime.now)
+    
 
 
 class Favorite(db.Model):
@@ -147,6 +151,7 @@ class Favorite(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     entry_id = db.Column(db.Integer, db.ForeignKey('game_entry.id'))
     timestamp = db.Column(db.DateTime, default=datetime.now)
+    
 
 
 class Post(db.Model):

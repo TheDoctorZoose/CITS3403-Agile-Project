@@ -4,25 +4,47 @@
 
 {% block extra_styles %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
+
 {% endblock %}
 
 {% block content %}
-<section class="intro">
-  <h2>Welcome to Board Game Central</h2>
-  <p>Track your board game plays, analyze your win stats, and compete with friends!</p>
-  <ul>
-    <li>Log game sessions</li>
-    <li>Import past game data</li>
-    <li>Visualize your win/loss record</li>
-    <li>Share and compare with others</li>
-  </ul>
+<div class="container my-5">
+  <section class="intro">
+    <h2>🎉 Welcome to Board Game Central</h2>
+    <p>Track your board game plays, analyze your win stats, and compete with friends!</p>
+    <ul>
+      <li>Log game sessions</li>
+      <li>Import past game data</li>
+      <li>Visualize your win/loss record</li>
+      <li>Share and compare with others</li>
+    </ul>
+    <div>
+      <a href="{{ url_for('main.forum') }}" class="rounded-btn">Go to Forum</a>
+      
+    </div>
+  </section>
 
-  <div style="text-align: center; margin-top: 30px;">
-    <a href="{{ url_for('main.forum') }}" class="rounded-btn">Go to Forum</a>
-    <a href="{{ url_for('main.share_data_view') }}" class="rounded-btn">View Shared Data</a>
+  <section class="stats-cards">
+    <div class="card-glass">
+      <h4>📊 Total Games Logged</h4>
+      <p class="fs-1 fw-bold">128</p>
+    </div>
+    <div class="card-glass">
+      <h4>🏆 Top Player</h4>
+      <p class="fs-4 fw-semibold">Player42</p>
+    </div>
+    <div class="card-glass">
+      <h4>🔥 Active Today</h4>
+      <p class="fs-4 fw-semibold">14 users</p>
+    </div>
+  </section>
+
+  <section class="feature-section mt-5">
+    <h3 style="color: #e65100;">✨ New Feature Preview: Leaderboard</h3>
+    <p>Coming soon: compete with friends and climb the ranks!</p>
     
-  </div>
-</section>
+  </section>
+</div>
 {% endblock %}
 
 {% block extra_scripts %}
