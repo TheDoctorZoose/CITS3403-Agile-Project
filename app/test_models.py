@@ -1,25 +1,19 @@
+
 import unittest
-from datetime import datetime
-
-from flask_testing import TestCase
-
 from app import db, create_app
 from app.models import User, FriendRequest, Message, GameEntry, Like, Favorite
-
+from flask_testing import TestCase
+from datetime import datetime
 
 class BaseTestCase(TestCase):
     def create_app(self):
         app = create_app()
         app.config['TESTING'] = True
-        # Use an in-memory SQLite database
         app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///:memory:'
         app.config['WTF_CSRF_ENABLED'] = False
-
         return app
 
     def setUp(self):
-        self.app_context = self.app.app_context()
-        self.app_context.push()
         db.create_all()
         self.user1 = User(username="user1", email="user1@example.com")
         self.user1.set_password("password")
@@ -31,7 +25,6 @@ class BaseTestCase(TestCase):
     def tearDown(self):
         db.session.remove()
         db.drop_all()
-        self.app_context.pop()
 
 class TestModels(BaseTestCase):
     def test_user_creation(self):
@@ -66,6 +59,3 @@ class TestModels(BaseTestCase):
         db.session.add(msg)
         db.session.commit()
         self.assertEqual(Message.query.count(), 1)
-
-if __name__ == '__main__':
-    unittest.main()

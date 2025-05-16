@@ -1,6 +1,8 @@
-from app import db
-from app.models import User, FriendRequest
+import flask_unittest
+
 from conftest import TestBase
+from app import create_app, db
+from app.models import User, FriendRequest
 
 
 class TestUserRegistration(TestBase):

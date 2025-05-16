@@ -2,7 +2,6 @@ import unittest
 
 from conftest import TestBase
 
-
 class TestErrorHandling(TestBase):
 
     def test_404_error(self, _, client):
