@@ -1,136 +1,146 @@
 /* 基础排版与背景 */
 body {
-  font-family: Arial, sans-serif;
-  background-color: #f5f5f5;
-  margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: #f5f5f5;
+    margin: 0;
 }
 
 /* 让 .container 视觉更集中 */
 .container {
-  background-color: #fff;
-  padding: 20px 24px;
-  border-radius: 10px;
-  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    background-color: #fff;
+    padding: 20px 24px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
 /* File-upload 样式 */
 .file-upload {
-  margin-top: 20px;
-  border: 2px dashed #ccc;
-  padding: 20px;
-  text-align: center;
-  color: #888;
-  background-color: #fafafa;
-  border-radius: 8px;
+    margin-top: 20px;
+    border: 2px dashed #ccc;
+    padding: 20px;
+    text-align: center;
+    color: #888;
+    background-color: #fafafa;
+    border-radius: 8px;
 }
 
 /* Visibility / Player sections */
 .visibility-section,
 .player-info {
-  border: 1px solid #aaa;
-  border-radius: 8px;
-  padding: 15px;
-  margin-bottom: 20px;
-  background-color: #fefefe;
+    border: 1px solid #aaa;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 20px;
+    background-color: #fefefe;
 }
 
 .visibility-row {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 1rem;
 }
 
 .visibility-label {
-  font-weight: bold;
-  min-width: 100px;
+    font-weight: bold;
+    min-width: 100px;
 }
 
 /* Like / Favorite / Delete 按钮 */
 .like-btn,
 .favorite-btn,
 .delete-btn {
-  background: none;
-  border: none;
-  cursor: pointer;
-  font-size: 1rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1rem;
 }
 
 .like-btn {
-  background-color: #f0f0f0;
-  color: #000;
-  padding: 5px 10px;
-  border-radius: 6px;
+    background-color: #f0f0f0;
+    color: #000;
+    padding: 5px 10px;
+    border-radius: 6px;
 }
+
 .like-btn.liked {
-  background-color: #28a745;
-  color: #fff;
+    background-color: #28a745;
+    color: #fff;
 }
 
 .favorite-btn {
-  background-color: #fdf5ce;
-  color: #d4a017;
-  padding: 5px 10px;
-  border-radius: 6px;
+    background-color: #fdf5ce;
+    color: #d4a017;
+    padding: 5px 10px;
+    border-radius: 6px;
 }
+
 .favorite-btn.favorited {
-  background-color: gold;
-  color: #fff;
+    background-color: gold;
+    color: #fff;
 }
 
 .delete-btn {
-  background-color: #dc3545;
-  color: #fff;
-  padding: 5px 10px;
-  border-radius: 4px;
-  margin-left: 10px;
+    background-color: #dc3545;
+    color: #fff;
+    padding: 5px 10px;
+    border-radius: 4px;
+    margin-left: 10px;
 }
+
 .delete-btn:hover {
-  background-color: #c82333;
+    background-color: #c82333;
 }
 
 /* 深色模式 */
 body.dark-mode {
-  background-color: #1e1e1e;
-  color: #e0e0e0;
+    background-color: #1e1e1e;
+    color: #e0e0e0;
 }
+
 body.dark-mode .container {
-  background-color: #2e2e2e;
-  color: #e0e0e0;
-  box-shadow: 0 0 12px #000;
+    background-color: #2e2e2e;
+    color: #e0e0e0;
+    box-shadow: 0 0 12px #000;
 }
+
 body.dark-mode input,
 body.dark-mode select,
 body.dark-mode textarea {
-  background-color: #3a3a3a;
-  color: #e0e0e0;
-  border: 1px solid #777;
+    background-color: #3a3a3a;
+    color: #e0e0e0;
+    border: 1px solid #777;
 }
+
 body.dark-mode .file-upload {
-  background-color: #3a3a3a;
-  border-color: #666;
-  color: #ccc;
+    background-color: #3a3a3a;
+    border-color: #666;
+    color: #ccc;
 }
+
 body.dark-mode .like-btn,
 body.dark-mode .favorite-btn,
 body.dark-mode .delete-btn {
-  background-color: #444;
-  color: #fff;
-  border: 1px solid #888;
+    background-color: #444;
+    color: #fff;
+    border: 1px solid #888;
 }
+
 body.dark-mode .like-btn.liked {
-  background-color: #28a745;
+    background-color: #28a745;
 }
+
 body.dark-mode .favorite-btn.favorited {
-  background-color: gold;
-  color: #000;
+    background-color: gold;
+    color: #000;
 }
+
 body.dark-mode .player-info {
-  background-color: #333;
-  border-color: #666;
+    background-color: #333;
+    border-color: #666;
 }
 
 /* Pagination 调整 */
 .pagination .page-link {
-  border-radius: 4px;
+    border-radius: 4px;
 }

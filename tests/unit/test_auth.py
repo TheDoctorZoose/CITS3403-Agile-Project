@@ -5,13 +5,13 @@ from tests.unit.conftest import TestBase
 
 class TestUserRegistration(TestBase):
 
-    def test_register_page(self, app, client):
+    def test_register_page(self, _, client):
         """GET /register returns the registration form."""
         response = client.get("/register")
         self.assertStatus(response, 200)
         self.assertIn(b"Register", response.data)
 
-    def test_user_registration(self, app, client):
+    def test_user_registration(self, _, client):
         """Test user registration functionality."""
         response = client.post(
             "/register",
@@ -34,13 +34,13 @@ class TestUserLogin(TestBase):
             db.session.add(user)
             db.session.commit()
 
-    def test_login_page(self, app, client):
+    def test_login_page(self, _, client):
         """Test if the login page is accessible."""
         response = client.get("/login")
         self.assertEqual(200, response.status_code)
         self.assertIn(b"Login", response.data)
 
-    def test_user_login(self, app, client):
+    def test_user_login(self, _, client):
         """Test user login functionality."""
         response = client.post(
             "/login",
@@ -51,7 +51,7 @@ class TestUserLogin(TestBase):
         )
         self.assertEqual(302, response.status_code)
 
-    def test_incorrect_password(self, app, client):
+    def test_incorrect_password(self, _, client):
         """Test prevent user logging in badly."""
         response = client.post(
             "/login",
@@ -75,7 +75,7 @@ class TestFriendRequests(TestBase):
             db.session.add_all([user1, user2])
             db.session.commit()
 
-    def test_send_friend_request(self, app, client):
+    def test_send_friend_request(self, _, client):
         """Test sending a friend request."""
         client.post(
             "/login", data={"email": "user1@example.com", "password": "password123"}
