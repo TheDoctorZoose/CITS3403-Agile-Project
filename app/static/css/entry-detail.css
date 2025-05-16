@@ -20,3 +20,8 @@ caption {
     caption-side: bottom;
     padding-top: 10px;
 }
+
+/* Text bolding */
+.text-bold {
+    font-weight: bold;
+}

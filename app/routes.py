@@ -293,6 +293,7 @@ def view_entry(entry_id):
             join(GameEntry, PlayerGameEntry.game_entry_id==GameEntry.id).\
             filter(PlayerGameEntry.game_entry_id==entry_id).\
             add_columns(
+                PlayerGameEntry.user_id,
                 PlayerGameEntry.name,
                 User.username,
                 PlayerGameEntry.win,
@@ -305,6 +306,7 @@ def view_entry(entry_id):
     player_entries = []
     for player_entry in player_entry_rows:
         player_entries.append({
+            'user_id':          player_entry.user_id,   # for profile hyperlinks
             'name':             player_entry.name,
             'username':         player_entry.username if player_entry.username is not None else "-",
             'win':              "Yes" if player_entry.win else "No",
