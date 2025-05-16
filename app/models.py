@@ -135,7 +135,6 @@ class PlayerGameEntry(db.Model):
     score = db.Column(db.Integer)   # assuming integer scores only (most board games)
 
 
-
 class Comment(db.Model):
     __tablename__ = 'comment'
 

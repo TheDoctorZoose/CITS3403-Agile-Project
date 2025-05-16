@@ -1,22 +1,30 @@
+import csv
 import io
-from os import abort
-from flask import Blueprint, render_template, redirect, url_for, flash, request, jsonify,current_app
-from flask_login import login_user, logout_user, current_user, login_required
-from werkzeug.security import generate_password_hash, check_password_hash
-
-from app import db , mail
-from app.models import FriendRequest, Message, User, GameEntry, PlayerGameEntry, Comment, Like, Favorite, RawCSVEntry
-from app.forms import RegistrationForm, LoginForm
-
-from datetime import datetime
-import csv, json
-
-from itsdangerous import URLSafeTimedSerializer
-from flask_mail import Message as MailMessage
-
-from sqlalchemy import func, extract, cast, Integer
+import json
 from collections import Counter
+from datetime import datetime
+from os import abort
 
+from flask import Blueprint, render_template, redirect, url_for, flash, current_app
+from flask_login import login_user, logout_user, current_user, login_required
+from flask_mail import Message as MailMessage
+from itsdangerous import URLSafeTimedSerializer
+from sqlalchemy import func, extract, cast, Integer
+from werkzeug.security import check_password_hash
+
+from app import db, mail
+from app.forms import RegistrationForm, LoginForm
+from app.models import (
+    FriendRequest,
+    Message,
+    User,
+    GameEntry,
+    PlayerGameEntry,
+    Comment,
+    Like,
+    Favorite,
+    RawCSVEntry,
+)
 
 main = Blueprint('main', __name__)
 
@@ -108,15 +116,15 @@ def profile(user_id):
     friends = user.friends.all() if is_own_profile else None
 
     return render_template(
-        'profile.html',
+        "profile.html",
         user=user,
-        entries=entries,  # ✅ 确保模板中用的变量名一致
+        entries=entries,
         liked_entries=liked_entries,
         favorited_entries=favorited_entries,
         is_own_profile=is_own_profile,
         request_sent=request_sent,
         are_friends=are_friends,
-        friends=friends 
+        friends=friends,
     )
 
 
@@ -362,7 +370,6 @@ def upload_csv():
     return redirect(url_for('main.forum'))
 
 
-
 @main.route('/upload_json', methods=['POST'])
 @login_required
 def upload_json():
@@ -577,7 +584,6 @@ def reset_token(token):
     return render_template('reset_password.html', user=user,token=token)
 
 
-
 def generate_reset_token(email, expires_sec=3600):
     s = URLSafeTimedSerializer(current_app.config['SECRET_KEY'])
     return s.dumps(email, salt='reset-password')
@@ -605,7 +611,6 @@ Thanks,
 Board Game Central
 '''
     mail.send(msg)
-
 
 
 @main.route('/analysis', methods=['GET', 'POST'])
