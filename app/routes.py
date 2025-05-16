@@ -4,24 +4,19 @@ from flask import Blueprint, render_template, redirect, url_for, flash, request,
 from flask_login import login_user, logout_user, current_user, login_required
 from werkzeug.security import generate_password_hash, check_password_hash
 
-from app.models import FriendRequest, Message, User, GameEntry, PlayerGameEntry, Comment, Like, Favorite
-
-from app.forms import RegistrationForm, LoginForm
 from app import db , mail
+from app.models import FriendRequest, Message, User, GameEntry, PlayerGameEntry, Comment, Like, Favorite, RawCSVEntry
+from app.forms import RegistrationForm, LoginForm
 
 from datetime import datetime
-
-from io import TextIOWrapper
-
 import csv, json
 
-from app.models import RawCSVEntry
-from threading import Thread
 from itsdangerous import URLSafeTimedSerializer
 from flask_mail import Message as MailMessage
 
 from sqlalchemy import func, extract, cast, Integer
 from collections import Counter
+
 
 main = Blueprint('main', __name__)
 
@@ -582,11 +577,6 @@ Board Game Central
     mail.send(msg)
 
 
-from flask import Blueprint, render_template
-from flask_login import login_required, current_user
-from sqlalchemy import func, extract, cast, Integer
-from app.models import GameEntry, User
-from app import db
 
 @main.route('/analysis', methods=['GET', 'POST'])
 @login_required
@@ -597,10 +587,16 @@ def analysis():
 
 
     entries = (
-        GameEntry.query
+        PlayerGameEntry.query
+        .join(GameEntry, PlayerGameEntry.game_entry_id==GameEntry.id)
         .filter(
-            (GameEntry.user_id == current_user.id) |
+            (PlayerGameEntry.user_id == current_user.id) |
             (GameEntry.allowed_users.any(id=current_user.id))
+        )
+        .add_columns(
+            PlayerGameEntry.user_id,
+            GameEntry.game_title,
+            GameEntry.date_played
         )
         .order_by(GameEntry.timestamp.desc())
         .all()
@@ -609,7 +605,7 @@ def analysis():
     # —— Summary —— 
     plays        = len(entries)
     unique_games = len({e.game_title for e in entries})
-    unique_days  = len({e.date_played   for e in entries})
+    unique_days  = len({e.date_played for e in entries})
 
     # H-index
     freqs = sorted(
@@ -634,6 +630,7 @@ def analysis():
     )
     players = len(co_ids)
 
+    
     # A) Monthly plays
     ppm_rows = (
         db.session.query(
@@ -641,6 +638,7 @@ def analysis():
             extract('month', GameEntry.date_played).label('month'),
             func.count(GameEntry.id).label('count'),
         )
+        .join(PlayerGameEntry, GameEntry.id==PlayerGameEntry.game_entry_id)
         .filter_by(user_id=current_user.id)
         .group_by('year', 'month')
         .order_by('year', 'month')
@@ -668,18 +666,21 @@ def analysis():
     # C) Leaderboard
     lb_rows = (
         db.session.query(
-            GameEntry.user_id,
-            func.count(GameEntry.id).label('plays'),
-            func.sum(cast(GameEntry.win, Integer)).label('wins'),
+            PlayerGameEntry.user_id,
+            func.count(PlayerGameEntry.id).label('plays'),
+            func.sum(cast(PlayerGameEntry.win, Integer)).label('wins'),
         )
-        .group_by(GameEntry.user_id)
-        .order_by(func.count(GameEntry.id).desc())
+        .group_by(PlayerGameEntry.user_id)
+        .order_by(func.count(PlayerGameEntry.id).asc())
         .limit(5)
         .all()
     )
     leaderboard = []
     for r in lb_rows:
         u = User.query.get(r.user_id)
+        # no username entries are ignored as there is no unique identifier for them
+        if u is None:
+            continue
         wins = int(r.wins or 0)
         rate = round(wins / r.plays * 100, 1) if r.plays else 0
         leaderboard.append({
@@ -691,22 +692,21 @@ def analysis():
 
     # D) First-time plays
     total_first = (
-        db.session.query(func.count(GameEntry.id))
-        .filter_by(
-            user_id=current_user.id,
-            first_time_playing=True
-        )
+        db.session.query(func.count())
+        .select_from(GameEntry)
+        .join(PlayerGameEntry, GameEntry.id==PlayerGameEntry.game_entry_id)
+        .filter_by(first_time=True, user_id=current_user.id)
         .scalar() or 0
     )
+
     wins_first = (
-        db.session.query(func.count(GameEntry.id))
-        .filter_by(
-            user_id=current_user.id,
-            first_time_playing=True,
-            win=True
-        )
+        db.session.query(func.count())
+        .select_from(GameEntry)
+        .join(PlayerGameEntry, GameEntry.id==PlayerGameEntry.game_entry_id)
+        .filter_by(first_time=True, win=True, user_id=current_user.id)
         .scalar() or 0
     )
+
     first_play_stats = {
         'total': total_first,
         'wins':  wins_first,
