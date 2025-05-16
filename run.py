@@ -3,13 +3,13 @@ from flask_migrate import upgrade, migrate, init
 import threading
 import time
 import os
-from tests.selenium_tests import selenium_test  
 
 app = create_app()
 
 def run_selenium_tests():
-    time.sleep(3)  
-    selenium_test.run_selenium_tests()  
+    time.sleep(3)
+    from tests.selenium_tests import selenium_test
+    selenium_test.run_selenium_tests()
 
 def run_migrations():
     with app.app_context():
@@ -26,4 +26,4 @@ if __name__ == "__main__":
         run_migrations()
         threading.Thread(target=run_selenium_tests).start()
 
-    app.run(debug=True, use_reloader=False)
+    app.run(debug=True)
