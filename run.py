@@ -8,9 +8,11 @@ from app import create_app
 
 app = create_app()
 
+
 def run_selenium_tests():
     time.sleep(3)
     run_selenium_tests()
+
 
 def run_migrations():
     with app.app_context():
@@ -23,7 +25,9 @@ def run_migrations():
             print(f"[Migration warning] {e}")  # Ignore "No changes detected"
         upgrade()
 
+
 if __name__ == "__main__":
+
     if os.environ.get("WERKZEUG_RUN_MAIN") == "true":
         run_migrations()  # Run migrations before server starts
         threading.Thread(target=run_selenium_tests).start()
