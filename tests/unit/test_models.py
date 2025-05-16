@@ -1,19 +1,25 @@
-
 import unittest
+from datetime import datetime
+
+from flask_testing import TestCase
+
 from app import db, create_app
 from app.models import User, FriendRequest, Message, GameEntry, Like, Favorite
-from flask_testing import TestCase
-from datetime import datetime
+
 
 class BaseTestCase(TestCase):
     def create_app(self):
         app = create_app()
-        app.config['TESTING'] = True
-        app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///:memory:'
-        app.config['WTF_CSRF_ENABLED'] = False
+        app.config["TESTING"] = True
+        # Use an in-memory SQLite database
+        app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///:memory:"
+        app.config["WTF_CSRF_ENABLED"] = False
+
         return app
 
     def setUp(self):
+        self.app_context = self.app.app_context()
+        self.app_context.push()
         db.create_all()
         self.user1 = User(username="user1", email="user1@example.com")
         self.user1.set_password("password")
@@ -25,6 +31,8 @@ class BaseTestCase(TestCase):
     def tearDown(self):
         db.session.remove()
         db.drop_all()
+        self.app_context.pop()
+
 
 class TestModels(BaseTestCase):
     def test_user_creation(self):
@@ -37,7 +45,9 @@ class TestModels(BaseTestCase):
         self.assertEqual(FriendRequest.query.count(), 1)
 
     def test_like_model(self):
-        entry = GameEntry(game_title="Test", date_played=datetime.today(), user_id=self.user1.id)
+        entry = GameEntry(
+            game_title="Test", date_played=datetime.today(), user_id=self.user1.id
+        )
         db.session.add(entry)
         db.session.commit()
         like = Like(user_id=self.user2.id, entry_id=entry.id)
@@ -46,7 +56,9 @@ class TestModels(BaseTestCase):
         self.assertEqual(Like.query.count(), 1)
 
     def test_favorite_model(self):
-        entry = GameEntry(game_title="Test2", date_played=datetime.today(), user_id=self.user1.id)
+        entry = GameEntry(
+            game_title="Test2", date_played=datetime.today(), user_id=self.user1.id
+        )
         db.session.add(entry)
         db.session.commit()
         fav = Favorite(user_id=self.user2.id, entry_id=entry.id)
@@ -55,7 +67,13 @@ class TestModels(BaseTestCase):
         self.assertEqual(Favorite.query.count(), 1)
 
     def test_message_model(self):
-        msg = Message(sender_id=self.user1.id, receiver_id=self.user2.id, content="hello")
+        msg = Message(
+            sender_id=self.user1.id, receiver_id=self.user2.id, content="hello"
+        )
         db.session.add(msg)
         db.session.commit()
         self.assertEqual(Message.query.count(), 1)
+
+
+if __name__ == "__main__":
+    unittest.main()

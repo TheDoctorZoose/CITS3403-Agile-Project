@@ -4,9 +4,9 @@ from typing import Iterator
 
 import flask_unittest
 from flask import Flask
-from flask.testing import FlaskClient
 
 from app import create_app, db
+
 
 # with open(os.path.join(os.path.dirname(__file__), "data.sql"), "rb") as f:
 #     _data_sql = f.read().decode("utf-8")

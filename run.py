@@ -1,15 +1,16 @@
-from app import create_app, db
-from flask_migrate import upgrade, migrate, init
+import os
 import threading
 import time
-import os
+
+from flask_migrate import upgrade, migrate, init
+
+from app import create_app
 
 app = create_app()
 
 def run_selenium_tests():
     time.sleep(3)
-    import app.selenium_test
-    app.selenium_test.run_selenium_tests()
+    run_selenium_tests()
 
 def run_migrations():
     with app.app_context():
