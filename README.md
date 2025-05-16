@@ -16,7 +16,28 @@ This project was completed for the CITS3403 Agile Web Development unit at the Un
 TBA
 
 ## Application Tests
-TBA
+
+This project uses `pytest` for all testing.
+
+### Run all tests
+
+```shell
+pytest
+```
+
+### Tun a specific suite
+
+```shell
+pytest tests/unit/
+```
+
+### Selenium (end-to-end) tests
+
+> make sure the Flask server is running before running these tests
+
+```shell
+pytest tests/selenium/
+```
 
 ## Features
 ### Upload Data

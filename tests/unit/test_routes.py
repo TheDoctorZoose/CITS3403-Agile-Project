@@ -1,9 +1,8 @@
 import unittest
 
-from unit.conftest import TestBase
-
 from app import db
 from app.models import User, GameEntry, FriendRequest
+from tests.unit.conftest import TestBase
 
 
 class TestRoutes(TestBase):

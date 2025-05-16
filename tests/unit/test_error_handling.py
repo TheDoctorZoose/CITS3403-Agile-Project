@@ -1,6 +1,6 @@
 import unittest
 
-from unit.conftest import TestBase
+from tests.unit.conftest import TestBase
 
 
 class TestErrorHandling(TestBase):
