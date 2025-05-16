@@ -13,7 +13,37 @@ This project was completed for the CITS3403 Agile Web Development unit at the Un
 | 24242657       | Zayn Chen         | ChenZhez        |
 
 ## Usage
-TBA
+1. **Clone and navigate to the repository:**
+   ```bash
+   git clone https://github.com/TheDoctorZoose/CITS3403-Agile-Project.git
+   cd <path/to/repository/>
+   ```
+
+2. **Create and activate the Virtual Environment:**
+   ```bash
+   python3 -m venv venv
+   source venv/bin/activate
+   ```
+
+3. **Install dependencies inside the Virtual Environment:**
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+4. **Initialise the database:**
+   ```bash
+   flask db init
+   flask db migrate
+   flask db upgrade
+   ```
+
+5. **Start the application:**
+   ```bash
+   flask run
+   ```
+
+6. **Access the app using a browser:**<br/>
+   View at `http://127.0.0.1:5000` or `http://localhost:5000`
 
 ## Application Tests
 TBA
