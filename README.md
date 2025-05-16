@@ -16,7 +16,32 @@ This project was completed for the CITS3403 Agile Web Development unit at the Un
 TBA
 
 ## Application Tests
-TBA
+
+Before running tests, make sure you have the requirements installed:
+
+```sh
+pip install -r requirements.txt
+```
+
+To run the unit test suit:
+
+```sh
+python -m unittest discover -s tests/unit
+```
+
+To test simulated user behaviour using selenium, activate the Flask app and run
+
+```sh
+# Start the server in one terminal
+flask run
+
+# Then, in a new terminal:
+python -m unittest discover -s tests/selenium
+```
+
+
+
+
 
 ## Features
 ### Upload Data
