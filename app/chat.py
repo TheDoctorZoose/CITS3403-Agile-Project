@@ -1,9 +1,8 @@
 # chat.py
-from flask_sock import Sock
-from flask_login import current_user
-from flask import request
 import json
-from datetime import datetime
+
+from flask import request
+
 from app.models import db, Message, User
 
 sockets = {}  # user_id -> websocket
@@ -13,7 +12,7 @@ def register_chat_routes(sock):
     def chat(ws):
         try:
             user_id = int(request.args.get('user_id'))
-        except:
+        except (TypeError, ValueError):
             ws.close()
             return
 
