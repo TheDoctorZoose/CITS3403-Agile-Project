@@ -1,9 +1,9 @@
 import unittest
 
-from tests.unit.conftest import TestBase
+from tests.unit.conftest import TestBaseMemoryDB
 
 
-class TestErrorHandling(TestBase):
+class TestErrorHandlingMemoryDB(TestBaseMemoryDB):
 
     def test_404_error(self, _, client):
         """Test handling of 404 Not Found error"""
@@ -16,6 +16,7 @@ class TestErrorHandling(TestBase):
         response = client.get('/profile/9999')
         self.assertEqual(403, response.status_code)
         self.assertIn(b'403 Forbidden', response.data)
+
 
 if __name__ == '__main__':
     unittest.main()

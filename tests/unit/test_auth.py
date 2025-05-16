@@ -1,9 +1,9 @@
 from app import db
 from app.models import User, FriendRequest
-from tests.unit.conftest import TestBase
+from tests.unit.conftest import TestBaseMemoryDB
 
 
-class TestUserRegistration(TestBase):
+class TestUserRegistrationMemoryDB(TestBaseMemoryDB):
 
     def test_register_page(self, app, client):
         """GET /register returns the registration form."""
@@ -21,7 +21,8 @@ class TestUserRegistration(TestBase):
         })
         self.assertEqual(302, response.status_code)
 
-class TestUserLogin(TestBase):
+
+class TestUserLoginMemoryDB(TestBaseMemoryDB):
 
     def setUp(self, app, client):
         with app.app_context():
@@ -52,7 +53,8 @@ class TestUserLogin(TestBase):
         })
         self.assertEqual(200, response.status_code)
 
-class TestFriendRequests(TestBase):
+
+class TestFriendRequestsMemoryDB(TestBaseMemoryDB):
 
     def setUp(self, app, client):
         with app.app_context():
@@ -79,7 +81,6 @@ class TestFriendRequests(TestBase):
             request = FriendRequest(sender=user2, receiver=user1)
             db.session.add(request)
             db.session.commit()
-
 
         client.post('/login', data={'email': 'user1@example.com', 'password': 'password123'})
         response = client.post('/accept_request/1')

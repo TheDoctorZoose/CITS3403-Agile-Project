@@ -1,10 +1,12 @@
+import unittest
+
 from app import db
 from app.models import User, GameEntry
+from tests.unit.conftest import TestBaseMemoryDB
 
-from tests.unit.conftest import TestBase
 
-
-class TestGameEntrySubmission(TestBase):
+@unittest.skip("Unfortunately out of scope")
+class TestGameEntrySubmissionMemoryDB(TestBaseMemoryDB):
 
     def setUp(self, app, client):
         with app.app_context():

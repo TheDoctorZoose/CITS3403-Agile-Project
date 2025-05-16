@@ -8,12 +8,19 @@ from flask import Flask
 from app import create_app, db
 
 
-# with open(os.path.join(os.path.dirname(__file__), "data.sql"), "rb") as f:
-#     _data_sql = f.read().decode("utf-8")
+def create_test_app(use_memory_db: bool = True) -> Iterator[Flask]:
+    """
+    Create and configure a new app instance for each test.
+    :param use_memory_db: whether to use an in-memory SQLite db, or a temp file.
+    """
+    if use_memory_db:
+        db_uri = "sqlite:///:memory:"
+        db_fd = None
+        db_path = None
+    else:
+        db_fd, db_path = tempfile.mkstemp()
+        db_uri = f"sqlite:///{db_path}"
 
-def _create_app(self) -> Iterator[Flask]:
-    """Create and configure a new app instance for each test."""
-    db_fd, db_path = tempfile.mkstemp()
     app = create_app(
         {
             "TESTING": True,
@@ -31,8 +38,14 @@ def _create_app(self) -> Iterator[Flask]:
         db.session.remove()
         db.drop_all()
 
-    os.close(db_fd)
-    os.remove(db_path)
+    if not use_memory_db and db_fd is not None:
+        os.close(db_fd)
+        os.remove(db_path)
 
-class TestBase(flask_unittest.AppClientTestCase):
-    create_app = _create_app
+class TestBaseMemoryDB(flask_unittest.AppClientTestCase):
+    def create_app(self):
+        yield from create_test_app(use_memory_db=True)
+
+class TestBaseWithFileDB(flask_unittest.AppClientTestCase):
+    def create_app(self):
+        yield from create_test_app(use_memory_db=False)

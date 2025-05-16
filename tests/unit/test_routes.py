@@ -2,10 +2,10 @@ import unittest
 
 from app import db
 from app.models import User, GameEntry, FriendRequest
-from tests.unit.conftest import TestBase
+from tests.unit.conftest import TestBaseMemoryDB
 
 
-class TestRoutes(TestBase):
+class TestRoutesMemoryDB(TestBaseMemoryDB):
 
     def setUp(self, app, client):
         with app.app_context():
