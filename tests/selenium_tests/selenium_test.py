@@ -24,7 +24,9 @@ class FlaskSeleniumTest(unittest.TestCase):
         driver.find_element(By.NAME, "username").send_keys(username)
         driver.find_element(By.NAME, "email").send_keys(email)
         driver.find_element(By.NAME, "password").send_keys(password)
-        driver.find_element(By.NAME, "confirm_password").send_keys(password + Keys.RETURN)
+        driver.find_element(By.NAME, "confirm_password").send_keys(
+            password + Keys.RETURN
+        )
 
         time.sleep(1)
 
@@ -42,12 +44,14 @@ class FlaskSeleniumTest(unittest.TestCase):
     def tearDown(self):
         self.driver.quit()
 
+
 if __name__ == "__main__":
     unittest.main()
 
 
 def run_selenium_tests():
     import unittest
+
     suite = unittest.defaultTestLoader.loadTestsFromTestCase(FlaskSeleniumTest)
     runner = unittest.TextTestRunner()
     runner.run(suite)
