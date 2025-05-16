@@ -1,10 +1,11 @@
-# Board Game Central - CITS3403 Group Project
+# 🎲 Board Game Central - CITS3403 Group Project
 
-## About
-This is a data analytics web application that allows for tracking, automated analysis, and sharing of board game play data with other users of the platform.
-This project was completed for the CITS3403 Agile Web Development unit at the University of Western Australia (UWA).
+## 🧩 About
 
-### Group
+Board Game Central is a full-stack data analytics web application that allows users to track, analyze, and share their board game sessions. This project was developed as part of the **CITS3403 Agile Web Development** unit at the **University of Western Australia (UWA)**.
+
+## 👥 Team
+
 | Student Number | Name              | GitHub Username |
 | -------------- | ----------------- | --------------- |
 | 23962159       | Diarmuid O'Connor | tirednightowl   |
@@ -12,75 +13,20 @@ This project was completed for the CITS3403 Agile Web Development unit at the Un
 | 21953544       | Peter Denby       | TheDoctorZoose  |
 | 24242657       | Zayn Chen         | ChenZhez        |
 
-## Usage
-1. **Clone and navigate to the repository:**
-   ```bash
-   git clone https://github.com/TheDoctorZoose/CITS3403-Agile-Project.git
-   cd <path/to/repository/>
-   ```
+---
 
-2. **Create and activate the Virtual Environment:**
-   ```bash
-   python3 -m venv venv         # or `python -m venv venv` depending on your python installation
-   source venv/bin/activate
-   ```
+## 🚀 Getting Started
 
-3. **Install dependencies inside the Virtual Environment:**
-   ```bash
-   pip install -r requirements.txt
-   ```
+### 1. Clone the Repository
 
-4. **Initialise the database:**
-   ```bash
-   flask db init
-   flask db migrate
-   flask db upgrade
-   ```
+```bash
+git clone https://github.com/TheDoctorZoose/CITS3403-Agile-Project.git
+cd CITS3403-Agile-Project
 
-5. **Start the application:**
-   ```bash
-   flask run
-   ```
-
-6. **Access the app using a browser:**<br/>
-   View at `http://127.0.0.1:5000` or `http://localhost:5000`
-
-## Application Tests
-
-Before running tests, make sure you have the requirements installed:
-
-```sh
-pip install -r requirements.txt
-```
-
-To run the unit test suit:
-
-```sh
-python -m unittest discover -s tests/unit
-```
-
-To test simulated user behaviour using selenium, activate the Flask app and run
-
-```sh
-# Start the server in one terminal
-flask run
-
-# Then, in a new terminal:
-python -m unittest discover -s tests/selenium
-```
-
-
-
-
-
-## Features
-### Upload Data
-- Use the interface to manually enter in relevant board game data
-- Batch import CSV or JSON data
-
-### Visualise Data
-- View your statistics in the form of summaries and charts
-- View other user's statistics that have been shared with you
-
-### Share Data
-- Search for other users you know and share specific visualisations and statistics with them
+### 2. Create and Activate a Virtual Environment
+```bash
+python -m venv venv
+# For macOS/Linux:
+source venv/bin/activate
+# For Windows:
+venv\Scripts\activate
