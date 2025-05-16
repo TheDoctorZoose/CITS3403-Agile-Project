@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}Welcome | Board Game Central{% endblock %}
+{% block title %}Intro | Board Game Central{% endblock %}
 
 {% block extra_styles %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/intro-styles.css') }}">
@@ -32,7 +32,7 @@
             <p>🎉 Welcome back, {{ current_user.username }}!</p>
             <p>Ready to record your next game or view your stats?</p>
             <a class="rounded-btn" href="{{ url_for('main.forum') }}">🎲 Record New Game</a>
-            <a class="rounded-btn" href="{{ url_for('main.forum') }}">📊 View My Stats</a>
+            <a class="rounded-btn" href="{{ url_for('main.analysis') }}">📊 View My Stats</a>
         {% else %}
             <p>To get started, log in or sign up below!</p>
             <a class="rounded-btn" href="{{ url_for('main.login') }}">Log In</a>

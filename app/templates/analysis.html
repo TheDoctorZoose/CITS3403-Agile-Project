@@ -1,7 +1,7 @@
 {# templates/analysis.html #}
 {% extends "base.html" %}
 
-{% block title %}Analysis View{% endblock %}
+{% block title %}Data Analysis | Board Game Central{% endblock %}
 
 {% block extra_styles %}
   <link rel="stylesheet"
@@ -32,7 +32,7 @@
 
     <hr class="section-divider">
 
-
+    <!-- Currently Unimplemented Custom Visualisation Form
     <section class="card mb-4 create-card">
       <div class="card-body bg-light">
         <h3>Create New Analysis View</h3>
@@ -114,8 +114,10 @@
         </form>
       </div>
     </section>
+    
 
     <hr class="section-divider">
+    -->
 
     <!-- —— Charts —— -->
     <div class="cards-grid">
@@ -150,7 +152,7 @@
   window.firstPlayStats = {{ first_play_stats | tojson }};
 
   document.addEventListener('DOMContentLoaded', function() {
-    // 1) Monthly bureau count
+    // 1) Monthly play count
     new Chart(
       document.getElementById('plays-per-month-chart').getContext('2d'),
       {
