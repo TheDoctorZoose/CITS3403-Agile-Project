@@ -13,7 +13,7 @@
 
 {% block content %}
 <div class="container my-4">
-  <h1 class="text-center">Board Game Entry Analysis Tool</h1>
+  <h1 class="text-center">Upload Data</h1>
   <p class="text-center">Please fill in the form below to record your board game session.</p>
 
   <!-- Flash Messages -->
@@ -82,29 +82,24 @@
       <!-- Players -->
       <div id="playersContainer">
         <fieldset class="player-info mb-4" data-index="0">
-          <legend class="fw-semibold">Player 1</legend>
+          <legend class="fw-semibold">Player 1 (You)</legend>
 
           <div class="mb-3">
             <label class="form-label">Name:</label>
             <input type="text" name="player_name" class="form-control" required placeholder="Player Name">
           </div>
 
-          <div class="mb-3">
-            <label class="form-label">Username (optional):</label>
-            <input type="text" name="player_username" class="form-control" placeholder="Username">
-          </div>
-
           <div class="form-check mb-2">
-            <input class="form-check-input" type="checkbox" name="win" value="0" id="player0Win">
             <label class="form-check-label" for="player0Win">Win?</label>
+            <input class="form-check-input" type="checkbox" name="win" value="0" id="player0Win">
           </div>
           <div class="form-check mb-2">
-            <input class="form-check-input" type="checkbox" name="went_first" value="0" id="player0First">
             <label class="form-check-label" for="player0First">Went First?</label>
+            <input class="form-check-input" type="checkbox" name="went_first" value="0" id="player0First">
           </div>
           <div class="form-check mb-3">
-            <input class="form-check-input" type="checkbox" name="first_time_playing" value="0" id="player0FirstTime">
             <label class="form-check-label" for="player0FirstTime">First Time Playing?</label>
+            <input class="form-check-input" type="checkbox" name="first_time_playing" value="0" id="player0FirstTime">
           </div>
 
           <div class="mb-3">
@@ -131,17 +126,24 @@
     <ul class="list-unstyled" id="entryList">
       {% for item in entries %}
         {% set entry = item.entry %}
+        {% set p_entry = item.p_entry %}
         <li class="mb-3 p-3 border rounded">
           <strong>{{ entry.game_title }}</strong> — {{ entry.date_played }}<br>
-          by <a href="{{ url_for('main.profile', user_id=entry.user.id) }}" class="fw-semibold">{{ entry.user.username }}</a>
+          
+          {% if p_entry.user_id %}
+            by <a href="{{ url_for('main.profile', user_id=p_entry.user_id) }}" class="fw-semibold">{{ p_entry.username }}</a>
+          {% else %}
+            by <span class="fw-semibold">{{ p_entry.name }}</span>
+          {% endif %}
+
           at {{ entry.timestamp.strftime('%Y-%m-%d %H:%M') }}<br>
 
           <!-- Stats -->
           <div class="mt-2">
-            Score: <strong>{{ item.score or 'N/A' }}</strong><br>
-            <input type="checkbox" disabled {% if item.win %}checked{% endif %}> Win<br>
-            <input type="checkbox" disabled {% if item.went_first %}checked{% endif %}> Went First<br>
-            <input type="checkbox" disabled {% if item.first_time_playing %}checked{% endif %}> First Time Playing<br>
+            Score: <strong>{{ p_entry.score or 'N/A' }}</strong><br>
+            <input type="checkbox" disabled {% if p_entry.win %}checked{% endif %}> Win<br>
+            <input type="checkbox" disabled {% if p_entry.went_first %}checked{% endif %}> Went First<br>
+            <input type="checkbox" disabled {% if p_entry.first_time_playing %}checked{% endif %}> First Time Playing<br>
           </div>
 
           <!-- Like & Favorite -->

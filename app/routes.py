@@ -4,24 +4,19 @@ from flask import Blueprint, render_template, redirect, url_for, flash, request,
 from flask_login import login_user, logout_user, current_user, login_required
 from werkzeug.security import generate_password_hash, check_password_hash
 
-from app.models import FriendRequest, Message, User, GameEntry, Comment, Like, Favorite
-
-from app.forms import RegistrationForm, LoginForm
 from app import db , mail
+from app.models import FriendRequest, Message, User, GameEntry, PlayerGameEntry, Comment, Like, Favorite, RawCSVEntry
+from app.forms import RegistrationForm, LoginForm
 
 from datetime import datetime
-
-from io import TextIOWrapper
-
 import csv, json
 
-from app.models import RawCSVEntry
-from threading import Thread
 from itsdangerous import URLSafeTimedSerializer
 from flask_mail import Message as MailMessage
 
 from sqlalchemy import func, extract, cast, Integer
 from collections import Counter
+
 
 main = Blueprint('main', __name__)
 
@@ -133,52 +128,95 @@ def visualisation():
 @login_required
 def forum():
     if request.method == 'POST':
-
-        # 1. basic data
+        # Retrieving form POST data
         game_title = request.form.get('gameTitle')
-        date_str   = request.form.get('datePlayed')
+        date_str = request.form.get('datePlayed')
         visibility = request.form.get('visibility')
+
+        # Error handling date entry
         try:
             date_played = datetime.strptime(date_str, "%Y-%m-%d").date()
         except ValueError:
             flash("Invalid date format.", "error")
             return redirect(url_for('main.forum'))
 
-        # 2. allowed users
+        # Visibility control
         if visibility == 'public':
             allowed_users = User.query.all()
         else:
             allowed_ids   = request.form.getlist('allowed_users')
             allowed_users = User.query.filter(User.id.in_(allowed_ids)).all()
 
-
-        # 3. game entries
-        names              = request.form.getlist('player_name')
-        usernames          = request.form.getlist('player_username')
-        scores             = request.form.getlist('score')
-        win_checked        = request.form.getlist('win')
-        went_first_checked = request.form.getlist('went_first')
-        first_checked      = request.form.getlist('first_time_playing')
-
-        for idx, name in enumerate(names):
-            uname = usernames[idx].strip()
-            user = User.query.filter_by(username=uname).first() if uname else None
-            entry_user = user or current_user
-
-            entry = GameEntry(
-                game_title         = game_title,
-                date_played        = date_played,
-                user_id            = entry_user.id,
-                win                = str(idx) in win_checked,
-                went_first         = str(idx) in went_first_checked,
-                first_time_playing = str(idx) in first_checked,
-                score              = int(scores[idx]) if scores[idx] else None,
-                allowed_users      = allowed_users
-            )
-            db.session.add(entry)
+        # Enter upload data view data into game entry table
+        new_entry = GameEntry(
+            game_title=game_title,
+            date_played=date_played,
+            user_id=current_user.id,
+            allowed_users=allowed_users
+        )
+        db.session.add(new_entry)
         db.session.commit()
 
-        flash('Entry submitted!', 'success')
+        # Enter upload data view data into RDBMS for each *player* in a game entry
+        game_entry_id = new_entry.id   # same for all players
+
+        # Retrieve lists of form field entries
+        name_list = request.form.getlist('player_name')
+        username_list = [current_user.username] + request.form.getlist('player_username')
+        win_list = request.form.getlist('win')
+        went_first_list = request.form.getlist('went_first')
+        first_time_playing_list = request.form.getlist('first_time_playing')
+        score_list = request.form.getlist('score')
+
+        num_players = len(name_list)   # as player name is a required field
+
+
+        # Player 1's (the user) game entry
+        user_player_entry = PlayerGameEntry(
+            game_entry_id = game_entry_id,
+            user_id = current_user.id,
+            name = name_list[0],
+            win = True if '0' in win_list else False,
+            went_first = True if '0' in went_first_list else False,
+            first_time = True if '0' in first_time_playing_list else False,
+            score = score_list[0]
+        )
+        db.session.add(user_player_entry)
+
+        # Other players' game entries
+        if num_players > 1:
+            for i in range(1, num_players):
+                # Get player username
+                username = username_list[i]
+                
+                # Error checking: Entered Username
+                if username:
+                    # Query the database to find corresponding user_id
+                    user_id = User.query.\
+                        add_columns(User.id).\
+                        filter(User.username == username).all()
+                    
+                    # Error handling: Username doesn't exist
+                    if not user_id:   # if list is empty (i.e. query didn't find a username match)
+                        flash("Invalid Username.", "error")
+                        return redirect(url_for('main.forum'))
+
+                # Add player game data entry to database
+                other_player_entry = PlayerGameEntry(
+                    game_entry_id = game_entry_id,
+                    user_id = None if not username else user_id[0][1],   # list should only contain a single user_id
+                    name = name_list[i],
+                    win = True if str(i) in win_list else False,
+                    went_first = True if str(i) in went_first_list else False,
+                    first_time = True if str(i) in first_time_playing_list else False,
+                    score = score_list[i]
+                )
+                db.session.add(other_player_entry)
+
+        # Commit changes to database
+        db.session.commit()
+
+        flash('Entry submitted!')
         return redirect(url_for('main.forum'))
 
     # Pagination
@@ -208,16 +246,30 @@ def forum():
 
     entries = []
     for e in items:
-        entries.append({
-            'entry':              e,
-            'like_count':         e.likes.count(),
-            'favorite_count':     e.favorites.count(),
-            'liked':              Like.query.filter_by(user_id=current_user.id, entry_id=e.id).first() is not None,
-            'favorited':          Favorite.query.filter_by(user_id=current_user.id, entry_id=e.id).first() is not None,
-            'win':                e.win,
-            'went_first':         e.went_first,
-            'first_time_playing': e.first_time_playing,
-            'score':              e.score
+        # Joins game entry tables and filters for visible entries
+        player_game_entry_row = PlayerGameEntry.query.\
+            outerjoin(User, PlayerGameEntry.user_id==User.id).\
+            join(GameEntry, PlayerGameEntry.game_entry_id==GameEntry.id).\
+            filter(PlayerGameEntry.game_entry_id==e.id).\
+            add_columns(
+                PlayerGameEntry.id,
+                PlayerGameEntry.game_entry_id,
+                PlayerGameEntry.user_id,
+                User.username,
+                PlayerGameEntry.name,
+                PlayerGameEntry.win,
+                PlayerGameEntry.went_first,
+                PlayerGameEntry.first_time,
+                PlayerGameEntry.score,
+            ).all()
+        for player_entry in player_game_entry_row:
+            entries.append({
+                'entry':              e,
+                'p_entry':            player_entry,
+                'like_count':         e.likes.count(),
+                'favorite_count':     e.favorites.count(),
+                'liked':              Like.query.filter_by(user_id=current_user.id, entry_id=e.id).first() is not None,
+                'favorited':          Favorite.query.filter_by(user_id=current_user.id, entry_id=e.id).first() is not None
         })
 
     friends = current_user.friends.all()
@@ -523,11 +575,6 @@ Board Game Central
     mail.send(msg)
 
 
-from flask import Blueprint, render_template
-from flask_login import login_required, current_user
-from sqlalchemy import func, extract, cast, Integer
-from app.models import GameEntry, User
-from app import db
 
 @main.route('/analysis', methods=['GET', 'POST'])
 @login_required
@@ -538,10 +585,16 @@ def analysis():
 
 
     entries = (
-        GameEntry.query
+        PlayerGameEntry.query
+        .join(GameEntry, PlayerGameEntry.game_entry_id==GameEntry.id)
         .filter(
-            (GameEntry.user_id == current_user.id) |
+            (PlayerGameEntry.user_id == current_user.id) |
             (GameEntry.allowed_users.any(id=current_user.id))
+        )
+        .add_columns(
+            PlayerGameEntry.user_id,
+            GameEntry.game_title,
+            GameEntry.date_played
         )
         .order_by(GameEntry.timestamp.desc())
         .all()
@@ -550,7 +603,7 @@ def analysis():
     # —— Summary —— 
     plays        = len(entries)
     unique_games = len({e.game_title for e in entries})
-    unique_days  = len({e.date_played   for e in entries})
+    unique_days  = len({e.date_played for e in entries})
 
     # H-index
     freqs = sorted(
@@ -575,6 +628,7 @@ def analysis():
     )
     players = len(co_ids)
 
+    
     # A) Monthly plays
     ppm_rows = (
         db.session.query(
@@ -582,6 +636,7 @@ def analysis():
             extract('month', GameEntry.date_played).label('month'),
             func.count(GameEntry.id).label('count'),
         )
+        .join(PlayerGameEntry, GameEntry.id==PlayerGameEntry.game_entry_id)
         .filter_by(user_id=current_user.id)
         .group_by('year', 'month')
         .order_by('year', 'month')
@@ -609,18 +664,21 @@ def analysis():
     # C) Leaderboard
     lb_rows = (
         db.session.query(
-            GameEntry.user_id,
-            func.count(GameEntry.id).label('plays'),
-            func.sum(cast(GameEntry.win, Integer)).label('wins'),
+            PlayerGameEntry.user_id,
+            func.count(PlayerGameEntry.id).label('plays'),
+            func.sum(cast(PlayerGameEntry.win, Integer)).label('wins'),
         )
-        .group_by(GameEntry.user_id)
-        .order_by(func.count(GameEntry.id).desc())
+        .group_by(PlayerGameEntry.user_id)
+        .order_by(func.count(PlayerGameEntry.id).asc())
         .limit(5)
         .all()
     )
     leaderboard = []
     for r in lb_rows:
         u = User.query.get(r.user_id)
+        # no username entries are ignored as there is no unique identifier for them
+        if u is None:
+            continue
         wins = int(r.wins or 0)
         rate = round(wins / r.plays * 100, 1) if r.plays else 0
         leaderboard.append({
@@ -632,22 +690,21 @@ def analysis():
 
     # D) First-time plays
     total_first = (
-        db.session.query(func.count(GameEntry.id))
-        .filter_by(
-            user_id=current_user.id,
-            first_time_playing=True
-        )
+        db.session.query(func.count())
+        .select_from(GameEntry)
+        .join(PlayerGameEntry, GameEntry.id==PlayerGameEntry.game_entry_id)
+        .filter_by(first_time=True, user_id=current_user.id)
         .scalar() or 0
     )
+
     wins_first = (
-        db.session.query(func.count(GameEntry.id))
-        .filter_by(
-            user_id=current_user.id,
-            first_time_playing=True,
-            win=True
-        )
+        db.session.query(func.count())
+        .select_from(GameEntry)
+        .join(PlayerGameEntry, GameEntry.id==PlayerGameEntry.game_entry_id)
+        .filter_by(first_time=True, win=True, user_id=current_user.id)
         .scalar() or 0
     )
+
     first_play_stats = {
         'total': total_first,
         'wins':  wins_first,
