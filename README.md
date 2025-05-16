@@ -47,27 +47,31 @@ This project was completed for the CITS3403 Agile Web Development unit at the Un
 
 ## Application Tests
 
-This project uses `pytest` for all testing.
+Before running tests, make sure you have the requirements installed:
 
-### Run all tests
-
-```shell
-pytest
+```sh
+pip install -r requirements.txt
 ```
 
-### Tun a specific suite
+To run the unit test suit:
 
-```shell
-pytest tests/unit/
+```sh
+python -m unittest discover -s tests/unit
 ```
 
-### Selenium (end-to-end) tests
+To test simulated user behaviour using selenium, activate the Flask app and run
 
-> make sure the Flask server is running before running these tests
+```sh
+# Start the server in one terminal
+flask run
 
-```shell
-pytest tests/selenium/
+# Then, in a new terminal:
+python -m unittest discover -s tests/selenium
 ```
+
+
+
+
 
 ## Features
 ### Upload Data
