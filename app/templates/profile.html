@@ -71,7 +71,7 @@
       <div class="history card p-4 mb-4">
         <h4 class="mb-3">🧾 Forum Entries</h4>
         {% if entries %}
-        {% for entry in entries %}
+        {% for entry in entries[:3] %}
         <div class="share-card">
           <div>
             <strong>{{ user.username }}</strong>
@@ -82,6 +82,11 @@
           <a href="{{ url_for('main.view_entry', entry_id=entry.id) }}">🔍 View Details</a>
         </div>
         {% endfor %}
+        {% if entries|length > 3 %}
+        <div class="mt-2">
+          <a href="{{ url_for('main.forum') }}" class="btn btn-sm btn-outline-secondary">View More Forum Entries →</a>
+        </div>
+        {% endif %}
         {% else %}
         <p>This user hasn't posted anything in the forum yet.</p>
         {% endif %}
@@ -91,12 +96,17 @@
       <div class="history card p-4 mb-4">
         <h4 class="mb-3">👍 Liked Posts</h4>
         {% if liked_entries %}
-        {% for entry in liked_entries %}
+        {% for entry in liked_entries[:3] %}
         <div class="share-card">
           <p><strong>🎲 {{ entry.game_title }}</strong> — {{ entry.date_played }}</p>
           <a href="{{ url_for('main.view_entry', entry_id=entry.id) }}">💬 View & Comment</a>
         </div>
         {% endfor %}
+        {% if liked_entries|length > 3 %}
+        <div class="mt-2">
+          <a href="{{ url_for('main.forum') }}" class="btn btn-sm btn-outline-secondary">View More Liked Posts →</a>
+        </div>
+        {% endif %}
         {% else %}
         <p>You haven't liked any posts yet.</p>
         {% endif %}
@@ -105,12 +115,17 @@
       <div class="history card p-4 mb-4">
         <h4 class="mb-3">⭐ Favorited Posts</h4>
         {% if favorited_entries %}
-        {% for entry in favorited_entries %}
+        {% for entry in favorited_entries[:3] %}
         <div class="share-card">
           <p><strong>🎲 {{ entry.game_title }}</strong> — {{ entry.date_played }}</p>
           <a href="{{ url_for('main.view_entry', entry_id=entry.id) }}">💬 View & Comment</a>
         </div>
         {% endfor %}
+        {% if favorited_entries|length > 3 %}
+        <div class="mt-2">
+          <a href="{{ url_for('main.forum') }}" class="btn btn-sm btn-outline-secondary">View More Favorites →</a>
+        </div>
+        {% endif %}
         {% else %}
         <p>You haven't favorited any posts yet.</p>
         {% endif %}

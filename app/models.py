@@ -4,6 +4,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
 from datetime import datetime, timezone
 from app import db
+from sqlalchemy import func
 
 friendships = db.Table(
     'friendships',
