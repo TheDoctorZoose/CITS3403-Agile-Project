@@ -1,9 +1,10 @@
 import unittest
 
+from unit.conftest import TestBase
+
 from app import db
 from app.models import User, GameEntry, FriendRequest
 
-from tests.conftest import TestBase
 
 class TestRoutes(TestBase):
 
@@ -62,7 +63,6 @@ class TestRoutes(TestBase):
         self.assertEqual(302, response.status_code)
         with app.app_context():
             self.assertEqual(1, FriendRequest.query.count())
-
 
 
 if __name__ == "__main__":
