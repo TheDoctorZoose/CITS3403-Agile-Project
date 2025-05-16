@@ -1,16 +1,21 @@
+# app/models.py
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
 from datetime import datetime, timezone
+
 from sqlalchemy import func
 from app import db 
 
-friendships = db.Table('friendships',
+
+friendships = db.Table(
+    'friendships',
     db.Column('user_id', db.Integer, db.ForeignKey('user.id')),
     db.Column('friend_id', db.Integer, db.ForeignKey('user.id'))
 )
 
-gameentry_permissions = db.Table('gameentry_permissions',
+gameentry_permissions = db.Table(
+    'gameentry_permissions',
     db.Column('entry_id', db.Integer, db.ForeignKey('game_entry.id')),
     db.Column('user_id', db.Integer, db.ForeignKey('user.id'))
 )
@@ -26,7 +31,6 @@ class User(UserMixin, db.Model):
     joined_at = db.Column(db.DateTime, default=datetime.now)
     bio = db.Column(db.Text, default='', nullable=True)
 
-    # Messages
     messages_sent = db.relationship(
         'Message',
         foreign_keys='Message.sender_id',
@@ -40,12 +44,10 @@ class User(UserMixin, db.Model):
         lazy=True
     )
 
-    # Other relationships
     posts = db.relationship('Post', backref='user', lazy=True)
     likes = db.relationship('Like', backref='user', lazy='dynamic')
     favorites = db.relationship('Favorite', backref='user', lazy='dynamic')
 
-    # Friend system
     friends = db.relationship(
         'User',
         secondary=friendships,
@@ -62,7 +64,6 @@ class User(UserMixin, db.Model):
         cascade='all, delete-orphan',
         lazy='dynamic'
     )
-
     received_requests = db.relationship(
         'FriendRequest',
         foreign_keys='FriendRequest.receiver_id',
@@ -74,11 +75,10 @@ class User(UserMixin, db.Model):
     
 
     def set_password(self, password):
-        self.password_hash = generate_password_hash(password)
+        self.password_hash = generate_password_hash(password, method='pbkdf2:sha256')
 
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
-
 
 
 class FriendRequest(db.Model):
@@ -96,21 +96,28 @@ class FriendRequest(db.Model):
         db.UniqueConstraint('sender_id', 'receiver_id', name='unique_friend_request'),
     )
 
+
 class GameEntry(db.Model):
+    __tablename__ = 'game_entry'
+
     id = db.Column(db.Integer, primary_key=True)
     game_title = db.Column(db.String(100))
     date_played = db.Column(db.Date)
+
+    win = db.Column(db.Boolean, default=False, nullable=False)
+    went_first = db.Column(db.Boolean, default=False, nullable=False)
+    first_time_playing = db.Column(db.Boolean, default=False, nullable=False)
+    score = db.Column(db.Integer, nullable=True)
+
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     timestamp = db.Column(db.DateTime, default=datetime.now)
 
-    # 权限控制：哪些用户可以访问该上传记录
     allowed_users = db.relationship(
         'User',
         secondary=gameentry_permissions,
         backref='permitted_game_entries'
     )
 
-    # 交互记录
     likes = db.relationship('Like', backref='entry', lazy='dynamic', cascade='all, delete-orphan')
     favorites = db.relationship('Favorite', backref='entry', lazy='dynamic', cascade='all, delete-orphan')
     comments = db.relationship('Comment', backref='entry', lazy='dynamic', cascade='all, delete-orphan')
@@ -118,20 +125,21 @@ class GameEntry(db.Model):
     user = db.relationship('User', backref='entries')
 
 
-
 class Comment(db.Model):
+    __tablename__ = 'comment'
+
     id = db.Column(db.Integer, primary_key=True)
     content = db.Column(db.Text, nullable=False)
     timestamp = db.Column(db.DateTime, default=datetime.now)
-
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     entry_id = db.Column(db.Integer, db.ForeignKey('game_entry.id'), nullable=False)
 
     user = db.relationship('User', backref='comments')
-    
 
 
 class RawCSVEntry(db.Model):
+    __tablename__ = 'raw_csv_entry'
+
     id = db.Column(db.Integer, primary_key=True)
     raw_data = db.Column(db.Text, nullable=False)
     timestamp = db.Column(db.DateTime, default=datetime.now)
@@ -139,6 +147,8 @@ class RawCSVEntry(db.Model):
 
 
 class Like(db.Model):
+    __tablename__ = 'like'
+
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     entry_id = db.Column(db.Integer, db.ForeignKey('game_entry.id'))
@@ -147,6 +157,8 @@ class Like(db.Model):
 
 
 class Favorite(db.Model):
+    __tablename__ = 'favorite'
+
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     entry_id = db.Column(db.Integer, db.ForeignKey('game_entry.id'))
@@ -156,14 +168,16 @@ class Favorite(db.Model):
 
 class Post(db.Model):
     __tablename__ = 'post'
+
     id = db.Column(db.Integer, primary_key=True)
     content = db.Column(db.Text, nullable=False)
     timestamp = db.Column(db.DateTime, default=datetime.now)
-
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-   
+
 
 class Message(db.Model):
+    __tablename__ = 'message'
+
     id = db.Column(db.Integer, primary_key=True)
     sender_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     receiver_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
