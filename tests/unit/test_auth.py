@@ -5,20 +5,23 @@ from tests.unit.conftest import TestBaseMemoryDB
 
 class TestUserRegistrationMemoryDB(TestBaseMemoryDB):
 
-    def test_register_page(self, app, client):
+    def test_register_page(self, _, client):
         """GET /register returns the registration form."""
-        response = client.get('/register')
+        response = client.get("/register")
         self.assertStatus(response, 200)
         self.assertIn(b"Register", response.data)
 
-    def test_user_registration(self, app, client):
+    def test_user_registration(self, _, client):
         """Test user registration functionality."""
-        response = client.post('/register', data={
-            'username': 'testuser',
-            'email': 'testuser@example.com',
-            'password': "hunter7",
-            "confirm_password": "hunter7",
-        })
+        response = client.post(
+            "/register",
+            data={
+                "username": "testuser",
+                "email": "testuser@example.com",
+                "password": "hunter7",
+                "confirm_password": "hunter7",
+            },
+        )
         self.assertEqual(302, response.status_code)
 
 
@@ -31,26 +34,32 @@ class TestUserLoginMemoryDB(TestBaseMemoryDB):
             db.session.add(user)
             db.session.commit()
 
-    def test_login_page(self, app, client):
+    def test_login_page(self, _, client):
         """Test if the login page is accessible."""
-        response = client.get('/login')
+        response = client.get("/login")
         self.assertEqual(200, response.status_code)
         self.assertIn(b"Login", response.data)
 
-    def test_user_login(self, app, client):
+    def test_user_login(self, _, client):
         """Test user login functionality."""
-        response = client.post('/login', data={
-            'email': 'testuser@example.com',
-            'password': "password123",
-        })
+        response = client.post(
+            "/login",
+            data={
+                "email": "testuser@example.com",
+                "password": "password123",
+            },
+        )
         self.assertEqual(302, response.status_code)
 
-    def test_incorrect_password(self, app, client):
+    def test_incorrect_password(self, _, client):
         """Test prevent user logging in badly."""
-        response = client.post('/login', data={
-            'email': 'testuser@example.com',
-            'password': 'hunter7',
-        })
+        response = client.post(
+            "/login",
+            data={
+                "email": "testuser@example.com",
+                "password": "hunter7",
+            },
+        )
         self.assertEqual(200, response.status_code)
 
 
@@ -66,10 +75,12 @@ class TestFriendRequestsMemoryDB(TestBaseMemoryDB):
             db.session.add_all([user1, user2])
             db.session.commit()
 
-    def test_send_friend_request(self, app, client):
+    def test_send_friend_request(self, _, client):
         """Test sending a friend request."""
-        client.post('/login', data={'email': 'user1@example.com', 'password': "password123"})
-        response = client.post('/send_request/2')
+        client.post(
+            "/login", data={"email": "user1@example.com", "password": "password123"}
+        )
+        response = client.post("/send_request/2")
         self.assertEqual(302, response.status_code)
 
     def test_accept_friend_request(self, app, client):
@@ -82,6 +93,8 @@ class TestFriendRequestsMemoryDB(TestBaseMemoryDB):
             db.session.add(request)
             db.session.commit()
 
-        client.post('/login', data={'email': 'user1@example.com', 'password': 'password123'})
-        response = client.post('/accept_request/1')
+        client.post(
+            "/login", data={"email": "user1@example.com", "password": "password123"}
+        )
+        response = client.post("/accept_request/1")
         self.assertEqual(302, response.status_code)
