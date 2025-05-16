@@ -233,6 +233,33 @@ def forum():
 @login_required
 def view_entry(entry_id):
     entry = GameEntry.query.get_or_404(entry_id)
+    formatted_time = entry.timestamp.strftime('%H:%M')   # formatted timestamp for table caption
+
+    # Query to find all players from the same game session
+    player_entry_rows = PlayerGameEntry.query.\
+            outerjoin(User, PlayerGameEntry.user_id==User.id).\
+            join(GameEntry, PlayerGameEntry.game_entry_id==GameEntry.id).\
+            filter(PlayerGameEntry.game_entry_id==entry_id).\
+            add_columns(
+                PlayerGameEntry.name,
+                User.username,
+                PlayerGameEntry.win,
+                PlayerGameEntry.went_first,
+                PlayerGameEntry.first_time,
+                PlayerGameEntry.score,
+            ).all()
+    
+    # Transforming data and entering into a list of dictionaries
+    player_entries = []
+    for player_entry in player_entry_rows:
+        player_entries.append({
+            'name':             player_entry.name,
+            'username':         player_entry.username if player_entry.username is not None else "-",
+            'win':              "Yes" if player_entry.win else "No",
+            'went_first':       "Yes" if player_entry.went_first else "No",
+            'first_time':       "Yes" if player_entry.first_time else "No",
+            'score':            player_entry.score if player_entry.score is not None else "-"
+        })
 
     if entry.user_id != current_user.id and current_user not in entry.allowed_users:
         abort(403)
@@ -251,7 +278,7 @@ def view_entry(entry_id):
 
         return redirect(url_for('main.view_entry', entry_id=entry.id))
 
-    return render_template('entry_detail.html', entry=entry)
+    return render_template('entry_detail.html', entry=entry, player_entries=player_entries, formatted_time=formatted_time)
 
 
 @main.route('/upload_csv', methods=['POST'])
