@@ -1,6 +1,6 @@
 from app import db
 from app.models import User, FriendRequest
-from conftest import TestBase
+from unit.conftest import TestBase
 
 
 class TestUserRegistration(TestBase):
