@@ -1,0 +1,27 @@
+/* Table */
+table {
+    width: 100%;
+}
+
+/* Table headers*/
+th {
+    background-color: rgb(222, 179, 166);
+}
+
+/* Table, table headers and table data cell */
+table, th, td {
+  border: 2px solid black;
+  border-collapse: collapse;
+  text-align: center;
+}
+
+/* Caption for table */
+caption {
+    caption-side: bottom;
+    padding-top: 10px;
+}
+
+/* Text bolding */
+.text-bold {
+    font-weight: bold;
+}

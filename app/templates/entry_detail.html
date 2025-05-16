@@ -1,9 +1,40 @@
 {% extends 'base.html' %}
 
+{% block extra_styles %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/entry-detail.css') }}">
+{% endblock %}
+
 {% block content %}
   <h2>{{ entry.game_title }} ({{ entry.date_played }})</h2>
-  <p>Uploaded by {{ entry.user.username }} at {{ entry.timestamp }}</p>
 
+  <table>
+    <caption>Uploaded by <a href="{{ url_for('main.profile', user_id=entry.user_id) }}" class="text-bold">{{ entry.user.username }}</a> at {{ formatted_time }}</caption>
+    <tr>
+      <th>Name</th>
+      <th>Username</th>
+      <th>Won?</th>
+      <th>Went First?</th>
+      <th>First Time?</th>
+      <th>Score</th>
+    </tr>
+    {% for player_entry in player_entries %}
+    <tr>
+      <td>{{ player_entry.name }}</td>
+      <td>
+        {% if player_entry.user_id %}
+          <a href="{{ url_for('main.profile', user_id=player_entry.user_id) }}" class="text-bold">{{ player_entry.username }}</a>
+        {% else %}
+          <span class="fw-semibold">{{ player_entry.username }}</span>
+        {% endif %}
+      </td>
+      <td>{{ player_entry.win }}</td>
+      <td>{{ player_entry.went_first }}</td>
+      <td>{{ player_entry.first_time }}</td>
+      <td>{{ player_entry.score }}</td>
+    <tr>
+    {% endfor %}
+  </table>
+  
   <h3>Comments:</h3>
   <ul>
     {% for comment in entry.comments %}
