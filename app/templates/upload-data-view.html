@@ -126,17 +126,24 @@
     <ul class="list-unstyled" id="entryList">
       {% for item in entries %}
         {% set entry = item.entry %}
+        {% set p_entry = item.p_entry %}
         <li class="mb-3 p-3 border rounded">
           <strong>{{ entry.game_title }}</strong> — {{ entry.date_played }}<br>
-          by <a href="{{ url_for('main.profile', user_id=entry.user.id) }}" class="fw-semibold">{{ entry.user.username }}</a>
+          
+          {% if p_entry.user_id %}
+            by <a href="{{ url_for('main.profile', user_id=p_entry.user_id) }}" class="fw-semibold">{{ p_entry.username }}</a>
+          {% else %}
+            by <span class="fw-semibold">{{ p_entry.name }}</span>
+          {% endif %}
+
           at {{ entry.timestamp.strftime('%Y-%m-%d %H:%M') }}<br>
 
           <!-- Stats -->
           <div class="mt-2">
-            Score: <strong>{{ item.score or 'N/A' }}</strong><br>
-            <input type="checkbox" disabled {% if item.win %}checked{% endif %}> Win<br>
-            <input type="checkbox" disabled {% if item.went_first %}checked{% endif %}> Went First<br>
-            <input type="checkbox" disabled {% if item.first_time_playing %}checked{% endif %}> First Time Playing<br>
+            Score: <strong>{{ p_entry.score or 'N/A' }}</strong><br>
+            <input type="checkbox" disabled {% if p_entry.win %}checked{% endif %}> Win<br>
+            <input type="checkbox" disabled {% if p_entry.went_first %}checked{% endif %}> Went First<br>
+            <input type="checkbox" disabled {% if p_entry.first_time_playing %}checked{% endif %}> First Time Playing<br>
           </div>
 
           <!-- Like & Favorite -->

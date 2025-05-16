@@ -251,21 +251,33 @@ def forum():
 
     entries = []
     for e in items:
+        # Joins game entry tables and filters for visible entries
         player_game_entry_row = PlayerGameEntry.query.\
+            outerjoin(User, PlayerGameEntry.user_id==User.id).\
             join(GameEntry, PlayerGameEntry.game_entry_id==GameEntry.id).\
-            filter(PlayerGameEntry.game_entry_id==e.id).all()
+            filter(PlayerGameEntry.game_entry_id==e.id).\
+            add_columns(
+                PlayerGameEntry.id,
+                PlayerGameEntry.game_entry_id,
+                PlayerGameEntry.user_id,
+                User.username,
+                PlayerGameEntry.name,
+                PlayerGameEntry.win,
+                PlayerGameEntry.went_first,
+                PlayerGameEntry.first_time,
+                PlayerGameEntry.score,
+            ).all()
         for player_entry in player_game_entry_row:
             entries.append({
                 'entry':              e,
+                'p_entry':            player_entry,
                 'like_count':         e.likes.count(),
                 'favorite_count':     e.favorites.count(),
                 'liked':              Like.query.filter_by(user_id=current_user.id, entry_id=e.id).first() is not None,
-                'favorited':          Favorite.query.filter_by(user_id=current_user.id, entry_id=e.id).first() is not None,
-                'win':                player_entry.win,
-                'went_first':         player_entry.went_first,
-                'first_time_playing': player_entry.first_time,
-                'score':              player_entry.score
+                'favorited':          Favorite.query.filter_by(user_id=current_user.id, entry_id=e.id).first() is not None
         })
+    
+    print(entries[2]['entry'])
 
     friends = current_user.friends.all()
 
