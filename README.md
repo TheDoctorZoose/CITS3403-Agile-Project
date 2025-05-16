@@ -21,7 +21,7 @@ This project was completed for the CITS3403 Agile Web Development unit at the Un
 
 2. **Create and activate the Virtual Environment:**
    ```bash
-   python3 -m venv venv
+   python3 -m venv venv         # or `python -m venv venv` depending on your python installation
    source venv/bin/activate
    ```
 
