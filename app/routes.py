@@ -142,7 +142,7 @@ def forum():
 
         # Visibility control
         if visibility == 'public':
-            allowed_users = User.query.all()
+            allowed_users = []
         else:
             allowed_ids   = request.form.getlist('allowed_users')
             allowed_users = User.query.filter(User.id.in_(allowed_ids)).all()
@@ -222,10 +222,13 @@ def forum():
     # Pagination
     page        = request.args.get('page', 1, type=int)
     all_entries = GameEntry.query.order_by(GameEntry.timestamp.desc()).all()
-    visible     = [
-        e for e in all_entries
-        if e.user_id == current_user.id or current_user in e.allowed_users
-    ]
+    visible = [
+    e for e in all_entries
+    if e.user_id == current_user.id
+    or (e.allowed_users is None or len(e.allowed_users) == 0)  # 显式判断为空
+    or current_user in e.allowed_users
+]
+
 
     per_page = 5
     total    = len(visible)
