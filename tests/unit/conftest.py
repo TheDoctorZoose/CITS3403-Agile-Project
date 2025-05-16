@@ -24,7 +24,7 @@ def create_test_app(use_memory_db: bool = True) -> Iterator[Flask]:
     app = create_app(
         {
             "TESTING": True,
-            "SQLALCHEMY_DATABASE_URI": f"sqlite:///{db_path}",
+            "SQLALCHEMY_DATABASE_URI": f"sqlite:///{db_uri}",
             "WTF_CSRF_ENABLED": False,
             "SECRET_KEY": "testing-secret",
         }
