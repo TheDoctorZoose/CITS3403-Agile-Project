@@ -271,8 +271,6 @@ def forum():
                 'liked':              Like.query.filter_by(user_id=current_user.id, entry_id=e.id).first() is not None,
                 'favorited':          Favorite.query.filter_by(user_id=current_user.id, entry_id=e.id).first() is not None
         })
-    
-    print(entries[2]['entry'])
 
     friends = current_user.friends.all()
 
