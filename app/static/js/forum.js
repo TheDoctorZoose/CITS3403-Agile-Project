@@ -1,35 +1,35 @@
 document.addEventListener('DOMContentLoaded', function () {
-  const visibilitySelect = document.getElementById('visibility');
-  const friendSelection = document.getElementById('friend-selection');
+    const visibilitySelect = document.getElementById('visibility');
+    const friendSelection = document.getElementById('friend-selection');
 
-  function toggleFriendSelection() {
-    if (visibilitySelect && friendSelection) {
-      friendSelection.style.display = (visibilitySelect.value === 'friends') ? 'block' : 'none';
-    }
-  }
-
-  if (visibilitySelect) {
-    visibilitySelect.addEventListener('change', toggleFriendSelection);
-    toggleFriendSelection(); 
-  }
-
-  const addPlayerBtn     = document.getElementById('addPlayerBtn');
-  const playersContainer = document.getElementById('playersContainer');
-  let playerCount        = 1;
-
-  addPlayerBtn.addEventListener('click', function () {
-    playerCount++;
-    if (playerCount > 10) {
-      alert("You have reached the maximum number of players (10).");
-      return;
+    function toggleFriendSelection() {
+        if (visibilitySelect && friendSelection) {
+            friendSelection.style.display = (visibilitySelect.value === 'friends') ? 'block' : 'none';
+        }
     }
 
-    const idx = playerCount - 1;
-    const fs  = document.createElement('fieldset');
-    fs.classList.add('player-info');
-    fs.setAttribute('data-index', idx);
+    if (visibilitySelect) {
+        visibilitySelect.addEventListener('change', toggleFriendSelection);
+        toggleFriendSelection();
+    }
 
-    fs.innerHTML = `
+    const addPlayerBtn = document.getElementById('addPlayerBtn');
+    const playersContainer = document.getElementById('playersContainer');
+    let playerCount = 1;
+
+    addPlayerBtn.addEventListener('click', function () {
+        playerCount++;
+        if (playerCount > 10) {
+            alert("You have reached the maximum number of players (10).");
+            return;
+        }
+
+        const idx = playerCount - 1;
+        const fs = document.createElement('fieldset');
+        fs.classList.add('player-info');
+        fs.setAttribute('data-index', idx.toString());
+
+        fs.innerHTML = `
       <legend>Player ${playerCount}</legend>
 
       <div class="mb-3">
@@ -63,55 +63,59 @@ document.addEventListener('DOMContentLoaded', function () {
       <button type="button" class="removePlayerBtn btn btn-outline-danger">Remove Player</button>
     `;
 
-    fs.querySelector('.removePlayerBtn').addEventListener('click', () => fs.remove());
+        fs.querySelector('.removePlayerBtn').addEventListener('click', () => fs.remove());
 
-    fs.querySelector('.removePlayerBtn').addEventListener('click', function () {
-      fs.remove();
-      playerCount -= 1;   // Ensures player count can still be maximum 10 even after removing players
+        fs.querySelector('.removePlayerBtn').addEventListener('click', function () {
+            fs.remove();
+            playerCount -= 1;   // Ensures player count can still be maximum 10 even after removing players
+        });
+
+        playersContainer.appendChild(fs);
     });
 
-    playersContainer.appendChild(fs);
-  });
+    document.querySelectorAll('.like-btn').forEach(button => {
+        button.addEventListener('click', function () {
+            const entryId = this.dataset.entryId;
+            const likeCountSpan = this.querySelector('.like-count');
+            const btn = this;
 
-  document.querySelectorAll('.like-btn').forEach(button => {
-    button.addEventListener('click', function () {
-      const entryId = this.dataset.entryId;
-      const likeCountSpan = this.querySelector('.like-count');
-      const btn = this;
-
-      fetch(`/like/${entryId}`, {
-        method: 'POST',
-        headers: { 'X-Requested-With': 'XMLHttpRequest' },
-        credentials: 'same-origin'
-      })
-        .then(res => res.json())
-        .then(data => {
-          if (data.success) {
-            likeCountSpan.textContent = data.like_count;
-            btn.classList.toggle('liked', data.liked);
-          }
+            fetch(`/like/${entryId}`, {
+                method: 'POST',
+                headers: {'X-Requested-With': 'XMLHttpRequest'},
+                credentials: 'same-origin'
+            })
+                .then(res => res.json())
+                .then(data => {
+                    data.liked = undefined;
+                    data.like_count = undefined;
+                    if (data.success) {
+                        likeCountSpan.textContent = data.like_count;
+                        btn.classList.toggle('liked', data.liked);
+                    }
+                });
         });
     });
-  });
 
-  document.querySelectorAll('.favorite-btn').forEach(button => {
-    button.addEventListener('click', function () {
-      const entryId = this.dataset.entryId;
-      const favoriteCountSpan = this.querySelector('.favorite-count');
-      const btn = this;
+    document.querySelectorAll('.favorite-btn').forEach(button => {
+        button.addEventListener('click', function () {
+            const entryId = this.dataset.entryId;
+            const favoriteCountSpan = this.querySelector('.favorite-count');
+            const btn = this;
 
-      fetch(`/favorite/${entryId}`, {
-        method: 'POST',
-        headers: { 'X-Requested-With': 'XMLHttpRequest' },
-        credentials: 'same-origin'
-      })
-        .then(res => res.json())
-        .then(data => {
-          if (data.success) {
-            favoriteCountSpan.textContent = data.favorite_count;
-            btn.classList.toggle('favorited', data.favorited);
-          }
+            fetch(`/favorite/${entryId}`, {
+                method: 'POST',
+                headers: {'X-Requested-With': 'XMLHttpRequest'},
+                credentials: 'same-origin'
+            })
+                .then(res => res.json())
+                .then(data => {
+                    data.favorite_count = undefined;
+                    data.favorited = undefined;
+                    if (data.success) {
+                        favoriteCountSpan.textContent = data.favorite_count;
+                        btn.classList.toggle('favorited', data.favorited);
+                    }
+                });
         });
     });
-  });
 });

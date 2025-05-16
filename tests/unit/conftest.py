@@ -42,9 +42,11 @@ def create_test_app(use_memory_db: bool = True) -> Iterator[Flask]:
         os.close(db_fd)
         os.remove(db_path)
 
+
 class TestBaseMemoryDB(flask_unittest.AppClientTestCase):
     def create_app(self):
         yield from create_test_app(use_memory_db=True)
+
 
 class TestBaseWithFileDB(flask_unittest.AppClientTestCase):
     def create_app(self):

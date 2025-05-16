@@ -13,7 +13,7 @@
     border: 1px solid #ccc;
     border-radius: 8px;
     background-color: #fafafa;
-    box-shadow: 2px 2px 6px rgba(0,0,0,0.1);
+    box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.1);
     padding: 2rem;
     max-width: 800px;
     margin: 2rem auto;
@@ -40,6 +40,7 @@
         flex-direction: row;
         gap: 2rem;
     }
+
     .summary-column {
         flex: 1;
     }
@@ -93,7 +94,7 @@ table {
     margin-bottom: 2em;
     border-collapse: collapse;
     background-color: #fafafa;
-    box-shadow: 2px 2px 6px rgba(0,0,0,0.1);
+    box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.1);
     border: 1px solid #ccc;
     border-radius: 8px;
     overflow: hidden;
@@ -223,7 +224,7 @@ body {
     border-radius: 8px;
     padding: 1rem;
     margin: 1rem 0;
-    box-shadow: 2px 2px 6px rgba(0,0,0,0.1);
+    box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.1);
     background-color: #fafafa;
 }
 
@@ -308,7 +309,7 @@ th {
     padding: 2rem;
     max-width: 700px;
     margin: auto;
-    box-shadow: 2px 2px 6px rgba(0,0,0,0.1);
+    box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.1);
 }
 
 /* Create form layout */
@@ -390,14 +391,14 @@ select, input[type="date"], input[type="text"], input[type="number"] {
 }
 
 .cards-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 1rem;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
 }
 
 
 @media (max-width: 600px) {
-  .cards-grid {
-    grid-template-columns: 1fr;
-  }
+    .cards-grid {
+        grid-template-columns: 1fr;
+    }
 }

@@ -1,49 +1,49 @@
 #chatBox {
-  border: 1px solid #ccc;
-  height: 300px;
-  overflow-y: scroll;
-  padding: 10px;
-  background: #fafafa;
-  margin-bottom: 10px;
-  font-family: Arial, sans-serif;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
+    border: 1px solid #ccc;
+    height: 300px;
+    overflow-y: scroll;
+    padding: 10px;
+    background: #fafafa;
+    margin-bottom: 10px;
+    font-family: Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
 }
 
 .chat-msg {
-  max-width: 60%;
-  padding: 8px;
-  border-radius: 10px;
-  word-wrap: break-word;
-  font-size: 14px;
+    max-width: 60%;
+    padding: 8px;
+    border-radius: 10px;
+    word-wrap: break-word;
+    font-size: 14px;
 }
 
 .chat-msg.left {
-  background-color: #e1e1e1;
-  align-self: flex-start;
+    background-color: #e1e1e1;
+    align-self: flex-start;
 }
 
 .chat-msg.right {
-  background-color: #cde5ff;
-  align-self: flex-end;
-  text-align: right;
+    background-color: #cde5ff;
+    align-self: flex-end;
+    text-align: right;
 }
 
 #msgInput {
-  width: 70%;
-  padding: 8px;
-  font-size: 14px;
+    width: 70%;
+    padding: 8px;
+    font-size: 14px;
 }
 
 button {
-  padding: 8px 12px;
-  font-size: 14px;
-  margin-left: 5px;
+    padding: 8px 12px;
+    font-size: 14px;
+    margin-left: 5px;
 }
 
 #userList {
-  padding: 6px;
-  font-size: 14px;
-  margin-bottom: 10px;
+    padding: 6px;
+    font-size: 14px;
+    margin-bottom: 10px;
 }
