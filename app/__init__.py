@@ -1,4 +1,6 @@
 import os
+from typing import Mapping
+
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
@@ -17,9 +19,12 @@ sock = Sock()
 basedir = os.path.abspath(os.path.dirname(__file__))
 load_dotenv(os.path.join(basedir, '..', '.env'))
 
-def create_app():
+def create_app(alternate_config:Mapping=None):
     app = Flask(__name__)
-    app.config.from_object(Config)
+    if alternate_config:
+        app.config.from_mapping(**alternate_config)
+    else:
+        app.config.from_object(Config)
     mail.init_app(app)
 
     db.init_app(app)
