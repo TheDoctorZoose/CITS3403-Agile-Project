@@ -1,4 +1,4 @@
-# (Name of App) - CITS3403 Group Project
+# Board Game Central - CITS3403 Group Project
 
 ## About
 This is a data analytics web application that allows for tracking, automated analysis, and sharing of board game play data with other users of the platform.
