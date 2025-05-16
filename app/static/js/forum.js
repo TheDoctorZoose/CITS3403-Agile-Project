@@ -43,16 +43,16 @@ document.addEventListener('DOMContentLoaded', function () {
       </div>
 
       <div class="form-check mb-2">
-        <input class="form-check-input" type="checkbox" name="win" value="${idx}" id="win${idx}">
         <label class="form-check-label" for="win${idx}">Win?</label>
+        <input class="form-check-input" type="checkbox" name="win" value="${idx}" id="win${idx}">
       </div>
       <div class="form-check mb-2">
-        <input class="form-check-input" type="checkbox" name="went_first" value="${idx}" id="first${idx}">
         <label class="form-check-label" for="first${idx}">Went First?</label>
+        <input class="form-check-input" type="checkbox" name="went_first" value="${idx}" id="first${idx}">
       </div>
       <div class="form-check mb-3">
-        <input class="form-check-input" type="checkbox" name="first_time_playing" value="${idx}" id="ft${idx}">
         <label class="form-check-label" for="ft${idx}">First Time Playing?</label>
+        <input class="form-check-input" type="checkbox" name="first_time_playing" value="${idx}" id="ft${idx}">
       </div>
 
       <div class="mb-3">
@@ -64,6 +64,11 @@ document.addEventListener('DOMContentLoaded', function () {
     `;
 
     fs.querySelector('.removePlayerBtn').addEventListener('click', () => fs.remove());
+
+    fs.querySelector('.removePlayerBtn').addEventListener('click', function () {
+      fs.remove();
+      playerCount -= 1;   // Ensures player count can still be maximum 10 even after removing players
+    });
 
     playersContainer.appendChild(fs);
   });

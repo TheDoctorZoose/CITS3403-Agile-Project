@@ -100,11 +100,6 @@ class GameEntry(db.Model):
     game_title = db.Column(db.String(100))
     date_played = db.Column(db.Date)
 
-    win = db.Column(db.Boolean, default=False, nullable=False)
-    went_first = db.Column(db.Boolean, default=False, nullable=False)
-    first_time_playing = db.Column(db.Boolean, default=False, nullable=False)
-    score = db.Column(db.Integer, nullable=True)
-
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     timestamp = db.Column(db.DateTime, default=datetime.now)
 
@@ -119,6 +114,26 @@ class GameEntry(db.Model):
     comments = db.relationship('Comment', backref='entry', lazy='dynamic', cascade='all, delete-orphan')
 
     user = db.relationship('User', backref='entries')
+
+
+# Database representing individual player data from specific games
+class PlayerGameEntry(db.Model):
+    __tablename__ = 'player_game_entry'
+
+    # Primary key
+    id = db.Column(db.Integer, primary_key=True)
+
+    # Foreign keys
+    game_entry_id = db.Column(db.Integer, db.ForeignKey('game_entry.id'))
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+
+    # Player game data
+    name = db.Column(db.String(30))   # not stored in user table because it could vary across games (e.g. nicknames)
+    win = db.Column(db.Boolean)          # boolean checkbox
+    went_first = db.Column(db.Boolean)   # boolean checkbox
+    first_time = db.Column(db.Boolean)   # boolean checkbox
+    score = db.Column(db.Integer)   # assuming integer scores only (most board games)
+
 
 
 class Comment(db.Model):
