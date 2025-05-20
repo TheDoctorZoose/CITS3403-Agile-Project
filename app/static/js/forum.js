@@ -27,7 +27,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const idx = playerCount - 1;
         const fs = document.createElement('fieldset');
         fs.classList.add('player-info');
-        fs.setAttribute('data-index', idx.toString());
+        fs.setAttribute('data-index', idx);
 
         fs.innerHTML = `
       <legend>Player ${playerCount}</legend>
@@ -86,8 +86,6 @@ document.addEventListener('DOMContentLoaded', function () {
             })
                 .then(res => res.json())
                 .then(data => {
-                    data.liked = undefined;
-                    data.like_count = undefined;
                     if (data.success) {
                         likeCountSpan.textContent = data.like_count;
                         btn.classList.toggle('liked', data.liked);
@@ -109,8 +107,6 @@ document.addEventListener('DOMContentLoaded', function () {
             })
                 .then(res => res.json())
                 .then(data => {
-                    data.favorite_count = undefined;
-                    data.favorited = undefined;
                     if (data.success) {
                         favoriteCountSpan.textContent = data.favorite_count;
                         btn.classList.toggle('favorited', data.favorited);
