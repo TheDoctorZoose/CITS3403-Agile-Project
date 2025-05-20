@@ -7,7 +7,6 @@ from app.models import db, Message, User
 
 sockets = {}  # user_id -> websocket
 
-
 def register_chat_routes(sock):
 
     @sock.route("/ws/chat")

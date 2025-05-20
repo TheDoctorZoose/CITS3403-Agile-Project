@@ -40,7 +40,6 @@
         flex-direction: row;
         gap: 2rem;
     }
-
     .summary-column {
         flex: 1;
     }

@@ -62,7 +62,6 @@ body {
     padding: 5px 10px;
     border-radius: 6px;
 }
-
 .like-btn.liked {
     background-color: #28a745;
     color: #fff;
@@ -74,7 +73,6 @@ body {
     padding: 5px 10px;
     border-radius: 6px;
 }
-
 .favorite-btn.favorited {
     background-color: gold;
     color: #fff;
@@ -87,7 +85,6 @@ body {
     border-radius: 4px;
     margin-left: 10px;
 }
-
 .delete-btn:hover {
     background-color: #c82333;
 }
@@ -97,13 +94,11 @@ body.dark-mode {
     background-color: #1e1e1e;
     color: #e0e0e0;
 }
-
 body.dark-mode .container {
     background-color: #2e2e2e;
     color: #e0e0e0;
     box-shadow: 0 0 12px #000;
 }
-
 body.dark-mode input,
 body.dark-mode select,
 body.dark-mode textarea {
@@ -111,13 +106,11 @@ body.dark-mode textarea {
     color: #e0e0e0;
     border: 1px solid #777;
 }
-
 body.dark-mode .file-upload {
     background-color: #3a3a3a;
     border-color: #666;
     color: #ccc;
 }
-
 body.dark-mode .like-btn,
 body.dark-mode .favorite-btn,
 body.dark-mode .delete-btn {
@@ -125,16 +118,13 @@ body.dark-mode .delete-btn {
     color: #fff;
     border: 1px solid #888;
 }
-
 body.dark-mode .like-btn.liked {
     background-color: #28a745;
 }
-
 body.dark-mode .favorite-btn.favorited {
     background-color: gold;
     color: #000;
 }
-
 body.dark-mode .player-info {
     background-color: #333;
     border-color: #666;
